@@ -65,19 +65,19 @@ body{
 </head>
 <body>
 <div class="phone">
-  <!-- 鎖屏 -->
-  <div id="lock" class="screen center" style="position: relative;">
+  <!-- 鎖屏（拿掉滑動提示，只剩核心元素） -->
+  <div id="lock" class="screen center" style="position: relative; cursor: pointer;">
     <div class="time" id="time"></div>
     <div class="date" id="date"></div>
     
     <!-- 冷感語錄 -->
-    <div style="margin: 40px 0; color: #ccc; font-size: 18px; text-align: center; max-width: 80%;">
+    <div style="margin: 60px 0; color: #ccc; font-size: 18px; text-align: center; max-width: 80%;">
       「你不在，我其實也不太想解鎖。」
     </div>
     
-    <!-- 向上滑動提示，放在最下面 -->
-    <div id="unlockHint" style="margin-top: auto; margin-bottom: 60px; color: var(--sub); font-size: 15px; opacity: 0.9; transition: all 0.3s; text-align: center;">
-      向上滑動解鎖 <i class="fa-solid fa-chevron-up" style="margin-left: 8px; font-size: 18px;"></i>
+    <!-- 可選：加個小提示「點擊解鎖」，想拿掉就刪這整段 -->
+    <div style="margin-top: auto; margin-bottom: 80px; color: var(--sub); font-size: 14px; opacity: 0.8; text-align: center;">
+      點擊任何地方解鎖 <i class="fa-solid fa-hand-pointer" style="margin-left: 6px;"></i>
     </div>
   </div>
 
@@ -111,25 +111,20 @@ body{
 </div>
 
 <script>
-// 先定義元素，避免 undefined
+// 元素定義
 const timeEl = document.getElementById('time');
 const dateEl = document.getElementById('date');
 const lock = document.getElementById('lock');
 const home = document.getElementById('home');
-const unlockHint = document.getElementById('unlockHint');
 
-// 狀態
-const state = {
-  love: 80,
-  lastTalk: Date.now()
-};
-
+// 狀態與 apps
+const state = { love: 80, lastTalk: Date.now() };
 const apps = [
   {id: "messages", icon: "fa-solid fa-comment"},
   {id: "love", icon: "fa-solid fa-heart"}
 ];
 
-// 初始化 app 圖示
+// 初始化 app
 function initApps() {
   const grid = document.getElementById("apps");
   apps.forEach(a => {
@@ -141,20 +136,18 @@ function initApps() {
   });
 }
 
-// 開啟 app
+// 開/關 app 函式（保持原樣）
 function openApp(id) {
   document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   if (id === "messages") renderChat();
   if (id === "love") renderLove();
 }
-
-// 關閉 app
 function closeApp() {
   document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
 }
 
-// 渲染聊天
+// 聊天 & 關係渲染（保持原樣）
 function renderChat() {
   const chat = document.getElementById("chat");
   chat.innerHTML = `
@@ -166,11 +159,9 @@ function renderChat() {
   `;
   setTimeout(() => {
     chat.innerHTML += `<div class="bubble me">不是生氣，是你太讓人分心。</div>`;
-    chat.scrollTop = chat.scrollHeight; // 自動滾到底
+    chat.scrollTop = chat.scrollHeight;
   }, 1500);
 }
-
-// 渲染關係
 function renderLove() {
   const el = document.getElementById("loveContent");
   let mood = state.love > 70 ? "還行" : "別試探我底線";
@@ -182,58 +173,40 @@ function renderLove() {
     <button class="btn" onclick="increaseLove()">靠近她</button>
   `;
 }
-
 function increaseLove() {
   state.love += 2;
   renderLove();
 }
 
-// 更新時間
+// 時間更新
 function updateTime() {
   let d = new Date();
   timeEl.innerText = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
   dateEl.innerText = d.toDateString();
 }
 
-// 滑動解鎖邏輯
-
+// 點擊解鎖（唯一解鎖方式）
 function unlockPhone() {
   lock.style.transition = 'opacity 0.6s ease, transform 0.5s ease';
   lock.style.opacity = '0';
-  lock.style.transform = 'translateY(-80px) scale(0.95)';  // 往上飛一點 + 微微縮小
-
-  setTimeout(() => {
-    lock.classList.add("hidden");
-    home.classList.remove("hidden");
-    // 復原樣式，給下次用
-    lock.style.opacity = '1';
-    lock.style.transform = 'translateY(0) scale(1)';
-  }, 600);
-}
-lock.addEventListener('click', unlockPhone);
-
-
-// 點擊解鎖（桌面備用）
-lock.addEventListener('click', unlockPhone);
-
-function unlockPhone() {
-  lock.style.transition = 'opacity 0.5s, transform 0.4s';
-  lock.style.opacity = '0';
-  lock.style.transform = 'translateY(-50px)';
+  lock.style.transform = 'translateY(-60px) scale(0.96)';
   
   setTimeout(() => {
     lock.classList.add("hidden");
     home.classList.remove("hidden");
     lock.style.opacity = '1';
-    lock.style.transform = 'translateY(0)';
-  }, 400);
+    lock.style.transform = 'translateY(0) scale(1)';
+  }, 600);
 }
 
-// 頁面載入完成
+// 綁定點擊（整個鎖屏都可點）
+lock.addEventListener('click', unlockPhone);
+
+// 頁面載入
 window.onload = function() {
   initApps();
   setInterval(updateTime, 1000);
-  updateTime(); // 馬上更新一次時間
+  updateTime();
 };
 </script>
 </body>
