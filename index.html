@@ -44,6 +44,8 @@ body{
 }
 .chat{
   display:flex;flex-direction:column;gap:8px;
+  overflow-y:auto;
+  height:calc(100% - 120px);
 }
 .bubble{
   max-width:70%;padding:8px;border-radius:12px;font-size:13px;
@@ -61,106 +63,118 @@ body{
 }
 </style>
 </head>
-
 <body>
 <div class="phone">
-
-<!-- 鎖屏 -->
-<div id="lock" class="screen center">
-  <div class="time" id="time"></div>
-  <div class="date" id="date"></div>
-  
-  <!-- 冷感語錄 -->
-  <div style="margin: 40px 0; color: #ccc; font-size: 18px; text-align: center; max-width: 80%;">
-    「你不在，我其實也不太想解鎖。」
+  <!-- 鎖屏 -->
+  <div id="lock" class="screen center" style="position: relative;">
+    <div class="time" id="time"></div>
+    <div class="date" id="date"></div>
+    
+    <!-- 冷感語錄 -->
+    <div style="margin: 40px 0; color: #ccc; font-size: 18px; text-align: center; max-width: 80%;">
+      「你不在，我其實也不太想解鎖。」
+    </div>
+    
+    <!-- 向上滑動提示，放在最下面 -->
+    <div id="unlockHint" style="margin-top: auto; margin-bottom: 60px; color: var(--sub); font-size: 15px; opacity: 0.9; transition: all 0.3s; text-align: center;">
+      向上滑動解鎖 <i class="fa-solid fa-chevron-up" style="margin-left: 8px; font-size: 18px;"></i>
+    </div>
   </div>
-  
-  <!-- 直接加在下面！這就是你的第二段提示，位置已經調好～ -->
-  <div id="unlockHint" style="margin-top: auto; margin-bottom: 60px; color: var(--sub); font-size: 15px; opacity: 0.9; transition: all 0.3s; text-align: center;">
-    向上滑動解鎖 <i class="fa fa-chevron-up" style="margin-left: 8px; font-size: 18px;"></i>
+
+  <!-- 主畫面 -->
+  <div id="home" class="screen hidden">
+    <div class="app-grid" id="apps"></div>
   </div>
-</div>
 
-<!-- 主畫面 -->
-<div id="home" class="screen hidden">
-<div class="app-grid" id="apps"></div>
-</div>
+  <!-- Messages -->
+  <div id="messages" class="app-window screen">
+    <div class="header">
+      <button class="btn" onclick="closeApp()">返回</button>
+      <div>ccz</div>
+    </div>
+    <div id="chat" class="chat"></div>
+    <div style="margin-top:10px">
+      <input id="messageInput" style="width:100%;background:#111;border:none;color:#fff;padding:8px;border-radius:10px" placeholder="輸入訊息…（她不一定會回）">
+    </div>
+  </div>
 
-<!-- Messages -->
-<div id="messages" class="app-window screen">
-<div class="header">
-<button class="btn" onclick="closeApp()">返回</button>
-<div>ccz</div>
-</div>
-<div id="chat" class="chat"></div>
-<div style="margin-top:10px">
-<input style="width:100%;background:#111;border:none;color:#fff;padding:8px;border-radius:10px" placeholder="輸入訊息…（她不一定會回）">
-</div>
-</div>
+  <!-- Love App -->
+  <div id="love" class="app-window screen">
+    <div class="header">
+      <button class="btn" onclick="closeApp()">返回</button>
+      <div>Relationship</div>
+    </div>
+    <div id="loveContent"></div>
+  </div>
 
-<!-- Love App -->
-<div id="love" class="app-window screen">
-<div class="header">
-<button class="btn" onclick="closeApp()">返回</button>
-<div>Relationship</div>
-</div>
-<div id="loveContent"></div>
-</div>
-
-<div class="bar"></div>
+  <div class="bar"></div>
 </div>
 
 <script>
-const state={
-  love:80,
-  lastTalk:Date.now()
+// 先定義元素，避免 undefined
+const timeEl = document.getElementById('time');
+const dateEl = document.getElementById('date');
+const lock = document.getElementById('lock');
+const home = document.getElementById('home');
+const unlockHint = document.getElementById('unlockHint');
+
+// 狀態
+const state = {
+  love: 80,
+  lastTalk: Date.now()
 };
 
-const apps=[
-{id:"messages",icon:"fa-comment"},
-{id:"love",icon:"fa-heart"}
+const apps = [
+  {id: "messages", icon: "fa-solid fa-comment"},
+  {id: "love", icon: "fa-solid fa-heart"}
 ];
 
-function initApps(){
-  const grid=document.getElementById("apps");
-  apps.forEach(a=>{
-    let el=document.createElement("div");
-    el.className="app";
-    el.innerHTML=`<div class="icon"><i class="fa ${a.icon}"></i></div>${a.id}`;
-    el.onclick=()=>openApp(a.id);
+// 初始化 app 圖示
+function initApps() {
+  const grid = document.getElementById("apps");
+  apps.forEach(a => {
+    let el = document.createElement("div");
+    el.className = "app";
+    el.innerHTML = `<div class="icon"><i class="${a.icon}"></i></div>${a.id}`;
+    el.onclick = () => openApp(a.id);
     grid.appendChild(el);
   });
 }
 
-function openApp(id){
-  document.querySelectorAll(".app-window").forEach(a=>a.classList.remove("active"));
+// 開啟 app
+function openApp(id) {
+  document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
   document.getElementById(id).classList.add("active");
-  if(id==="messages") renderChat();
-  if(id==="love") renderLove();
+  if (id === "messages") renderChat();
+  if (id === "love") renderLove();
 }
 
-function closeApp(){
-  document.querySelectorAll(".app-window").forEach(a=>a.classList.remove("active"));
+// 關閉 app
+function closeApp() {
+  document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
 }
 
-function renderChat(){
-  const chat=document.getElementById("chat");
-  chat.innerHTML=`
+// 渲染聊天
+function renderChat() {
+  const chat = document.getElementById("chat");
+  chat.innerHTML = `
     <div class="bubble you">今天有好好吃飯嗎</div>
     <div class="bubble me">…有</div>
     <div class="bubble me">別管那麼多</div>
     <div class="bubble you">你在生氣？</div>
     <div class="typing">star 正在輸入…</div>
   `;
-  setTimeout(()=>{
-    chat.innerHTML+=`<div class="bubble me">不是生氣，是你太讓人分心。</div>`;
-  },1500);
+  setTimeout(() => {
+    chat.innerHTML += `<div class="bubble me">不是生氣，是你太讓人分心。</div>`;
+    chat.scrollTop = chat.scrollHeight; // 自動滾到底
+  }, 1500);
 }
 
-function renderLove(){
-  const el=document.getElementById("loveContent");
-  let mood = state.love>70?"還行":"別試探我底線";
-  el.innerHTML=`
+// 渲染關係
+function renderLove() {
+  const el = document.getElementById("loveContent");
+  let mood = state.love > 70 ? "還行" : "別試探我底線";
+  el.innerHTML = `
     關係強度：${state.love}%<br><br>
     狀態評價：${mood}<br><br>
     備註：<br>
@@ -169,28 +183,72 @@ function renderLove(){
   `;
 }
 
-function increaseLove(){
-  state.love+=2;
+function increaseLove() {
+  state.love += 2;
   renderLove();
 }
 
-function updateTime(){
-  let d=new Date();
-  time.innerText=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-  date.innerText=d.toDateString();
+// 更新時間
+function updateTime() {
+  let d = new Date();
+  timeEl.innerText = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  dateEl.innerText = d.toDateString();
 }
 
-lock.onclick=()=>{
-  lock.classList.add("hidden");
-  home.classList.remove("hidden");
-};
+// 滑動解鎖邏輯
+let touchStartY = 0;
+let isSwiping = false;
 
-window.onload = function(){
-  load();
+lock.addEventListener('touchstart', e => {
+  touchStartY = e.changedTouches[0].screenY;
+  isSwiping = true;
+});
+
+lock.addEventListener('touchmove', e => {
+  if (!isSwiping) return;
+  const currentY = e.changedTouches[0].screenY;
+  const diff = touchStartY - currentY; // 向上滑 diff > 0
+  if (diff > 0) {
+    lock.style.transform = `translateY(-${Math.min(diff * 0.4, 100)}px)`;
+    unlockHint.style.opacity = Math.max(0.3, 1 - (diff / 200));
+  }
+});
+
+lock.addEventListener('touchend', e => {
+  if (!isSwiping) return;
+  const touchEndY = e.changedTouches[0].screenY;
+  const swipeDistance = touchStartY - touchEndY;
+  if (swipeDistance > 120) {
+    unlockPhone();
+  } else {
+    lock.style.transform = 'translateY(0)';
+    unlockHint.style.opacity = '0.9';
+  }
+  isSwiping = false;
+});
+
+// 點擊解鎖（桌面備用）
+lock.addEventListener('click', unlockPhone);
+
+function unlockPhone() {
+  lock.style.transition = 'opacity 0.5s, transform 0.4s';
+  lock.style.opacity = '0';
+  lock.style.transform = 'translateY(-50px)';
+  
+  setTimeout(() => {
+    lock.classList.add("hidden");
+    home.classList.remove("hidden");
+    lock.style.opacity = '1';
+    lock.style.transform = 'translateY(0)';
+  }, 400);
+}
+
+// 頁面載入完成
+window.onload = function() {
   initApps();
-  setInterval(updateTime,1000);
+  setInterval(updateTime, 1000);
+  updateTime(); // 馬上更新一次時間
 };
 </script>
-
 </body>
 </html>
