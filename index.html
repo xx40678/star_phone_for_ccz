@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>star.phone v2 - 冷感戀愛版</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0b10;
+  --glass:rgba(255,255,255,0.06);
+  --text:#fff;
+  --sub:#9aa0aa;
+  --accent:#9b5cff;
+  --radius:22px;
+}
+body{
+  margin:0;background:#000;display:flex;justify-content:center;align-items:center;height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont;
+}
+.phone{
+  width:360px;height:720px;background:var(--bg);border-radius:40px;overflow:hidden;position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,.7);
+}
+.screen{position:absolute;inset:0;padding:16px;}
+.hidden{display:none}
+.center{display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;}
+.time{font-size:64px;font-weight:600;}
+.date{color:var(--sub);}
+.app-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.app{text-align:center;font-size:12px;color:#fff;}
+.icon{
+  width:60px;height:60px;border-radius:18px;background:var(--glass);
+  display:flex;align-items:center;justify-content:center;margin:auto;font-size:22px;
+}
+.app-window{
+  position:absolute;inset:0;background:var(--bg);
+  transform:scale(.95);opacity:0;transition:.25s;
+}
+.app-window.active{transform:scale(1);opacity:1;}
+.header{display:flex;justify-content:space-between;margin-bottom:10px;}
+.btn{
+  background:var(--glass);border:none;color:#fff;padding:6px 10px;border-radius:10px;
+}
+.chat{
+  display:flex;flex-direction:column;gap:8px;
+}
+.bubble{
+  max-width:70%;padding:8px;border-radius:12px;font-size:13px;
+}
+.me{background:var(--accent);align-self:flex-end;}
+.you{background:#333;align-self:flex-start;}
+.typing{
+  font-size:12px;color:var(--sub);
+  animation:blink 1s infinite;
+}
+@keyframes blink{50%{opacity:.3}}
+.bar{
+  height:5px;width:120px;background:#fff3;border-radius:10px;
+  position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+}
+</style>
+</head>
+
+<body>
+<div class="phone">
+
+<!-- 鎖屏 -->
+<div id="lock" class="screen center">
+<div class="time" id="time"></div>
+<div class="date" id="date"></div>
+<div style="margin-top:20px;color:#ccc">「你不在，我其實也不太想解鎖。」</div>
+</div>
+
+<!-- 主畫面 -->
+<div id="home" class="screen hidden">
+<div class="app-grid" id="apps"></div>
+</div>
+
+<!-- Messages -->
+<div id="messages" class="app-window screen">
+<div class="header">
+<button class="btn" onclick="closeApp()">返回</button>
+<div>ccz</div>
+</div>
+<div id="chat" class="chat"></div>
+<div style="margin-top:10px">
+<input style="width:100%;background:#111;border:none;color:#fff;padding:8px;border-radius:10px" placeholder="輸入訊息…（她不一定會回）">
+</div>
+</div>
+
+<!-- Love App -->
+<div id="love" class="app-window screen">
+<div class="header">
+<button class="btn" onclick="closeApp()">返回</button>
+<div>Relationship</div>
+</div>
+<div id="loveContent"></div>
+</div>
+
+<div class="bar"></div>
+</div>
+
+<script>
+const state={
+  love:80,
+  lastTalk:Date.now()
+};
+
+const apps=[
+{id:"messages",icon:"fa-comment"},
+{id:"love",icon:"fa-heart"}
+];
+
+function initApps(){
+  const grid=document.getElementById("apps");
+  apps.forEach(a=>{
+    let el=document.createElement("div");
+    el.className="app";
+    el.innerHTML=`<div class="icon"><i class="fa ${a.icon}"></i></div>${a.id}`;
+    el.onclick=()=>openApp(a.id);
+    grid.appendChild(el);
+  });
+}
+
+function openApp(id){
+  document.querySelectorAll(".app-window").forEach(a=>a.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if(id==="messages") renderChat();
+  if(id==="love") renderLove();
+}
+
+function closeApp(){
+  document.querySelectorAll(".app-window").forEach(a=>a.classList.remove("active"));
+}
+
+function renderChat(){
+  const chat=document.getElementById("chat");
+  chat.innerHTML=`
+    <div class="bubble you">今天有好好吃飯嗎</div>
+    <div class="bubble me">…有</div>
+    <div class="bubble me">別管那麼多</div>
+    <div class="bubble you">你在生氣？</div>
+    <div class="typing">star 正在輸入…</div>
+  `;
+  setTimeout(()=>{
+    chat.innerHTML+=`<div class="bubble me">不是生氣，是你太讓人分心。</div>`;
+  },1500);
+}
+
+function renderLove(){
+  const el=document.getElementById("loveContent");
+  let mood = state.love>70?"還行":"別試探我底線";
+  el.innerHTML=`
+    關係強度：${state.love}%<br><br>
+    狀態評價：${mood}<br><br>
+    備註：<br>
+    「你如果再晚睡，我不保證我還會這麼冷靜。」<br><br>
+    <button class="btn" onclick="increaseLove()">靠近她</button>
+  `;
+}
+
+function increaseLove(){
+  state.love+=2;
+  renderLove();
+}
+
+function updateTime(){
+  let d=new Date();
+  time.innerText=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  date.innerText=d.toDateString();
+}
+
+lock.onclick=()=>{
+  lock.classList.add("hidden");
+  home.classList.remove("hidden");
+};
+
+initApps();
+setInterval(updateTime,1000);
+</script>
+
+</body>
+</html>
