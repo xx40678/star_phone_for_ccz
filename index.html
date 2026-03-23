@@ -176,8 +176,11 @@ lock.onclick=()=>{
   home.classList.remove("hidden");
 };
 
-initApps();
-setInterval(updateTime,1000);
+window.onload = function(){
+  load();
+  initApps();
+  setInterval(updateTime,1000);
+};
 </script>
 
 </body>
