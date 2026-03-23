@@ -196,36 +196,22 @@ function updateTime() {
 }
 
 // 滑動解鎖邏輯
-let touchStartY = 0;
-let isSwiping = false;
 
-lock.addEventListener('touchstart', e => {
-  touchStartY = e.changedTouches[0].screenY;
-  isSwiping = true;
-});
+function unlockPhone() {
+  lock.style.transition = 'opacity 0.6s ease, transform 0.5s ease';
+  lock.style.opacity = '0';
+  lock.style.transform = 'translateY(-80px) scale(0.95)';  // 往上飛一點 + 微微縮小
 
-lock.addEventListener('touchmove', e => {
-  if (!isSwiping) return;
-  const currentY = e.changedTouches[0].screenY;
-  const diff = touchStartY - currentY; // 向上滑 diff > 0
-  if (diff > 0) {
-    lock.style.transform = `translateY(-${Math.min(diff * 0.4, 100)}px)`;
-    unlockHint.style.opacity = Math.max(0.3, 1 - (diff / 200));
-  }
-});
+  setTimeout(() => {
+    lock.classList.add("hidden");
+    home.classList.remove("hidden");
+    // 復原樣式，給下次用
+    lock.style.opacity = '1';
+    lock.style.transform = 'translateY(0) scale(1)';
+  }, 600);
+}
+lock.addEventListener('click', unlockPhone);
 
-lock.addEventListener('touchend', e => {
-  if (!isSwiping) return;
-  const touchEndY = e.changedTouches[0].screenY;
-  const swipeDistance = touchStartY - touchEndY;
-  if (swipeDistance > 120) {
-    unlockPhone();
-  } else {
-    lock.style.transform = 'translateY(0)';
-    unlockHint.style.opacity = '0.9';
-  }
-  isSwiping = false;
-});
 
 // 點擊解鎖（桌面備用）
 lock.addEventListener('click', unlockPhone);
