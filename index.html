@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>iPhone Pro Elite - v25 Unlock Fixed</title>
+<title>iPhone Pro Elite - v26 Ultimate Recovery</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root {
@@ -14,10 +14,10 @@
   --border-glass: 0.5px solid rgba(255, 255, 255, 0.15);
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 
 body {
-  margin: 0; background: #0a0a0a; display: flex; justify-content: center; align-items: center; 
+  background: #0a0a0a; display: flex; justify-content: center; align-items: center; 
   min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
   overflow: hidden;
 }
@@ -31,12 +31,12 @@ body {
 .status-bar { position: absolute; top: 0; width: 100%; height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; z-index: 10000; color: #fff; font-size: 14px; pointer-events: none; }
 .notch { width: 160px; height: 30px; background: #1c1c1e; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 10001; }
 
-/* 鎖屏修復：強制 pointer-events 確保可點擊 */
+/* 鎖屏優化 */
 #lock-screen { 
   position: absolute; inset: 0; z-index: 9999; background: var(--ios-wallpaper); 
   display: flex; flex-direction: column; align-items: center; padding-top: 100px; 
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
-  cursor: pointer; pointer-events: auto;
+  cursor: pointer; pointer-events: auto; visibility: visible;
 }
 .lock-time { font-size: 88px; font-weight: 200; color: #fff; letter-spacing: -3px; pointer-events: none; }
 .lock-widget { margin-top: 30px; background: rgba(255, 255, 255, 0.12); padding: 12px 24px; border-radius: 18px; backdrop-filter: blur(15px); color: #fff; font-size: 14px; border: var(--border-glass); pointer-events: none; }
@@ -60,8 +60,6 @@ body {
 .me { background: var(--accent); align-self: flex-end; border-bottom-right-radius: 4px; }
 .you { background: #262629; align-self: flex-start; border-bottom-left-radius: 4px; }
 
-.photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
-.photo-thumb { aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; padding: 8px; cursor: pointer; }
 .photo-viewer { position: absolute; inset: 0; background: #000; z-index: 2000; display: none; flex-direction: column; }
 .photo-viewer.active { display: flex; }
 
@@ -71,6 +69,8 @@ body {
 .reply-menu.show { display: flex; }
 .menu-item { padding: 16px; color: var(--accent); text-align: center; border-bottom: 0.5px solid rgba(255,255,255,0.1); cursor: pointer; }
 .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 135px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.5; }
+
+@keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 </style>
 </head>
 <body>
@@ -82,11 +82,11 @@ body {
     <div style="display:flex; gap:5px;"><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></div>
   </div>
 
-  <div id="lock-screen" onclick="unlock()">
+  <div id="lock-screen">
     <div class="lock-time" id="lock-time">16:20</div>
-    <div style="font-size:20px; color:#fff; margin-top:-5px;">3月24日 星期二</div>
+    <div style="font-size:20px; color:#fff; margin-top:-5px; pointer-events:none;">3月24日 星期二</div>
     <div class="lock-widget"><i class="fas fa-heart" style="color:#ff2d55; margin-right:8px;"></i> 你不在，我其實也不太想解鎖。</div>
-    <div style="margin-top:auto; margin-bottom:60px; color:rgba(255,255,255,0.5); font-size:14px; animation: pulse 2s infinite;">點擊進入主畫面</div>
+    <div style="margin-top:auto; margin-bottom:60px; color:rgba(255,255,255,0.7); font-size:14px; animation: pulse 2s infinite; pointer-events:none;">點擊進入主畫面</div>
   </div>
 
   <div id="home-screen">
@@ -98,7 +98,7 @@ body {
         <div class="app" onclick="openApp('phone-app')"><div class="icon" style="color:#32D74B;"><i class="fas fa-phone"></i></div></div>
         <div class="app" onclick="openApp('search-app')"><div class="icon" style="color:#5AC8FA;"><i class="fas fa-compass"></i></div></div>
         <div class="app" onclick="openApp('photos-app')"><div class="icon"><i class="fas fa-image" style="color:#8e8e93; font-size:28px;"></i></div></div>
-        <div class="app"><div class="icon" style="color:#A2845E;"><i class="fas fa-music"></i></div></div>
+        <div class="app" onclick="showAlert('音樂功能維修中')"><div class="icon" style="color:#A2845E;"><i class="fas fa-music"></i></div></div>
     </div>
   </div>
 
@@ -112,6 +112,27 @@ body {
         <div class="avatar" style="background:#3a3a3c;"><i class="fas fa-box" style="color:#8e8e93;"></i></div>
         <div style="flex:1;"><span style="font-weight:600;">到貨通知</span><div style="color:#8e8e93; font-size:14px;">您的化妝品包裹已抵達...</div></div>
     </div>
+  </div>
+
+  <div id="search-app" class="app-window">
+    <div class="header"><i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="closeApp()"></i><div class="header-title">Safari</div></div>
+    <div style="padding:15px; overflow-y:auto; flex:1;">
+        <div style="color:#fff; font-size:22px; font-weight:700; margin:10px 0 15px 5px;">關於她</div>
+        <div class="list-item" onclick="showAlert('不知道女生都喜歡什麼顏色')">女生喜歡的口紅色號</div>
+        <div class="list-item" onclick="showAlert('她會想去景點走走')">約會景點</div>
+        <div class="list-item" onclick="showAlert('她天天熬夜')">長期熬夜的危害</div>
+        <div style="color:#fff; font-size:22px; font-weight:700; margin:20px 0 15px 5px;">其他</div>
+        <div class="list-item" onclick="showAlert('會變很大喔')">珍珠放五天會變大嗎?</div>
+        <div class="list-item" onclick="showAlert('會爛臉吧...')">牙膏可以拿來洗臉嗎?</div>
+        <div class="list-item" onclick="showAlert('只要我不消失，你的工作就在')">AI未來工作趨勢</div>
+    </div>
+  </div>
+
+  <div id="phone-app" class="app-window">
+    <div class="header"><i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="closeApp()"></i><div class="header-title">聯絡人</div></div>
+    <div class="list-item" onclick="showAlert('想你了。')"><div class="avatar" style="background:#5856d6;">C</div><span>ccz</span></div>
+    <div class="list-item" onclick="showAlert('又要開會...')"><div class="avatar" style="background:#8e8e93;">B</div><span>boss</span></div>
+    <div class="list-item" onclick="showAlert('記得回家吃飯')"><div class="avatar" style="background:#ff9500;">M</div><span>mom</span></div>
   </div>
 
   <div id="chat-ccz" class="app-window">
@@ -134,39 +155,18 @@ body {
     <div style="padding:15px 15px 40px; background:#000;"><div onclick="toggleReply(event)" style="background:#1c1c1e; border-radius:22px; padding:10px 18px; color:#8e8e93; border: 1px solid #333; cursor:pointer;">iMessage</div></div>
   </div>
 
-  <div id="search-app" class="app-window">
-    <div class="header"><i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="closeApp()"></i><div class="header-title">Safari</div></div>
-    <div style="padding:15px; overflow-y:auto; flex:1;">
-        <div style="color:#fff; font-size:22px; font-weight:700; margin:10px 0 15px 5px;">關於她</div>
-        <div class="list-item" onclick="showAlert('不知道女生都喜歡什麼顏色')">女生喜歡的口紅色號</div>
-        <div class="list-item" onclick="showAlert('她會想去景點走走')">約會景點</div>
-        <div class="list-item" onclick="showAlert('她天天熬夜')">長期熬夜的危害</div>
-        <div style="color:#fff; font-size:22px; font-weight:700; margin:20px 0 15px 5px;">其他</div>
-        <div class="list-item" onclick="showAlert('會的')">珍珠放五天會變大嗎?</div>
-        <div class="list-item" onclick="showAlert('不行')">牙膏可以拿來洗臉嗎?</div>
-        <div class="list-item" onclick="showAlert('看你表現')">AI未來工作趨勢</div>
-    </div>
-  </div>
-
-  <div id="phone-app" class="app-window">
-    <div class="header"><i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="closeApp()"></i><div class="header-title">聯絡人</div></div>
-    <div class="list-item" onclick="showAlert('不知道你現在在幹嘛?')"><div class="avatar" style="background:#5856d6;">C</div><span>ccz</span></div>
-    <div class="list-item" onclick="showAlert('不想上班')"><div class="avatar" style="background:#8e8e93;">B</div><span>boss</span></div>
-    <div class="list-item" onclick="showAlert('想家了...')"><div class="avatar" style="background:#ff9500;">M</div><span>mom</span></div>
-  </div>
-
   <div id="photos-app" class="app-window">
     <div class="header"><i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="closeApp()"></i><div class="header-title">照片</div></div>
-    <div class="photo-grid">
-        <div class="photo-thumb" style="background:#ffebee;" onclick="viewPhoto('ccz與她妹妹的自拍照', 1)"><span>ccz與她妹妹</span></div>
-        <div class="photo-thumb" style="background:#f3e5f5;" onclick="viewPhoto('', 2)"><span>路邊看到的貓咪</span></div>
-        <div class="photo-thumb" style="background:#e3f2fd;" onclick="viewPhoto('好想一起去看海', 3)"><span>海</span></div>
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:2px;">
+        <div class="avatar" style="width:100px; height:100px; border-radius:0; margin:0;" onclick="viewPhoto('ccz與她妹妹的自拍照', 1)">👩‍❤️‍👩</div>
+        <div class="avatar" style="width:100px; height:100px; border-radius:0; margin:0;" onclick="viewPhoto('', 2)">🐱</div>
+        <div class="avatar" style="width:100px; height:100px; border-radius:0; margin:0;" onclick="viewPhoto('好想一起去看海', 3)">🌊</div>
     </div>
   </div>
 
   <div id="photo-viewer" class="photo-viewer">
     <div class="header" style="background:transparent; border:none;"><i class="fas fa-chevron-left" style="color:#fff; cursor:pointer" onclick="closePhoto()"></i></div>
-    <div class="viewer-content" id="viewer-main"></div>
+    <div id="viewer-main" style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; padding:30px;"></div>
   </div>
 
   <div id="love-app" class="app-window">
@@ -183,14 +183,18 @@ function updateTime() {
     const t = new Date().toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit', hour12:false});
     document.querySelectorAll('#status-time, #lock-time').forEach(el => el.innerText = t);
 }
-// 暴力解鎖：徹底移除 DOM 並防止事件冒泡
-function unlock() { 
-    console.log("Unlock Triggered");
-    const s = document.getElementById('lock-screen');
-    s.style.transform = 'translateY(-100%)';
-    s.style.opacity = '0';
-    setTimeout(() => { s.style.display = 'none'; }, 600);
+
+// 終極解鎖：使用兩層保險
+const lockScreen = document.getElementById('lock-screen');
+function unlock() {
+    console.log("Unlock process started");
+    lockScreen.style.transform = 'translateY(-100%)';
+    lockScreen.style.opacity = '0';
+    setTimeout(() => { lockScreen.style.display = 'none'; }, 600);
 }
+// 腳本保險：直接監聽點擊
+lockScreen.addEventListener('click', unlock);
+
 function openApp(id) {
     document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
     document.getElementById(id).classList.add('active');
@@ -198,18 +202,16 @@ function openApp(id) {
 }
 function closeApp() { document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); }
 function toggleReply(e) { e.stopPropagation(); document.getElementById('reply-menu').classList.toggle('show'); }
-function hideReplyMenu() { const r = document.getElementById('reply-menu'); if(r) r.classList.remove('show'); }
 function sendReply(me, you) {
     const box = document.getElementById('chat-box-ccz');
     box.innerHTML += `<div class="bubble me">${me}</div>`;
-    hideReplyMenu();
+    document.getElementById('reply-menu').classList.remove('show');
     setTimeout(() => { box.innerHTML += `<div class="bubble you">${you}</div>`; box.scrollTop = box.scrollHeight; }, 1000);
 }
 function viewPhoto(txt, num) {
     const v = document.getElementById('viewer-main');
-    if(num === 2) v.innerHTML = `<div style="font-size:22px; text-align:left; font-family:monospace; width:100%; white-space:pre;">　　　　　  ＿＿\n　　　　　／＞　　フ\n　　　　　|  　_　 _ l\n　 　　　／` ミ＿꒳ノ\n　　 　 /　　　 　 |\n　　　 /　 ヽ、.. \n\n<div style='font-size:28px; text-align:center; margin-top:20px;'>‧̍̊˙· 𓆝.° ｡ ˚𓆛˚｡ °.𓆞 ·˙‧̍̊</div></div>`;
-    else if(num === 1) v.innerHTML = `<div style="font-size:18px;">${txt}</div><span style="font-size:35px; margin-top:15px;">🧢✨</span>`;
-    else v.innerHTML = `<div style="font-size:18px;">${txt}</div><div style="font-size:30px; margin-top:25px;">🌊🐚✨</div>`;
+    if(num === 2) v.innerHTML = `<div style="font-size:22px; text-align:left; font-family:monospace; white-space:pre;">　　　　　  ＿＿\n　　　　　／＞　　フ\n　　　　　|  　_　 _ l\n　 　　　／` ミ＿꒳ノ\n　　 　 /　　　 　 |\n　　　 /　 ヽ、.. </div>`;
+    else v.innerHTML = `<div style="font-size:18px;">${txt}</div>`;
     document.getElementById('photo-viewer').classList.add('active');
 }
 function closePhoto() { document.getElementById('photo-viewer').classList.remove('active'); }
