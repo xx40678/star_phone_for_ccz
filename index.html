@@ -122,62 +122,97 @@ body{
 </div>
 
 <script>
-// 傻瓜最終版 - 把所有東西都寫在外面
+// ==================== 所有函式寫在最外面 ====================
 
-// 1. 時間更新
+// 時間更新
 function updateTime() {
     const timeEl = document.getElementById('time');
-    const dateEl = document.getElementById('date');
     if (timeEl) {
-        let d = new Date();
+        const d = new Date();
         timeEl.innerText = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
     }
 }
 
-// 2. 開啟 App
+// 開啟 App
 function openApp(id) {
-    console.log("📱 點擊開啟:", id);
+    console.log("📱 點擊開啟 App:", id);
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
     const target = document.getElementById(id);
-    if (target) target.classList.add("active");
+    if (target) {
+        target.classList.add("active");
+        if (id === "messages") renderChat();
+        if (id === "love") renderLove();
+    }
 }
 
-// 3. 關閉 App
+// 關閉 App
 function closeApp() {
     console.log("🔙 執行 closeApp");
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
 }
 
-// 4. 頁面載入
+// 渲染聊天
+function renderChat() {
+    const chat = document.getElementById("chat");
+    if (chat) {
+        chat.innerHTML = `
+            <div class="bubble you">今天有好好吃飯嗎</div>
+            <div class="bubble me">…有</div>
+            <div class="bubble me">別管那麼多</div>
+            <div class="bubble you">你在生氣？</div>
+        `;
+    }
+}
+
+// 渲染關係
+function renderLove() {
+    const el = document.getElementById("loveContent");
+    if (el) {
+        el.innerHTML = `
+            關係強度：80%<br><br>
+            狀態評價：還行<br><br>
+            備註：<br>
+            「你如果再晚睡，我不保證我還會這麼冷靜。」
+        `;
+    }
+}
+
+// 解鎖
+function unlockPhone() {
+    console.log("🖱️ 點擊解鎖");
+    const lock = document.getElementById('lock');
+    const home = document.getElementById('home');
+    if (lock && home) {
+        lock.style.transition = 'all 0.6s ease';
+        lock.style.opacity = '0';
+        setTimeout(() => {
+            lock.classList.add("hidden");
+            home.classList.remove("hidden");
+        }, 400);
+    }
+}
+
+// ==================== 頁面載入 ====================
 window.onload = function() {
     console.log("✅ onload 執行成功");
 
-    // 解鎖
+    // 解鎖綁定
     const overlay = document.getElementById('lockOverlay');
-    if (overlay) {
-        overlay.addEventListener('click', function() {
-            console.log("🖱️ 點擊解鎖");
-            const lock = document.getElementById('lock');
-            const home = document.getElementById('home');
-            lock.style.transition = 'all 0.6s';
-            lock.style.opacity = '0';
-            setTimeout(() => {
-                lock.classList.add("hidden");
-                home.classList.remove("hidden");
-            }, 400);
-        });
-    }
+    if (overlay) overlay.addEventListener('click', unlockPhone);
 
-    // 生成兩個 App
+    // 生成主畫面 App
     const grid = document.getElementById("apps");
-    grid.innerHTML = `
-        <div class="app" style="cursor: pointer;" onclick="openApp('messages')">
-            <div class="icon"><i class="fa-solid fa-comment"></i></div>messages
-        </div>
-        <div class="app" style="cursor: pointer;" onclick="openApp('love')">
-            <div class="icon"><i class="fa-solid fa-heart"></i></div>love
-        </div>
-    `;
+    if (grid) {
+        grid.innerHTML = `
+            <div class="app" style="cursor:pointer" onclick="openApp('messages')">
+                <div class="icon"><i class="fa-solid fa-comment"></i></div>messages
+            </div>
+            <div class="app" style="cursor:pointer" onclick="openApp('love')">
+                <div class="icon"><i class="fa-solid fa-heart"></i></div>love
+            </div>
+        `;
+        console.log("✅ 主畫面 App 已生成");
+    }
 
     // 返回按鈕
     document.querySelectorAll('.btn').forEach(btn => {
@@ -189,8 +224,7 @@ window.onload = function() {
     // 啟動時間
     updateTime();
     setInterval(updateTime, 1000);
-
-    console.log("✅ 所有設定完成");
+    console.log("✅ 時間更新已啟動");
 };
 </script>
 </body>
