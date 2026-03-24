@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>star.phone v2 - test</title>
+<title>star.phone v2 - 冷感戀愛版</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root{
@@ -12,7 +12,6 @@
   --text:#fff;
   --sub:#9aa0aa;
   --accent:#9b5cff;
-  --radius:22px;
 }
 body{
   margin:0;background:#000;display:flex;justify-content:center;align-items:center;height:100vh;
@@ -27,7 +26,7 @@ body{
 .time{font-size:64px;font-weight:600;}
 .date{color:var(--sub);}
 .app-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
-.app{text-align:center;font-size:12px;color:#fff;}
+.app{text-align:center;font-size:12px;color:#fff;cursor:pointer;}
 .icon{
   width:60px;height:60px;border-radius:18px;background:var(--glass);
   display:flex;align-items:center;justify-content:center;margin:auto;font-size:22px;
@@ -56,41 +55,33 @@ body{
   animation:blink 1s infinite;
 }
 @keyframes blink{50%{opacity:.3}}
-.bar{
-  height:5px;width:120px;background:#fff3;border-radius:10px;
-  position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
-}
 </style>
 </head>
 <body>
 <div class="phone">
 
-  <!-- 鎖屏 - 終極全點擊版（保證整塊都能點） -->
-<div id="lock" class="screen" style="position: relative; width: 100%; height: 100%;">
-
-  <!-- 這層才是真正負責點擊的超大透明層 -->
-  <div id="lockOverlay" 
-       style="position: absolute; inset: 0; z-index: 999; cursor: pointer; 
-              background: transparent;">
-  </div>
-
-  <!-- 所有內容都放在這層下面 -->
-  <div style="position: relative; z-index: 1; height: 100%; width: 100%; 
-              display: flex; flex-direction: column; justify-content: center; align-items: center; 
-              padding: 16px; box-sizing: border-box; pointer-events: none;">
-    
-    <div class="time" id="time"></div>
-    <div class="date" id="date"></div>
-   
-    <div style="margin: 60px 0; color: #ccc; font-size: 18px; text-align: center; max-width: 80%;">
-      「你不在，我其實也不太想解鎖。」
+  <!-- 鎖屏 -->
+  <div id="lock" class="screen" style="position: relative; width: 100%; height: 100%;">
+    <div id="lockOverlay" 
+         style="position: absolute; inset: 0; z-index: 10; cursor: pointer; background: transparent;">
     </div>
-   
-    <div style="margin-top: auto; margin-bottom: 80px; color: var(--sub); font-size: 14px; opacity: 0.8; text-align: center;">
-      點擊任何地方解鎖 <i class="fa-solid fa-hand-pointer" style="margin-left: 6px;"></i>
+
+    <div style="position: relative; z-index: 20; height: 100%; width: 100%; 
+                display: flex; flex-direction: column; justify-content: center; align-items: center; 
+                padding: 16px; box-sizing: border-box;">
+      
+      <div class="time" id="time"></div>
+      <div class="date" id="date"></div>
+      
+      <div style="margin: 60px 0; color: #ccc; font-size: 18px; text-align: center; max-width: 80%;">
+        「你不在，我其實也不太想解鎖。」
+      </div>
+      
+      <div style="margin-top: auto; margin-bottom: 80px; color: var(--sub); font-size: 14px; opacity: 0.8;">
+        點擊任何地方解鎖 <i class="fa-solid fa-hand-pointer" style="margin-left: 6px;"></i>
+      </div>
     </div>
   </div>
-</div>
 
   <!-- 主畫面 -->
   <div id="home" class="screen hidden">
@@ -100,19 +91,19 @@ body{
   <!-- Messages -->
   <div id="messages" class="app-window screen">
     <div class="header">
-      <button class="btn" onclick="closeApp()">返回</button>
+      <button class="btn">返回</button>
       <div>ccz</div>
     </div>
     <div id="chat" class="chat"></div>
     <div style="margin-top:10px">
-      <input id="messageInput" style="width:100%;background:#111;border:none;color:#fff;padding:8px;border-radius:10px" placeholder="輸入訊息…（她不一定會回）">
+      <input style="width:100%;background:#111;border:none;color:#fff;padding:8px;border-radius:10px" placeholder="輸入訊息…（她不一定會回）">
     </div>
   </div>
 
   <!-- Love App -->
   <div id="love" class="app-window screen">
     <div class="header">
-      <button class="btn" onclick="closeApp()">返回</button>
+      <button class="btn">返回</button>
       <div>Relationship</div>
     </div>
     <div id="loveContent"></div>
@@ -122,9 +113,8 @@ body{
 </div>
 
 <script>
-// ==================== 最終乾淨版 - 所有函式都在外面 ====================
+// ==================== 最終修正版 ====================
 
-// 時間更新
 function updateTime() {
     const timeEl = document.getElementById('time');
     if (timeEl) {
@@ -133,7 +123,6 @@ function updateTime() {
     }
 }
 
-// 開啟 App
 function openApp(id) {
     console.log("📱 點擊開啟:", id);
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
@@ -144,13 +133,11 @@ function openApp(id) {
     if (id === "love") renderLove();
 }
 
-// 關閉 App
 function closeApp() {
     console.log("🔙 執行 closeApp");
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
 }
 
-// 渲染聊天
 function renderChat() {
     const chat = document.getElementById("chat");
     if (chat) {
@@ -163,7 +150,6 @@ function renderChat() {
     }
 }
 
-// 渲染關係
 function renderLove() {
     const el = document.getElementById("loveContent");
     if (el) {
@@ -175,7 +161,6 @@ function renderLove() {
     }
 }
 
-// 解鎖
 function unlockPhone() {
     console.log("🖱️ 點擊解鎖");
     const lock = document.getElementById('lock');
@@ -190,11 +175,11 @@ function unlockPhone() {
     }
 }
 
-// ==================== 頁面載入（只執行一次） ====================
+// ==================== 初始化 ====================
 window.onload = function() {
     console.log("✅ onload 執行成功");
 
-    // 解鎖綁定
+    // 解鎖
     const overlay = document.getElementById('lockOverlay');
     if (overlay) overlay.addEventListener('click', unlockPhone);
 
@@ -202,10 +187,10 @@ window.onload = function() {
     const grid = document.getElementById("apps");
     if (grid) {
         grid.innerHTML = `
-            <div class="app" style="cursor:pointer" onclick="openApp('messages')">
+            <div class="app" onclick="openApp('messages')">
                 <div class="icon"><i class="fa-solid fa-comment"></i></div>messages
             </div>
-            <div class="app" style="cursor:pointer" onclick="openApp('love')">
+            <div class="app" onclick="openApp('love')">
                 <div class="icon"><i class="fa-solid fa-heart"></i></div>love
             </div>
         `;
@@ -218,11 +203,11 @@ window.onload = function() {
         }
     });
 
-    // 啟動時間
+    // 時間
     updateTime();
     setInterval(updateTime, 1000);
 
-    console.log("✅ 所有功能已初始化完成");
+    console.log("✅ 所有功能初始化完成");
 };
 </script>
 </body>
