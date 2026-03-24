@@ -122,33 +122,13 @@ body{
 </div>
 
 <script>
-// ==================== 全域狀態 ====================
+// 極簡測試版 - 只保留核心功能
 window.state = { love: 80 };
-
-// ==================== 主要函式 ====================
-window.initApps = function() {
-    const grid = document.getElementById("apps");
-    grid.innerHTML = '';
-
-    const apps = [
-        {id: "messages", icon: "fa-solid fa-comment", name: "messages"},
-        {id: "love",     icon: "fa-solid fa-heart",   name: "love"}
-    ];
-
-    apps.forEach(a => {
-        let el = document.createElement("div");
-        el.className = "app";
-        el.innerHTML = `<div class="icon"><i class="${a.icon}"></i></div>${a.name}`;
-        el.addEventListener('click', () => window.openApp(a.id));
-        grid.appendChild(el);
-    });
-};
 
 window.openApp = function(id) {
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
-    const appWindow = document.getElementById(id);
-    if (appWindow) appWindow.classList.add("active");
-
+    document.getElementById(id).classList.add("active");
+    
     if (id === "messages") window.renderChat();
     if (id === "love") window.renderLove();
 };
@@ -159,33 +139,12 @@ window.closeApp = function() {
 
 window.renderChat = function() {
     const chat = document.getElementById("chat");
-    chat.innerHTML = `
-        <div class="bubble you">今天有好好吃飯嗎</div>
-        <div class="bubble me">…有</div>
-        <div class="bubble me">別管那麼多</div>
-        <div class="bubble you">你在生氣？</div>
-        <div class="typing">star 正在輸入…</div>
-    `;
-    setTimeout(() => {
-        chat.innerHTML += `<div class="bubble me">不是生氣，是你太讓人分心。</div>`;
-        chat.scrollTop = chat.scrollHeight;
-    }, 1500);
+    chat.innerHTML = `<div class="bubble you">今天有好好吃飯嗎</div><div class="bubble me">…有</div>`;
 };
 
 window.renderLove = function() {
     const el = document.getElementById("loveContent");
-    let mood = window.state.love > 70 ? "還行" : "別試探我底線";
-    el.innerHTML = `
-        關係強度：${window.state.love}%<br><br>
-        狀態評價：${mood}<br><br>
-        備註：<br>
-        「你如果再晚睡，我不保證我還會這麼冷靜。」<br><br>
-        <button class="btn" id="increaseBtn">靠近她</button>
-    `;
-
-    // 重新綁定「靠近她」按鈕
-    const increaseBtn = document.getElementById("increaseBtn");
-    if (increaseBtn) increaseBtn.addEventListener('click', window.increaseLove);
+    el.innerHTML = `關係強度：${window.state.love}%<br><button onclick="window.increaseLove()">靠近她</button>`;
 };
 
 window.increaseLove = function() {
@@ -193,49 +152,38 @@ window.increaseLove = function() {
     window.renderLove();
 };
 
-window.updateTime = function() {
-    let d = new Date();
-    const timeEl = document.getElementById('time');
-    const dateEl = document.getElementById('date');
-    if (timeEl) timeEl.innerText = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-    if (dateEl) dateEl.innerText = d.toDateString();
-};
-
-// ==================== 解鎖 ====================
 window.unlockPhone = function() {
     const lock = document.getElementById('lock');
     const home = document.getElementById('home');
-    if (!lock || !home) return;
-
-    lock.style.transition = 'all 0.6s ease';
     lock.style.opacity = '0';
-    lock.style.transform = 'translateY(-60px) scale(0.95)';
-
     setTimeout(() => {
         lock.classList.add("hidden");
         home.classList.remove("hidden");
-    }, 500);
+    }, 400);
 };
 
-// ==================== 頁面載入 ====================
 window.onload = function() {
-    // 解鎖綁定
-    const lockOverlay = document.getElementById('lockOverlay');
-    if (lockOverlay) {
-        lockOverlay.addEventListener('click', window.unlockPhone);
-    }
+    // 解鎖
+    const overlay = document.getElementById('lockOverlay');
+    if (overlay) overlay.addEventListener('click', window.unlockPhone);
 
-    // 返回按鈕綁定（一次綁定所有返回按鈕）
+    // 初始化主畫面 apps
+    const grid = document.getElementById("apps");
+    grid.innerHTML = `
+        <div class="app" onclick="window.openApp('messages')">
+            <div class="icon"><i class="fa-solid fa-comment"></i></div>messages
+        </div>
+        <div class="app" onclick="window.openApp('love')">
+            <div class="icon"><i class="fa-solid fa-heart"></i></div>love
+        </div>
+    `;
+
+    // 返回按鈕
     document.querySelectorAll('.btn').forEach(btn => {
-        if (btn.textContent.trim() === '返回') {
+        if (btn.textContent.includes('返回')) {
             btn.addEventListener('click', window.closeApp);
         }
     });
-
-    // 初始化
-    window.initApps();
-    setInterval(window.updateTime, 1000);
-    window.updateTime();
 };
 </script>
 </body>
