@@ -122,105 +122,65 @@ body{
 </div>
 
 <script>
-// ==================== 所有函式強制公開到 window ====================
+// ==================== 超明顯診斷版 ====================
 
-window.state = { love: 80 };
+console.log("🚀 Script 開始執行");
 
 window.openApp = function(id) {
+    console.log("📱 嘗試開啟 App:", id);
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
-    const target = document.getElementById(id);
-    if (target) target.classList.add("active");
-    
-    if (id === "messages") window.renderChat();
-    if (id === "love") window.renderLove();
+    const app = document.getElementById(id);
+    if (app) {
+        app.classList.add("active");
+        console.log("✅ 成功開啟:", id);
+    } else {
+        console.log("❌ 找不到 id =", id);
+    }
 };
 
 window.closeApp = function() {
+    console.log("🔙 執行 closeApp()");
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
 };
 
-window.renderChat = function() {
-    const chat = document.getElementById("chat");
-    if (!chat) return;
-    chat.innerHTML = `
-        <div class="bubble you">今天有好好吃飯嗎</div>
-        <div class="bubble me">…有</div>
-        <div class="bubble me">別管那麼多</div>
-        <div class="bubble you">你在生氣？</div>
-        <div class="typing">star 正在輸入…</div>
-    `;
-};
-
-window.renderLove = function() {
-    const el = document.getElementById("loveContent");
-    if (!el) return;
-    el.innerHTML = `
-        關係強度：${window.state.love}%<br><br>
-        狀態評價：還行<br><br>
-        備註：<br>
-        「你如果再晚睡，我不保證我還會這麼冷靜。」<br><br>
-        <button class="btn" onclick="window.increaseLove()">靠近她</button>
-    `;
-};
-
-window.increaseLove = function() {
-    window.state.love += 2;
-    window.renderLove();
-};
-
-// 解鎖
-window.unlockPhone = function() {
-    const lock = document.getElementById('lock');
-    const home = document.getElementById('home');
-    if (!lock || !home) return;
-
-    lock.style.transition = 'all 0.6s ease';
-    lock.style.opacity = '0';
-    lock.style.transform = 'translateY(-60px) scale(0.95)';
-
-    setTimeout(() => {
-        lock.classList.add("hidden");
-        home.classList.remove("hidden");
-    }, 500);
-};
-
-// ==================== 頁面載入 ====================
 window.onload = function() {
     console.log("✅ onload 執行成功");
 
-    // 解鎖綁定
+    // 解鎖
     const overlay = document.getElementById('lockOverlay');
     if (overlay) {
-        overlay.addEventListener('click', window.unlockPhone);
+        overlay.addEventListener('click', () => {
+            console.log("🖱️ 點擊解鎖");
+            const lock = document.getElementById('lock');
+            const home = document.getElementById('home');
+            lock.style.opacity = '0';
+            setTimeout(() => {
+                lock.classList.add("hidden");
+                home.classList.remove("hidden");
+            }, 400);
+        });
         console.log("✅ 解鎖已綁定");
     }
 
-    // 主畫面兩個 app 圖示
+    // 主畫面兩個 App
     const grid = document.getElementById("apps");
     grid.innerHTML = `
-        <div class="app" onclick="window.openApp('messages')">
+        <div class="app" style="cursor:pointer" onclick="window.openApp('messages')">
             <div class="icon"><i class="fa-solid fa-comment"></i></div>messages
         </div>
-        <div class="app" onclick="window.openApp('love')">
+        <div class="app" style="cursor:pointer" onclick="window.openApp('love')">
             <div class="icon"><i class="fa-solid fa-heart"></i></div>love
         </div>
     `;
+    console.log("✅ 主畫面 App 已生成");
 
-    // 所有返回按鈕
+    // 返回按鈕
     document.querySelectorAll('.btn').forEach(btn => {
         if (btn.innerText.includes('返回')) {
             btn.addEventListener('click', window.closeApp);
+            console.log("✅ 返回按鈕已綁定");
         }
     });
-
-    // 時間
-    function updateTime() {
-        const timeEl = document.getElementById('time');
-        const dateEl = document.getElementById('date');
-        if (timeEl) timeEl.innerText = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-    }
-    updateTime();
-    setInterval(updateTime, 1000);
 };
 </script>
 </body>
