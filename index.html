@@ -122,96 +122,99 @@ body{
 </div>
 
 <script>
-window.onload = function() {
-    // 抓取元素
+// ==================== 全域變數與狀態 ====================
+const state = { love: 80, lastTalk: Date.now() };
+
+const apps = [
+    {id: "messages", icon: "fa-solid fa-comment"},
+    {id: "love", icon: "fa-solid fa-heart"}
+];
+
+// ==================== 主要函式 ====================
+function initApps() {
+    const grid = document.getElementById("apps");
+    grid.innerHTML = '';
+    apps.forEach(a => {
+        let el = document.createElement("div");
+        el.className = "app";
+        el.innerHTML = `<div class="icon"><i class="${a.icon}"></i></div>${a.id}`;
+        el.onclick = () => openApp(a.id);
+        grid.appendChild(el);
+    });
+}
+
+function openApp(id) {
+    document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    
+    if (id === "messages") renderChat();
+    if (id === "love") renderLove();
+}
+
+function closeApp() {
+    document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
+}
+
+function renderChat() {
+    const chat = document.getElementById("chat");
+    chat.innerHTML = `
+        <div class="bubble you">今天有好好吃飯嗎</div>
+        <div class="bubble me">…有</div>
+        <div class="bubble me">別管那麼多</div>
+        <div class="bubble you">你在生氣？</div>
+        <div class="typing">star 正在輸入…</div>
+    `;
+    setTimeout(() => {
+        chat.innerHTML += `<div class="bubble me">不是生氣，是你太讓人分心。</div>`;
+        chat.scrollTop = chat.scrollHeight;
+    }, 1500);
+}
+
+function renderLove() {
+    const el = document.getElementById("loveContent");
+    let mood = state.love > 70 ? "還行" : "別試探我底線";
+    el.innerHTML = `
+        關係強度：${state.love}%<br><br>
+        狀態評價：${mood}<br><br>
+        備註：<br>
+        「你如果再晚睡，我不保證我還會這麼冷靜。」<br><br>
+        <button class="btn" onclick="increaseLove()">靠近她</button>
+    `;
+}
+
+function increaseLove() {
+    state.love += 2;
+    renderLove();
+}
+
+function updateTime() {
+    let d = new Date();
     const timeEl = document.getElementById('time');
     const dateEl = document.getElementById('date');
+    timeEl.innerText = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    dateEl.innerText = d.toDateString();
+}
+
+// ==================== 解鎖函式 ====================
+function unlockPhone() {
     const lock = document.getElementById('lock');
     const home = document.getElementById('home');
+
+    lock.style.transition = 'all 0.6s ease';
+    lock.style.opacity = '0';
+    lock.style.transform = 'translateY(-60px) scale(0.95)';
+
+    setTimeout(() => {
+        lock.classList.add("hidden");
+        home.classList.remove("hidden");
+    }, 500);
+}
+
+// ==================== 頁面載入 ====================
+window.onload = function() {
     const lockOverlay = document.getElementById('lockOverlay');
-
-    // 狀態
-    const state = { love: 80, lastTalk: Date.now() };
-
-    const apps = [
-        {id: "messages", icon: "fa-solid fa-comment"},
-        {id: "love", icon: "fa-solid fa-heart"}
-    ];
-
-    function initApps() {
-        const grid = document.getElementById("apps");
-        grid.innerHTML = '';
-        apps.forEach(a => {
-            let el = document.createElement("div");
-            el.className = "app";
-            el.innerHTML = `<div class="icon"><i class="${a.icon}"></i></div>${a.id}`;
-            el.onclick = () => openApp(a.id);
-            grid.appendChild(el);
-        });
-    }
-
-    function openApp(id) {
-        document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
-        document.getElementById(id).classList.add("active");
-        if (id === "messages") renderChat();
-        if (id === "love") renderLove();
-    }
-
-    function closeApp() {
-        document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
-    }
-
-    function renderChat() {
-        const chat = document.getElementById("chat");
-        chat.innerHTML = `
-            <div class="bubble you">今天有好好吃飯嗎</div>
-            <div class="bubble me">…有</div>
-            <div class="bubble me">別管那麼多</div>
-            <div class="bubble you">你在生氣？</div>
-            <div class="typing">star 正在輸入…</div>
-        `;
-        setTimeout(() => {
-            chat.innerHTML += `<div class="bubble me">不是生氣，是你太讓人分心。</div>`;
-            chat.scrollTop = chat.scrollHeight;
-        }, 1500);
-    }
-
-    function renderLove() {
-        const el = document.getElementById("loveContent");
-        let mood = state.love > 70 ? "還行" : "別試探我底線";
-        el.innerHTML = `
-            關係強度：${state.love}%<br><br>
-            狀態評價：${mood}<br><br>
-            備註：<br>
-            「你如果再晚睡，我不保證我還會這麼冷靜。」<br><br>
-            <button class="btn" onclick="increaseLove()">靠近她</button>
-        `;
-    }
-
-    function increaseLove() {
-        state.love += 2;
-        renderLove();
-    }
-
-    function updateTime() {
-        let d = new Date();
-        timeEl.innerText = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-        dateEl.innerText = d.toDateString();
-    }
-
-    // 解鎖函式
-    function unlockPhone() {
-        lock.style.transition = 'all 0.6s ease';
-        lock.style.opacity = '0';
-        lock.style.transform = 'translateY(-60px) scale(0.95)';
-
-        setTimeout(() => {
-            lock.classList.add("hidden");
-            home.classList.remove("hidden");
-        }, 500);
-    }
-
-    // 綁定點擊
+    
+    // 綁定解鎖
     if (lockOverlay) {
         lockOverlay.addEventListener('click', unlockPhone);
     }
