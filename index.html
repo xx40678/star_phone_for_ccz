@@ -111,22 +111,25 @@ body{
 </div>
 
 <script>
-// 元素定義
+// ==================== 元素定義 ====================
 const timeEl = document.getElementById('time');
 const dateEl = document.getElementById('date');
 const lock = document.getElementById('lock');
 const home = document.getElementById('home');
 
-// 狀態與 apps
+// ==================== 狀態與資料 ====================
 const state = { love: 80, lastTalk: Date.now() };
+
 const apps = [
   {id: "messages", icon: "fa-solid fa-comment"},
   {id: "love", icon: "fa-solid fa-heart"}
 ];
 
-// 初始化 app
+// ==================== 函式 ====================
+// 初始化主畫面 app
 function initApps() {
   const grid = document.getElementById("apps");
+  grid.innerHTML = ''; // 清空避免重複
   apps.forEach(a => {
     let el = document.createElement("div");
     el.className = "app";
@@ -136,18 +139,18 @@ function initApps() {
   });
 }
 
-// 開/關 app 函式（保持原樣）
+// 開啟 app
 function openApp(id) {
   document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   if (id === "messages") renderChat();
   if (id === "love") renderLove();
 }
+
 function closeApp() {
   document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
 }
 
-// 聊天 & 關係渲染（保持原樣）
 function renderChat() {
   const chat = document.getElementById("chat");
   chat.innerHTML = `
@@ -162,6 +165,7 @@ function renderChat() {
     chat.scrollTop = chat.scrollHeight;
   }, 1500);
 }
+
 function renderLove() {
   const el = document.getElementById("loveContent");
   let mood = state.love > 70 ? "還行" : "別試探我底線";
@@ -173,37 +177,38 @@ function renderLove() {
     <button class="btn" onclick="increaseLove()">靠近她</button>
   `;
 }
+
 function increaseLove() {
   state.love += 2;
   renderLove();
 }
 
-// 時間更新
 function updateTime() {
   let d = new Date();
   timeEl.innerText = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
   dateEl.innerText = d.toDateString();
 }
 
-// 點擊解鎖（唯一解鎖方式）
+// ==================== 點擊解鎖核心 ====================
 function unlockPhone() {
+  console.log("🔓 點擊解鎖成功！");   // 這行用來確認有沒有執行
+
   lock.style.transition = 'opacity 0.6s ease, transform 0.5s ease';
   lock.style.opacity = '0';
   lock.style.transform = 'translateY(-60px) scale(0.96)';
-  
+
   setTimeout(() => {
     lock.classList.add("hidden");
     home.classList.remove("hidden");
-    lock.style.opacity = '1';
-    lock.style.transform = 'translateY(0) scale(1)';
-  }, 600);
+  }, 500);
 }
 
-// 綁定點擊（整個鎖屏都可點）
+// 綁定點擊事件（整個鎖屏都能點）
 lock.addEventListener('click', unlockPhone);
 
-// 頁面載入
+// ==================== 頁面載入 ====================
 window.onload = function() {
+  console.log("✅ 頁面載入完成");
   initApps();
   setInterval(updateTime, 1000);
   updateTime();
