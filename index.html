@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>star.phone v2 - refined</title>
+<title>star.phone v2 - interactive</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root{
@@ -18,96 +18,77 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 }
 .phone{
-  width:360px;
-  height:720px;
-  background:var(--bg);
-  border-radius:45px;
-  overflow:hidden;
-  position:relative;
-  box-shadow:0 30px 80px rgba(0,0,0,.8);
+  width:360px;height:720px;background:var(--bg);border-radius:45px;
+  overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.8);
   border: 8px solid #1f1f25;
 }
-.screen{
-  position:absolute;
-  inset:0;
-  transition: opacity 0.5s ease;
-}
+.screen{position:absolute;inset:0;transition: opacity 0.5s ease;}
 .hidden{display:none !important;}
 
-/* 鎖屏樣式 */
-.time{font-size:68px;font-weight:700;letter-spacing:-2px;margin-top:40px;}
-.date{color:var(--sub);font-size:18px;}
+/* 鎖屏 */
+.time{font-size:68px;font-weight:700;letter-spacing:-2px;margin-top:40px;text-align:center;color:#fff;}
+.date{color:var(--sub);font-size:18px;text-align:center;}
 
 /* 主畫面 */
-.app-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
-  padding: 60px 20px;
-}
-.app{text-align:center;font-size:12px;color:#fff;cursor:pointer; transition: transform 0.2s;}
-.app:active{transform: scale(0.9);}
+.app-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding: 60px 20px;}
+.app{text-align:center;font-size:12px;color:#fff;cursor:pointer;}
 .icon{
   width:62px;height:62px;border-radius:18px;background:var(--glass);
   display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:24px;
-  backdrop-filter: blur(10px);
 }
 
-/* App 視窗通用樣式 */
+/* App 視窗 */
 .app-window{
   position:absolute;inset:0;background:var(--bg);
   transform:translateY(20px);opacity:0;transition:.3s ease;
-  pointer-events: none; /* 關鍵：未開啟時不擋住下方點擊 */
-  z-index: 10;
-  display: flex; flex-direction: column;
-  padding: 20px;
-  box-sizing: border-box;
+  pointer-events: none;z-index: 10;display: flex; flex-direction: column;
+  padding: 20px;box-sizing: border-box;
 }
 .app-window.active{transform:translateY(0);opacity:1;pointer-events: auto;}
 
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-top:10px;}
-.btn{
-  background:var(--glass);border:none;color:#fff;padding:8px 15px;border-radius:12px;cursor:pointer;
-}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;color:#fff;}
+.btn{background:var(--glass);border:none;color:#fff;padding:8px 15px;border-radius:12px;cursor:pointer;}
 
 /* 對話樣式 */
-.chat{
-  flex: 1;
-  display:flex;flex-direction:column;gap:12px;
-  overflow-y:auto;
-  padding-right: 4px;
-}
-.chat::-webkit-scrollbar { width: 0; } /* 隱藏滾動條 */
-
-.bubble{
-  max-width:80%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.4;
-}
+.chat{flex: 1;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-bottom: 20px;}
+.chat::-webkit-scrollbar { width: 0; }
+.bubble{max-width:80%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.4;color:#fff;}
 .me{background:var(--accent);align-self:flex-end;border-bottom-right-radius:4px;}
 .you{background:#2c2c34;align-self:flex-start;border-bottom-left-radius:4px;}
 
+/* 輸入區與彈出選單 */
+.input-area{position: relative; padding-top:15px;}
+.fake-input{
+    width:100%;background:#1a1a20;border:1px solid #333;color:var(--sub);
+    padding:12px;border-radius:15px;box-sizing: border-box;cursor: pointer;font-size: 14px;
+}
+.options-menu{
+    position: absolute; bottom: 70px; left: 0; right: 0;
+    background: #25252b; border-radius: 15px; padding: 8px;
+    display: none; flex-direction: column; gap: 8px;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.5); z-index: 20;
+}
+.options-menu.show{display: flex;}
+.opt-btn{
+    background: var(--glass); border: none; color: #fff; padding: 12px;
+    border-radius: 10px; cursor: pointer; text-align: left; transition: 0.2s;
+}
+.opt-btn:hover{background: rgba(255,255,255,0.15);}
+
 /* 關係進度條 */
-.progress-container {
-    width: 100%; height: 8px; background: #222; border-radius: 10px; margin: 15px 0; overflow: hidden;
-}
-.progress-bar {
-    height: 100%; background: linear-gradient(90deg, #6a11cb 0%, #9b5cff 100%); width: 0%; transition: width 1s ease;
-}
+.progress-container {width: 100%; height: 8px; background: #222; border-radius: 10px; margin: 15px 0; overflow: hidden;}
+.progress-bar {height: 100%; background: linear-gradient(90deg, #6a11cb 0%, #9b5cff 100%); width: 0%; transition: width 1s ease;}
 </style>
 </head>
 <body>
 
 <div class="phone">
-
   <div id="lock" class="screen" style="cursor: pointer; z-index: 100;">
-    <div style="height: 100%; width: 100%; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box; background: linear-gradient(to bottom, rgba(0,0,0,0.2), transparent);">
+    <div style="height: 100%; width: 100%; display: flex; flex-direction: column; align-items: center; padding: 20px; box-sizing: border-box;">
       <div class="time" id="time">00:00</div>
-      <div class="date" id="date">1月1日 星期一</div>
-      
-      <div style="margin: auto 0; color: #eee; font-size: 18px; text-align: center; line-height: 1.6; letter-spacing: 1px;">
-        「你不在，<br>我其實也不太想解鎖。」
-      </div>
-      
-      <div style="margin-bottom: 60px; color: var(--sub); font-size: 14px; animation: breathe 2s infinite;">
-        點擊解鎖 <i class="fa-solid fa-chevron-up" style="margin-left: 4px;"></i>
-      </div>
+      <div class="date" id="date">載入中...</div>
+      <div style="margin: auto 0; color: #eee; font-size: 18px; text-align: center; line-height: 1.6;">「你不在，<br>我其實也不太想解鎖。」</div>
+      <div style="margin-bottom: 60px; color: var(--sub); font-size: 14px;">點擊解鎖 <i class="fa-solid fa-chevron-up"></i></div>
     </div>
   </div>
 
@@ -128,10 +109,15 @@ body{
       <div style="font-weight: 600;">ccz</div>
       <div style="width: 40px;"></div>
     </div>
-    <div id="chat" class="chat">
-        </div>
-    <div style="padding-top:15px">
-      <input style="width:100%;background:#1a1a20;border:1px solid #333;color:#fff;padding:12px;border-radius:15px;box-sizing: border-box;" placeholder="輸入訊息…">
+    
+    <div id="chat" class="chat"></div>
+
+    <div class="input-area">
+      <div id="options" class="options-menu">
+        <button class="opt-btn" onclick="sendMessage('怎麼會對你生氣', '乖乖等我回家')">怎麼會對你生氣</button>
+        <button class="opt-btn" onclick="sendMessage('哪有', '憋死你算了')">哪有</button>
+      </div>
+      <div class="fake-input" onclick="toggleOptions()">選擇回覆內容...</div>
     </div>
   </div>
 
@@ -141,24 +127,23 @@ body{
       <div style="font-weight: 600;">Relationship</div>
       <div style="width: 40px;"></div>
     </div>
-    <div id="loveContent" style="color: #eee; line-height: 1.8;">
-        </div>
+    <div id="loveContent"></div>
   </div>
-
 </div>
 
 <script>
+// 初始化對話內容
+let chatHistory = [
+    { type: 'you', text: '今天有好好吃飯嗎？' },
+    { type: 'me', text: '…有' },
+    { type: 'me', text: '別管那麼多' },
+    { type: 'you', text: '你在生氣？' }
+];
+
 function updateTime() {
-    const timeEl = document.getElementById('time');
-    const dateEl = document.getElementById('date');
     const d = new Date();
-    
-    if (timeEl) {
-        timeEl.innerText = d.toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit', hour12: false});
-    }
-    if (dateEl) {
-        dateEl.innerText = d.toLocaleDateString('zh-TW', {month:'long', day:'numeric', weekday: 'long'});
-    }
+    document.getElementById('time').innerText = d.toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit', hour12: false});
+    document.getElementById('date').innerText = d.toLocaleDateString('zh-TW', {month:'long', day:'numeric', weekday: 'long'});
 }
 
 function openApp(id) {
@@ -173,28 +158,43 @@ function openApp(id) {
 
 function closeApp() {
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
+    document.getElementById('options').classList.remove('show');
 }
 
 function renderChat() {
     const chat = document.getElementById("chat");
-    chat.innerHTML = `
-        <div class="bubble you">今天有好好吃飯嗎？</div>
-        <div class="bubble me">…有</div>
-        <div class="bubble me">別管那麼多</div>
-        <div class="bubble you">你在生氣？</div>
-    `;
+    chat.innerHTML = chatHistory.map(msg => `<div class="bubble ${msg.type}">${msg.text}</div>`).join('');
     chat.scrollTop = chat.scrollHeight;
+}
+
+function toggleOptions() {
+    document.getElementById('options').classList.toggle('show');
+}
+
+function sendMessage(myText, herResponse) {
+    // 關閉選單
+    document.getElementById('options').classList.remove('show');
+    
+    // 我的回覆
+    chatHistory.push({ type: 'me', text: myText });
+    renderChat();
+
+    // 延遲顯示對方的回覆
+    setTimeout(() => {
+        chatHistory.push({ type: 'you', text: herResponse });
+        renderChat();
+    }, 800);
 }
 
 function renderLove() {
     const el = document.getElementById("loveContent");
     el.innerHTML = `
-        <div style="margin-bottom: 20px;">
+        <div style="margin-bottom: 20px; color: #fff;">
             <span style="font-size: 14px; color: var(--sub);">目前關係強度</span>
             <div style="font-size: 32px; font-weight: bold; margin-top: 5px;">80%</div>
             <div class="progress-container"><div class="progress-bar" id="pbar"></div></div>
         </div>
-        <div style="background: var(--glass); padding: 15px; border-radius: 15px;">
+        <div style="background: var(--glass); padding: 15px; border-radius: 15px; color: #eee; line-height: 1.8;">
             <p><strong>狀態評價：</strong> 還行</p>
             <p><strong>備註：</strong><br><span style="color: #ff8e8e;">「你如果再晚睡，我不保證我還會這麼冷靜。」</span></p>
         </div>
@@ -203,7 +203,6 @@ function renderLove() {
 }
 
 window.onload = function() {
-    // 鎖屏點擊
     const lock = document.getElementById('lock');
     lock.addEventListener('click', () => {
         lock.style.opacity = '0';
@@ -212,18 +211,9 @@ window.onload = function() {
             document.getElementById('home').classList.remove("hidden");
         }, 500);
     });
-
     updateTime();
     setInterval(updateTime, 1000);
 };
 </script>
-
-<style>
-@keyframes breathe {
-    0%, 100% { opacity: 0.4; transform: translateY(0); }
-    50% { opacity: 0.9; transform: translateY(-5px); }
-}
-</style>
-
 </body>
 </html>
