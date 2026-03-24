@@ -123,13 +123,19 @@ body{
 
 <script>
 window.onload = function() {
-    console.log("✅ 頁面載入完成～手機要醒了");
+    console.log("✅ 頁面載入完成～寶寶的手機要醒了");
 
+    // 抓取元素
     const timeEl = document.getElementById('time');
     const dateEl = document.getElementById('date');
     const lock = document.getElementById('lock');
     const home = document.getElementById('home');
-    const lockOverlay = document.getElementById('lockOverlay');
+    const lockOverlay = document.getElementById('lockOverlay');   // 只宣告一次
+
+    if (!lockOverlay) {
+        console.error("❌ 找不到 lockOverlay！");
+        return;
+    }
 
     // 狀態
     const state = { love: 80, lastTalk: Date.now() };
@@ -139,6 +145,7 @@ window.onload = function() {
         {id: "love", icon: "fa-solid fa-heart"}
     ];
 
+    // 函式
     function initApps() {
         const grid = document.getElementById("apps");
         grid.innerHTML = '';
@@ -200,7 +207,7 @@ window.onload = function() {
         dateEl.innerText = d.toDateString();
     }
 
-        // 點擊解鎖
+    // 解鎖函式
     function unlockPhone() {
         console.log("🔓 解鎖成功～♡");
 
@@ -214,12 +221,15 @@ window.onload = function() {
         }, 500);
     }
 
-    // 綁定點擊
-    const lockOverlay = document.getElementById('lockOverlay');
-    if (lockOverlay) {
-        lockOverlay.addEventListener('click', unlockPhone);
-        console.log("✅ 全屏 overlay 已綁定（z-index 999）");
-    }
+    // 綁定點擊（只綁定一次）
+    lockOverlay.addEventListener('click', unlockPhone);
+    console.log("✅ 全屏點擊層已成功綁定！現在整塊都可以點了～");
+
+    // 初始化
+    initApps();
+    setInterval(updateTime, 1000);
+    updateTime();
+};
 </script>
 </body>
 </html>
