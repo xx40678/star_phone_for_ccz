@@ -122,94 +122,103 @@ body{
 </div>
 
 <script>
-// 極簡救命版 - 什麼 console 都不要，只求能動
+// ==================== 所有函式強制公開到 window ====================
 
-// 時間更新
-function updateTime() {
-    const timeEl = document.getElementById('time');
-    const dateEl = document.getElementById('date');
-    if (!timeEl || !dateEl) return;
+window.state = { love: 80 };
+
+window.openApp = function(id) {
+    document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
+    const target = document.getElementById(id);
+    if (target) target.classList.add("active");
     
-    let d = new Date();
-    timeEl.innerText = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-    dateEl.innerText = d.toLocaleDateString('zh-TW', {weekday:'long', month:'long', day:'numeric'});
-}
+    if (id === "messages") window.renderChat();
+    if (id === "love") window.renderLove();
+};
 
-// 開啟 App
-function openApp(id) {
+window.closeApp = function() {
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-}
+};
 
-// 關閉 App
-function closeApp() {
-    document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
-}
-
-// 渲染聊天
-function renderChat() {
+window.renderChat = function() {
     const chat = document.getElementById("chat");
+    if (!chat) return;
     chat.innerHTML = `
         <div class="bubble you">今天有好好吃飯嗎</div>
         <div class="bubble me">…有</div>
         <div class="bubble me">別管那麼多</div>
         <div class="bubble you">你在生氣？</div>
+        <div class="typing">star 正在輸入…</div>
     `;
-}
+};
 
-// 渲染關係
-function renderLove() {
+window.renderLove = function() {
     const el = document.getElementById("loveContent");
+    if (!el) return;
     el.innerHTML = `
-        關係強度：80%<br><br>
+        關係強度：${window.state.love}%<br><br>
         狀態評價：還行<br><br>
         備註：<br>
         「你如果再晚睡，我不保證我還會這麼冷靜。」<br><br>
-        <button class="btn" onclick="increaseLove()">靠近她</button>
+        <button class="btn" onclick="window.increaseLove()">靠近她</button>
     `;
-}
+};
 
-function increaseLove() {
-    alert("❤️ 關係強度 +2！");
-}
+window.increaseLove = function() {
+    window.state.love += 2;
+    window.renderLove();
+};
 
 // 解鎖
-function unlockPhone() {
+window.unlockPhone = function() {
     const lock = document.getElementById('lock');
     const home = document.getElementById('home');
-    lock.style.transition = 'opacity 0.5s';
+    if (!lock || !home) return;
+
+    lock.style.transition = 'all 0.6s ease';
     lock.style.opacity = '0';
+    lock.style.transform = 'translateY(-60px) scale(0.95)';
+
     setTimeout(() => {
         lock.classList.add("hidden");
         home.classList.remove("hidden");
-    }, 400);
-}
+    }, 500);
+};
 
 // ==================== 頁面載入 ====================
 window.onload = function() {
-    // 綁定解鎖
+    console.log("✅ onload 執行成功");
+
+    // 解鎖綁定
     const overlay = document.getElementById('lockOverlay');
-    if (overlay) overlay.addEventListener('click', unlockPhone);
+    if (overlay) {
+        overlay.addEventListener('click', window.unlockPhone);
+        console.log("✅ 解鎖已綁定");
+    }
 
-    // 綁定返回按鈕
-    document.querySelectorAll('.btn').forEach(btn => {
-        if (btn.innerText.includes('返回')) {
-            btn.addEventListener('click', closeApp);
-        }
-    });
-
-    // 初始化主畫面
+    // 主畫面兩個 app 圖示
     const grid = document.getElementById("apps");
     grid.innerHTML = `
-        <div class="app" onclick="openApp('messages')">
+        <div class="app" onclick="window.openApp('messages')">
             <div class="icon"><i class="fa-solid fa-comment"></i></div>messages
         </div>
-        <div class="app" onclick="openApp('love')">
+        <div class="app" onclick="window.openApp('love')">
             <div class="icon"><i class="fa-solid fa-heart"></i></div>love
         </div>
     `;
 
-    // 啟動時間
+    // 所有返回按鈕
+    document.querySelectorAll('.btn').forEach(btn => {
+        if (btn.innerText.includes('返回')) {
+            btn.addEventListener('click', window.closeApp);
+        }
+    });
+
+    // 時間
+    function updateTime() {
+        const timeEl = document.getElementById('time');
+        const dateEl = document.getElementById('date');
+        if (timeEl) timeEl.innerText = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    }
     updateTime();
     setInterval(updateTime, 1000);
 };
