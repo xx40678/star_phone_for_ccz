@@ -60,29 +60,18 @@ body{
 <body>
 <div class="phone">
 
-  <!-- 鎖屏 - 終極暴力全點擊版 -->
-<div id="lock" class="screen" style="position: relative; width: 100%; height: 100%; overflow: hidden;">
-
-  <!-- 這層透明層強制負責整個點擊區域 -->
-  <div id="lockOverlay" 
-       style="position: absolute; inset: 0; z-index: 9999; cursor: pointer; background: transparent;">
+  <!-- 鎖屏 -->
+<div id="lock" class="screen" style="display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; padding: 16px; box-sizing: border-box;">
+  
+  <div class="time" id="time"></div>
+  <div class="date" id="date"></div>
+  
+  <div style="margin: 60px 0; color: #ccc; font-size: 18px; text-align: center; max-width: 80%;">
+    「你不在，我其實也不太想解鎖。」
   </div>
-
-  <!-- 內容區 -->
-  <div style="position: relative; z-index: 1; height: 100%; width: 100%; 
-              display: flex; flex-direction: column; justify-content: center; align-items: center; 
-              padding: 16px; box-sizing: border-box;">
-    
-    <div class="time" id="time"></div>
-    <div class="date" id="date"></div>
-    
-    <div style="margin: 60px 0; color: #ccc; font-size: 18px; text-align: center; max-width: 80%;">
-      「你不在，我其實也不太想解鎖。」
-    </div>
-    
-    <div style="margin-top: auto; margin-bottom: 80px; color: var(--sub); font-size: 14px; opacity: 0.8; text-align: center;">
-      點擊任何地方解鎖 <i class="fa-solid fa-hand-pointer" style="margin-left: 6px;"></i>
-    </div>
+  
+  <div style="margin-top: auto; margin-bottom: 80px; color: var(--sub); font-size: 14px; opacity: 0.8; text-align: center;">
+    點擊任何地方解鎖 <i class="fa-solid fa-hand-pointer" style="margin-left: 6px;"></i>
   </div>
 </div>
 
@@ -114,9 +103,8 @@ body{
 </div>
 
 <script>
-// ==================== 最終修正版 ====================
+// ==================== 最終穩定版 ====================
 
-// 時間更新
 function updateTime() {
     const timeEl = document.getElementById('time');
     if (timeEl) {
@@ -125,7 +113,6 @@ function updateTime() {
     }
 }
 
-// 開啟 App
 function openApp(id) {
     console.log("📱 點擊開啟:", id);
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
@@ -136,13 +123,11 @@ function openApp(id) {
     if (id === "love") renderLove();
 }
 
-// 關閉 App
 function closeApp() {
     console.log("🔙 執行 closeApp");
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
 }
 
-// 渲染聊天
 function renderChat() {
     const chat = document.getElementById("chat");
     if (chat) {
@@ -155,7 +140,6 @@ function renderChat() {
     }
 }
 
-// 渲染關係
 function renderLove() {
     const el = document.getElementById("loveContent");
     if (el) {
@@ -167,43 +151,39 @@ function renderLove() {
     }
 }
 
-// 解鎖
-function unlockPhone() {
-    console.log("🖱️ 點擊解鎖");
-    const lock = document.getElementById('lock');
-    const home = document.getElementById('home');
-    if (lock && home) {
-        lock.style.transition = 'all 0.6s ease';
-        lock.style.opacity = '0';
-        setTimeout(() => {
-            lock.classList.add("hidden");
-            home.classList.remove("hidden");
-        }, 400);
-    }
-}
-
-// ==================== 頁面載入 ====================
+// ==================== 初始化 ====================
 window.onload = function() {
     console.log("✅ onload 執行成功");
 
-    // 鎖屏點擊（直接綁定在 lock）
+    // 鎖屏點擊
     const lock = document.getElementById('lock');
     if (lock) {
-        lock.addEventListener('click', unlockPhone);
-        console.log("✅ 鎖屏點擊已綁定（整塊）");
+        lock.addEventListener('click', () => {
+            console.log("🖱️ 點擊解鎖");
+            const home = document.getElementById('home');
+            lock.style.transition = 'all 0.6s ease';
+            lock.style.opacity = '0';
+            setTimeout(() => {
+                lock.classList.add("hidden");
+                home.classList.remove("hidden");
+            }, 400);
+        });
     }
 
     // 主畫面 App
     const grid = document.getElementById("apps");
     if (grid) {
         grid.innerHTML = `
-            <div class="app" onclick="openApp('messages')">
+            <div class="app" id="app-messages">
                 <div class="icon"><i class="fa-solid fa-comment"></i></div>messages
             </div>
-            <div class="app" onclick="openApp('love')">
+            <div class="app" id="app-love">
                 <div class="icon"><i class="fa-solid fa-heart"></i></div>love
             </div>
         `;
+
+        document.getElementById("app-messages").addEventListener("click", () => openApp("messages"));
+        document.getElementById("app-love").addEventListener("click", () => openApp("love"));
     }
 
     // 返回按鈕
@@ -213,7 +193,7 @@ window.onload = function() {
         }
     });
 
-    // 啟動時間
+    // 時間
     updateTime();
     setInterval(updateTime, 1000);
 
