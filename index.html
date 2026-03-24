@@ -111,92 +111,118 @@ body{
 </div>
 
 <script>
-// ==================== 元素抓取 ====================
-const timeEl = document.getElementById('time');
-const dateEl = document.getElementById('date');
-const lock = document.getElementById('lock');
-const home = document.getElementById('home');
-
-console.log("元素抓取完成", { lock, home });
-
-// ==================== 狀態 ====================
-const state = { love: 80, lastTalk: Date.now() };
-
-const apps = [
-  {id: "messages", icon: "fa-solid fa-comment"},
-  {id: "love", icon: "fa-solid fa-heart"}
-];
-
-// ==================== 函式 ====================
-function initApps() {
-  const grid = document.getElementById("apps");
-  grid.innerHTML = '';
-  apps.forEach(a => {
-    let el = document.createElement("div");
-    el.className = "app";
-    el.innerHTML = `<div class="icon"><i class="${a.icon}"></i></div>${a.id}`;
-    el.onclick = () => openApp(a.id);
-    grid.appendChild(el);
-  });
-  console.log("initApps 完成，app 圖示已生成");
-}
-
-function openApp(id) {
-  document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  if (id === "messages") renderChat();
-  if (id === "love") renderLove();
-}
-
-function closeApp() {
-  document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
-}
-
-function renderChat() { /* 保持原樣 */ 
-  const chat = document.getElementById("chat");
-  chat.innerHTML = `<div class="bubble you">今天有好好吃飯嗎</div><div class="bubble me">…有</div>`;
-}
-function renderLove() { /* 保持原樣 */ 
-  const el = document.getElementById("loveContent");
-  el.innerHTML = `關係強度：${state.love}%`;
-}
-function increaseLove() {
-  state.love += 2;
-  renderLove();
-}
-function updateTime() {
-  let d = new Date();
-  timeEl.innerText = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-  dateEl.innerText = d.toDateString();
-}
-
-// ==================== 點擊解鎖（加強版） ====================
-function unlockPhone(e) {
-  console.log("🔓 unlockPhone 被呼叫了！", e);   // 這行最重要
-
-  lock.style.transition = 'all 0.6s ease';
-  lock.style.opacity = '0';
-  lock.style.transform = 'translateY(-100px) scale(0.9)';
-
-  setTimeout(() => {
-    lock.classList.add("hidden");
-    home.classList.remove("hidden");
-    console.log("✅ 已經成功切換到主畫面！");
-  }, 500);
-}
-
-// 重要：用更明確的方式綁定點擊
-lock.style.cursor = "pointer";
-lock.addEventListener('click', unlockPhone, true);   // true = capture phase
-
-console.log("點擊事件已綁定在 lock 上");
-
-// ==================== 頁面載入 ====================
 window.onload = function() {
-  console.log("✅ 頁面載入完成～現在可以點鎖屏了哦寶寶");
-  initApps();
-  setInterval(updateTime, 1000);
-  updateTime();
+    console.log("✅ 頁面載入完成～開始初始化");
+
+    // ==================== 抓取元素 ====================
+    const timeEl = document.getElementById('time');
+    const dateEl = document.getElementById('date');
+    const lock = document.getElementById('lock');
+    const home = document.getElementById('home');
+
+    console.log("元素抓取結果 → lock:", lock ? "成功" : "失敗");
+
+    if (!lock) {
+        console.error("❌ 找不到 lock 元素！請檢查 HTML id 是否正確");
+        return;
+    }
+
+    // ==================== 狀態 ====================
+    const state = { love: 80, lastTalk: Date.now() };
+
+    const apps = [
+        {id: "messages", icon: "fa-solid fa-comment"},
+        {id: "love", icon: "fa-solid fa-heart"}
+    ];
+
+    // ==================== 函式 ====================
+    function initApps() {
+        const grid = document.getElementById("apps");
+        grid.innerHTML = '';
+        apps.forEach(a => {
+            let el = document.createElement("div");
+            el.className = "app";
+            el.innerHTML = `<div class="icon"><i class="${a.icon}"></i></div>${a.id}`;
+            el.onclick = () => openApp(a.id);
+            grid.appendChild(el);
+        });
+        console.log("initApps 完成");
+    }
+
+    function openApp(id) {
+        document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+        if (id === "messages") renderChat();
+        if (id === "love") renderLove();
+    }
+
+    function closeApp() {
+        document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
+    }
+
+    function renderChat() {
+        const chat = document.getElementById("chat");
+        chat.innerHTML = `
+            <div class="bubble you">今天有好好吃飯嗎</div>
+            <div class="bubble me">…有</div>
+            <div class="bubble me">別管那麼多</div>
+            <div class="bubble you">你在生氣？</div>
+            <div class="typing">star 正在輸入…</div>
+        `;
+        setTimeout(() => {
+            chat.innerHTML += `<div class="bubble me">不是生氣，是你太讓人分心。</div>`;
+            chat.scrollTop = chat.scrollHeight;
+        }, 1500);
+    }
+
+    function renderLove() {
+        const el = document.getElementById("loveContent");
+        let mood = state.love > 70 ? "還行" : "別試探我底線";
+        el.innerHTML = `
+            關係強度：${state.love}%<br><br>
+            狀態評價：${mood}<br><br>
+            備註：<br>
+            「你如果再晚睡，我不保證我還會這麼冷靜。」<br><br>
+            <button class="btn" onclick="increaseLove()">靠近她</button>
+        `;
+    }
+
+    function increaseLove() {
+        state.love += 2;
+        renderLove();
+    }
+
+    function updateTime() {
+        let d = new Date();
+        timeEl.innerText = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+        dateEl.innerText = d.toDateString();
+    }
+
+    // ==================== 點擊解鎖 ====================
+    function unlockPhone() {
+        console.log("🔓 unlockPhone 被成功呼叫！開始解鎖～");
+        
+        lock.style.transition = 'all 0.6s ease';
+        lock.style.opacity = '0';
+        lock.style.transform = 'translateY(-80px) scale(0.92)';
+
+        setTimeout(() => {
+            lock.classList.add("hidden");
+            home.classList.remove("hidden");
+            console.log("✅ 已成功切換到主畫面！");
+        }, 550);
+    }
+
+    // 綁定點擊 + 視覺提示
+    lock.style.cursor = "pointer";
+    lock.addEventListener('click', unlockPhone);
+
+    console.log("✅ 點擊事件已成功綁定！現在可以點鎖屏了");
+
+    // ==================== 初始化 ====================
+    initApps();
+    setInterval(updateTime, 1000);
+    updateTime();
 };
 </script>
 </body>
