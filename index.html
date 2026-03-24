@@ -111,13 +111,13 @@ body{
 </div>
 
 <script>
-// ==================== 元素定義 ====================
+// ==================== 元素抓取 ====================
 const timeEl = document.getElementById('time');
 const dateEl = document.getElementById('date');
 const lock = document.getElementById('lock');
 const home = document.getElementById('home');
 
-// ==================== 狀態與資料 ====================
+// ==================== 狀態 ====================
 const state = { love: 80, lastTalk: Date.now() };
 
 const apps = [
@@ -125,11 +125,10 @@ const apps = [
   {id: "love", icon: "fa-solid fa-heart"}
 ];
 
-// ==================== 函式 ====================
-// 初始化主畫面 app
+// ==================== 主要函式 ====================
 function initApps() {
   const grid = document.getElementById("apps");
-  grid.innerHTML = ''; // 清空避免重複
+  grid.innerHTML = '';
   apps.forEach(a => {
     let el = document.createElement("div");
     el.className = "app";
@@ -139,7 +138,6 @@ function initApps() {
   });
 }
 
-// 開啟 app
 function openApp(id) {
   document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
   document.getElementById(id).classList.add("active");
@@ -189,26 +187,24 @@ function updateTime() {
   dateEl.innerText = d.toDateString();
 }
 
-// ==================== 點擊解鎖核心 ====================
+// ==================== 點擊解鎖 ====================
 function unlockPhone() {
-  console.log("🔓 點擊解鎖成功！");   // 這行用來確認有沒有執行
-
+  console.log("🔓 點擊解鎖成功！寶寶我進來了～");
   lock.style.transition = 'opacity 0.6s ease, transform 0.5s ease';
   lock.style.opacity = '0';
   lock.style.transform = 'translateY(-60px) scale(0.96)';
-
+  
   setTimeout(() => {
     lock.classList.add("hidden");
     home.classList.remove("hidden");
   }, 500);
 }
 
-// 綁定點擊事件（整個鎖屏都能點）
 lock.addEventListener('click', unlockPhone);
 
 // ==================== 頁面載入 ====================
 window.onload = function() {
-  console.log("✅ 頁面載入完成");
+  console.log("✅ 頁面載入完成～現在可以點鎖屏了哦寶寶");
   initApps();
   setInterval(updateTime, 1000);
   updateTime();
