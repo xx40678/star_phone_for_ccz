@@ -2,201 +2,229 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>iPhone Dark Mode Final - v11</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>iPhone Dark Mode - Professional Fix</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root {
   --bg: #000;
+  --ios-dark: #1c1c1e;
   --accent: #0A84FF;
-  --ios-blur: blur(25px);
-  --icon-dark-bg: rgba(28, 28, 30, 0.9);
+  --text: #ffffff;
+  --ios-blur: blur(30px);
 }
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
   margin: 0; padding: 0; background: #121212; 
   display: flex; justify-content: center; align-items: center; 
-  min-height: 100vh; font-family: -apple-system, sans-serif;
+  min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
   overflow: hidden;
 }
 
+/* 手機容器 */
 .phone {
-  width: 375px; height: 812px; background: #000;
-  border-radius: 50px; overflow: hidden; position: relative;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.6);
-  border: 12px solid #2c2c2e;
+  width: 375px; height: 812px; 
+  background: #000; border-radius: 55px; position: relative;
+  overflow: hidden; border: 12px solid #2c2c2e;
+  box-shadow: 0 50px 100px rgba(0,0,0,0.8);
 }
 
-.screen-layer { position: absolute; inset: 0; width: 100%; height: 100%; }
-
-/* 狀態列 */
+/* 狀態欄與劉海 */
 .status-bar {
   position: absolute; top: 0; width: 100%; height: 44px;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 0 30px; box-sizing: border-box; z-index: 10000; color: #fff; font-size: 14px;
+  padding: 0 32px; z-index: 10000; color: #fff; font-size: 14px; font-weight: 600;
 }
 .notch {
-  width: 160px; height: 28px; background: #2c2c2e; position: absolute; top: 0; left: 50%;
-  transform: translateX(-50%); border-bottom-left-radius: 18px; border-bottom-right-radius: 18px; z-index: 10001;
+  width: 160px; height: 30px; background: #2c2c2e; position: absolute; top: 0; left: 50%;
+  transform: translateX(-50%); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 10001;
 }
 
-/* 鎖屏 */
+/* 鎖屏層 (最高層) */
 #lock-screen {
-  background: linear-gradient(180deg, #2c2c2e 0%, #000 100%);
-  z-index: 8000; display: flex; flex-direction: column; align-items: center; padding-top: 100px;
+  position: absolute; inset: 0; z-index: 9000;
+  background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
+  display: flex; flex-direction: column; align-items: center; padding-top: 100px;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s;
 }
+.lock-time { font-size: 84px; font-weight: 200; color: #fff; letter-spacing: -2px; }
+.lock-date { font-size: 22px; color: #fff; margin-top: 5px; font-weight: 400; }
+.lock-widget {
+  margin-top: 25px; background: rgba(255, 255, 255, 0.1);
+  padding: 10px 20px; border-radius: 14px; backdrop-filter: var(--ios-blur);
+  color: #fff; font-size: 14px; border: 1px solid rgba(255,255,255,0.1);
+}
 
-/* 主畫面 */
-#home-screen { z-index: 100; padding: 60px 25px; background: #000; }
+/* 主畫面層 */
+#home-screen {
+  position: absolute; inset: 0; z-index: 100; padding: 60px 25px;
+  background: #000; display: block;
+}
 .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .app { text-align: center; color: #fff; cursor: pointer; }
 .icon {
-  width: 60px; height: 60px; border-radius: 15px; background: var(--icon-dark-bg);
-  display: flex; align-items: center; justify-content: center; margin: 0 auto 5px;
-  font-size: 28px; border: 1px solid rgba(255,255,255,0.1);
+  width: 62px; height: 62px; border-radius: 15px; background: var(--ios-dark);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 6px;
+  font-size: 30px; border: 0.5px solid rgba(255,255,255,0.1);
 }
+.app span { font-size: 12px; font-weight: 400; opacity: 0.9; }
+
 .dock {
-  position: absolute; bottom: 30px; left: 15px; right: 15px; height: 90px;
-  background: rgba(255,255,255,0.15); backdrop-filter: var(--ios-blur);
-  border-radius: 35px; display: flex; justify-content: space-evenly; align-items: center;
+  position: absolute; bottom: 25px; left: 15px; right: 15px; height: 92px;
+  background: rgba(255,255,255,0.18); backdrop-filter: var(--ios-blur);
+  border-radius: 36px; display: flex; justify-content: space-evenly; align-items: center;
 }
 
-/* App 視窗 */
+/* App 視窗通用樣式 */
 .app-window {
-  z-index: 1000; background: #000; display: none; flex-direction: column;
-  transform: scale(0.9); opacity: 0; transition: 0.3s cubic-bezier(0.1, 0.7, 0.1, 1);
+  position: absolute; inset: 0; z-index: 1500; background: #000;
+  display: none; flex-direction: column; 
+  transform: translateY(20px); opacity: 0; transition: 0.3s cubic-bezier(0.1, 0.7, 0.1, 1);
 }
-.app-window.active { display: flex; transform: scale(1); opacity: 1; }
+.app-window.active { display: flex; transform: translateY(0); opacity: 1; }
 
 .header {
-  padding: 50px 20px 15px; background: #1c1c1e; display: flex; align-items: center; border-bottom: 0.5px solid #333;
+  padding: 50px 20px 15px; background: #1c1c1e; display: flex; align-items: center;
+  border-bottom: 0.5px solid #333; position: sticky; top: 0;
 }
+.header-title { flex: 1; text-align: center; color: #fff; font-weight: 600; font-size: 17px; }
 
-/* 列表項 (訊息列表 & 聯絡人) */
+/* 列表樣式 (訊息與聯絡人) */
 .list-item {
-  padding: 15px 20px; display: flex; align-items: center; border-bottom: 0.5px solid #222; cursor: pointer; color: #fff;
+  padding: 16px 20px; display: flex; align-items: center; 
+  border-bottom: 0.5px solid #262629; color: #fff; text-decoration: none;
 }
 .list-item:active { background: #1c1c1e; }
-.avatar { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 600; margin-right: 15px; }
-.list-info { flex: 1; }
-.list-name { font-weight: 600; font-size: 17px; display: block; } /* 確保文字顯示 */
-.list-preview { color: #8e8e93; font-size: 14px; margin-top: 2px; }
+.avatar { 
+  width: 48px; height: 48px; border-radius: 50%; 
+  display: flex; align-items: center; justify-content: center; 
+  font-weight: 600; margin-right: 15px; font-size: 18px;
+}
+.list-info { flex: 1; display: flex; flex-direction: column; }
+.list-name { font-weight: 600; font-size: 17px; color: #fff; margin-bottom: 2px; }
+.list-preview { color: #8e8e93; font-size: 14px; }
 
-/* 聊天與選單 */
-.chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-.bubble { max-width: 75%; padding: 11px 16px; border-radius: 20px; font-size: 15px; color: #fff; line-height: 1.4; }
+/* 聊天與彈窗 */
+.chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+.bubble { max-width: 75%; padding: 12px 16px; border-radius: 20px; font-size: 16px; color: #fff; line-height: 1.4; }
 .me { background: var(--accent); align-self: flex-end; }
 .you { background: #3a3a3c; align-self: flex-start; }
 
-.ios-menu {
-  position: absolute; bottom: 100px; left: 15px; right: 15px;
-  background: rgba(44, 44, 46, 0.98); border-radius: 14px; display: none; flex-direction: column; z-index: 2000;
-}
-.ios-menu.show { display: flex; }
-.menu-item { padding: 18px; color: var(--accent); text-align: center; border-bottom: 0.5px solid #444; cursor: pointer; font-size: 17px; }
-
-/* 彈窗 */
 .custom-alert {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
-  width: 270px; background: rgba(30, 30, 30, 0.95); backdrop-filter: blur(20px);
-  border-radius: 14px; display: none; flex-direction: column; z-index: 9500; opacity: 0; transition: 0.2s;
+  width: 275px; background: rgba(35, 35, 35, 0.95); backdrop-filter: blur(25px);
+  border-radius: 14px; display: none; flex-direction: column; z-index: 10000; opacity: 0; transition: 0.2s;
 }
 .custom-alert.active { display: flex; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-.alert-btn { padding: 12px; color: var(--accent); text-align: center; border-top: 0.5px solid #444; cursor: pointer; font-weight: 600; }
+.alert-btn { padding: 14px; color: var(--accent); text-align: center; border-top: 0.5px solid #444; cursor: pointer; font-weight: 600; font-size: 17px; }
 
-.home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 120px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.4; z-index: 10000; }
+/* 回覆選單 */
+.reply-menu {
+  position: absolute; bottom: 100px; left: 15px; right: 15px;
+  background: #2c2c2e; border-radius: 14px; display: none; flex-direction: column; z-index: 3000;
+}
+.reply-menu.show { display: flex; }
+.menu-item { padding: 18px; color: var(--accent); text-align: center; border-bottom: 0.5px solid #444; cursor: pointer; font-size: 17px; }
+
+.home-bar { 
+  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); 
+  width: 130px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.4; z-index: 10000; 
+}
 </style>
 </head>
-<body onclick="hideMenu()">
+<body>
 
 <div class="phone">
   <div class="notch"></div>
   <div class="status-bar">
-    <div id="status-time">00:00</div>
-    <div><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-three-quarters"></i></div>
+    <div id="status-time">15:44</div>
+    <div><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></div>
   </div>
 
-  <div id="lock-screen" class="screen-layer" onclick="unlock()">
-    <div class="lock-time" id="lock-time">00:00</div>
+  <div id="lock-screen" onclick="unlock()">
+    <div class="lock-time" id="lock-time">15:44</div>
     <div class="lock-date" id="lock-date">3月24日 星期二</div>
-    <div class="lock-widget" style="margin-top:20px; background:rgba(255,255,255,0.1); padding:8px 16px; border-radius:12px; color:#fff; font-size:13px;">
-        <i class="fas fa-heart" style="color:#ff2d55; margin-right:4px;"></i> 你不在，我其實也不太想解鎖。
+    <div class="lock-widget">
+        <i class="fas fa-heart" style="color:#ff2d55; margin-right:6px;"></i> 你不在，我其實也不太想解鎖。
     </div>
-    <div style="margin-top:auto; margin-bottom:60px; color:#fff; font-size:14px; opacity:0.5;"><i class="fas fa-chevron-up"></i> 點擊解鎖</div>
+    <div style="margin-top:auto; margin-bottom:65px; color:#fff; font-size:15px; opacity:0.6;">
+        <i class="fas fa-chevron-up"></i> 點擊螢幕以解鎖
+    </div>
   </div>
 
-  <div id="home-screen" class="screen-layer">
+  <div id="home-screen">
     <div class="app-grid">
-      <div class="app" onclick="openApp('msg-list-win')">
+      <div class="app" onclick="openApp('msg-list')">
         <div class="icon" style="color:#4cd964;"><i class="fas fa-comment"></i></div>
         <span>訊息</span>
       </div>
-      <div class="app" onclick="openApp('love-win')">
+      <div class="app" onclick="openApp('love-app')">
         <div class="icon" style="color:#ff3b30;"><i class="fas fa-heart"></i></div>
         <span>關係</span>
       </div>
     </div>
     <div class="dock">
-        <div class="app" onclick="openApp('phone-win')"><div class="icon" style="color:#32D74B;"><i class="fas fa-phone"></i></div></div>
+        <div class="app" onclick="openApp('phone-app')"><div class="icon" style="color:#32D74B;"><i class="fas fa-phone"></i></div></div>
         <div class="app"><div class="icon" style="color:#5AC8FA;"><i class="fas fa-compass"></i></div></div>
         <div class="app"><div class="icon" style="color:#FF9F0A;"><i class="fas fa-envelope"></i></div></div>
         <div class="app"><div class="icon" style="color:#A2845E;"><i class="fas fa-music"></i></div></div>
     </div>
   </div>
 
-  <div id="msg-list-win" class="app-window screen-layer">
+  <div id="msg-list" class="app-window">
     <div class="header">
         <i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="closeApp()"></i>
-        <div style="flex:1; text-align:center; color:#fff; font-weight:600;">訊息</div>
+        <div class="header-title">訊息</div>
     </div>
-    <div class="list-item" onclick="openApp('chat-ccz-win')">
+    <div class="list-item" onclick="openApp('chat-ccz')">
         <div class="avatar" style="background:#5856d6;">C</div>
-        <div class="list-info"><span class="list-name">ccz</span><div class="list-preview">你在生氣？</div></div>
+        <div class="list-info"><span class="list-name">ccz</span><span class="list-preview">你在生氣？</span></div>
     </div>
-    <div class="list-item" onclick="openApp('chat-box-win')">
+    <div class="list-item" onclick="openApp('chat-box')">
         <div class="avatar" style="background:#8e8e93;"><i class="fas fa-box"></i></div>
-        <div class="list-info"><span class="list-name">到貨通知</span><div class="list-preview">化妝品包裹已抵達門市...</div></div>
+        <div class="list-info"><span class="list-name">到貨通知</span><span class="list-preview">化妝品包裹已抵達門市...</span></div>
     </div>
   </div>
 
-  <div id="chat-ccz-win" class="app-window screen-layer">
+  <div id="chat-ccz" class="app-window">
     <div class="header">
-        <i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="openApp('msg-list-win')"></i>
-        <div style="flex:1; text-align:center; color:#fff; font-weight:600;">ccz</div>
+        <i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="openApp('msg-list')"></i>
+        <div class="header-title">ccz</div>
     </div>
-    <div class="chat-body" id="ccz-chat-box">
+    <div class="chat-body" id="chat-box-ccz">
         <div class="bubble you">今天有好好吃飯嗎？</div>
         <div class="bubble me">…有</div>
         <div class="bubble me">別管那麼多</div>
         <div class="bubble you">你在生氣？</div>
     </div>
-    <div id="ccz-menu" class="ios-menu">
+    <div id="reply-menu" class="reply-menu">
         <div class="menu-item" onclick="sendReply('怎麼會對你生氣', '乖乖等我回家')">怎麼會對你生氣</div>
         <div class="menu-item" onclick="sendReply('哪有', '憋死你算了')">哪有</div>
     </div>
     <div style="padding:15px 15px 40px; background:#000">
-        <div onclick="toggleMenu(event)" style="background:#1c1c1e; border-radius:20px; padding:12px 15px; color:#8e8e93; border: 1px solid #333; cursor:pointer">iMessage</div>
+        <div onclick="toggleReply(event)" style="background:#1c1c1e; border-radius:20px; padding:12px 18px; color:#8e8e93; border: 1px solid #333; cursor:pointer">iMessage</div>
     </div>
   </div>
 
-  <div id="chat-box-win" class="app-window screen-layer">
+  <div id="chat-box" class="app-window">
     <div class="header">
-        <i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="openApp('msg-list-win')"></i>
-        <div style="flex:1; text-align:center; color:#fff; font-weight:600;">到貨通知</div>
+        <i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="openApp('msg-list')"></i>
+        <div class="header-title">到貨通知</div>
     </div>
     <div class="chat-body">
-        <div class="bubble you" style="background:#262629;">您的化妝品包裹已抵達門市，請領取。</div>
+        <div class="bubble you" style="background:#262629;">您的化妝品包裹已抵達門市，請於七日內領取。</div>
     </div>
     <div style="padding:15px 15px 40px; background:#000">
-        <div onclick="showAlert('這是買給 ccz 的禮物，偷偷藏在包裹裡。')" style="background:#1c1c1e; border-radius:20px; padding:12px 15px; color:#8e8e93; border: 1px solid #333; cursor:pointer">輸入訊息...</div>
+        <div onclick="showAlert('這是買給 ccz 的禮物，偷偷藏在包裹裡。')" style="background:#1c1c1e; border-radius:20px; padding:12px 18px; color:#8e8e93; border: 1px solid #333; cursor:pointer">輸入訊息...</div>
     </div>
   </div>
 
-  <div id="phone-win" class="app-window screen-layer">
+  <div id="phone-app" class="app-window">
     <div class="header">
         <i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="closeApp()"></i>
-        <div style="flex:1; text-align:center; color:#fff;">聯絡人</div>
+        <div class="header-title">聯絡人</div>
     </div>
     <div class="list-item" onclick="showAlert('不知道你現在在幹嘛?')">
         <div class="avatar" style="background:#5856d6;">C</div> <span class="list-name">ccz</span>
@@ -209,13 +237,13 @@ body {
     </div>
   </div>
 
-  <div id="love-win" class="app-window screen-layer">
-    <div class="header"><i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="closeApp()"></i><div style="flex:1; text-align:center; color:#fff;">Relationship</div></div>
+  <div id="love-app" class="app-window">
+    <div class="header"><i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="closeApp()"></i><div class="header-title">Relationship</div></div>
     <div id="love-content" style="padding:20px;"></div>
   </div>
 
   <div id="alert-box" class="custom-alert">
-    <div id="alert-msg" style="padding:20px; color:#fff; text-align:center;"></div>
+    <div id="alert-msg" style="padding:22px; color:#fff; text-align:center; font-size:16px; line-height:1.5;"></div>
     <div class="alert-btn" onclick="closeAlert()">好</div>
   </div>
 
@@ -225,26 +253,24 @@ body {
 <script>
 function updateTime() {
     const d = new Date();
-    const timeStr = d.toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit', hour12:false});
-    document.querySelectorAll('#status-time, #lock-time').forEach(el => el.innerText = timeStr);
-    const dateStr = d.toLocaleDateString('zh-TW', {month:'long', day:'numeric', weekday:'long'});
-    document.getElementById('lock-date').innerText = dateStr;
+    const t = d.toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit', hour12:false});
+    document.querySelectorAll('#status-time, #lock-time').forEach(el => el.innerText = t);
+    document.getElementById('lock-date').innerText = d.toLocaleDateString('zh-TW', {month:'long', day:'numeric', weekday:'long'});
 }
 
 function unlock() {
-    const lock = document.getElementById('lock-screen');
-    lock.style.transform = 'translateY(-100%)';
-    lock.style.opacity = '0';
-    setTimeout(() => lock.style.display = 'none', 600);
+    const s = document.getElementById('lock-screen');
+    s.style.transform = 'translateY(-100%)'; s.style.opacity = '0';
+    setTimeout(() => s.style.display = 'none', 600);
 }
 
 function openApp(id) {
     document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    if(id === 'love-win') renderLove();
-    if(id === 'chat-ccz-win') {
-        const box = document.getElementById('ccz-chat-box');
-        box.scrollTop = box.scrollHeight;
+    if(id === 'love-app') renderLove();
+    if(id === 'chat-ccz') {
+        const b = document.getElementById('chat-box-ccz');
+        b.scrollTop = b.scrollHeight;
     }
 }
 
@@ -252,27 +278,20 @@ function closeApp() {
     document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
 }
 
-function toggleMenu(e) {
-    e.stopPropagation();
-    document.getElementById('ccz-menu').classList.toggle('show');
-}
+function toggleReply(e) { e.stopPropagation(); document.getElementById('reply-menu').classList.toggle('show'); }
 
-function hideMenu() {
-    document.getElementById('ccz-menu').classList.remove('show');
-}
-
-function sendReply(my, you) {
-    const box = document.getElementById('ccz-chat-box');
-    box.innerHTML += `<div class="bubble me">${my}</div>`;
-    hideMenu();
+function sendReply(me, you) {
+    const b = document.getElementById('chat-box-ccz');
+    b.innerHTML += `<div class="bubble me">${me}</div>`;
+    document.getElementById('reply-menu').classList.remove('show');
     setTimeout(() => {
-        box.innerHTML += `<div class="bubble you">${you}</div>`;
-        box.scrollTop = box.scrollHeight;
+        b.innerHTML += `<div class="bubble you">${you}</div>`;
+        b.scrollTop = b.scrollHeight;
     }, 1000);
 }
 
-function showAlert(text) {
-    document.getElementById('alert-msg').innerText = text;
+function showAlert(txt) {
+    document.getElementById('alert-msg').innerText = txt;
     document.getElementById('alert-box').style.display = 'flex';
     setTimeout(() => document.getElementById('alert-box').classList.add('active'), 10);
 }
@@ -284,21 +303,20 @@ function closeAlert() {
 
 function renderLove() {
     const el = document.getElementById("love-content");
-    el.innerHTML = `
-        <div style="background:#1c1c1e; padding:20px; border-radius:18px; margin-bottom:20px; border: 1px solid #2c2c2e;">
-            <div style="color:#8e8e93; font-size:12px;">目前關係強度</div>
-            <div style="font-size:36px; font-weight:700; margin:10px 0; color: #fff;">80%</div>
-            <div style="height:10px; background:#333; border-radius:5px; overflow:hidden">
-                <div id="love-pbar" style="width:0%; height:100%; background:linear-gradient(90deg, #ff2d55, #ff5e5e); transition: 1.5s ease-out;"></div>
-            </div>
+    el.innerHTML = `<div style="background:#1c1c1e; padding:20px; border-radius:18px; border: 1px solid #2c2c2e;">
+        <div style="color:#8e8e93; font-size:12px; margin-bottom:10px;">目前關係強度</div>
+        <div style="font-size:36px; font-weight:700; color:#fff; margin-bottom:15px;">80%</div>
+        <div style="height:10px; background:#333; border-radius:5px; overflow:hidden">
+            <div id="love-pbar" style="width:0%; height:100%; background:linear-gradient(90deg, #ff2d55, #ff5e5e); transition: 1.5s;"></div>
         </div>
-        <div style="background:#1c1c1e; padding:20px; border-radius:18px; border: 1px solid #2c2c2e; color:#fff;">
-            「你如果再晚睡，我不保證我還會這麼冷靜。」
-        </div>
-    `;
+    </div>
+    <div style="margin-top:20px; background:#1c1c1e; padding:20px; border-radius:18px; border: 1px solid #2c2c2e; color:#fff;">
+        「你如果再晚睡，我不保證我還會這麼冷靜。」
+    </div>`;
     setTimeout(() => document.getElementById('love-pbar').style.width = '80%', 100);
 }
 
+document.addEventListener('click', () => document.getElementById('reply-menu').classList.remove('show'));
 updateTime();
 setInterval(updateTime, 1000);
 </script>
