@@ -60,10 +60,10 @@ body{
 <body>
 <div class="phone">
 
-  <!-- 鎖屏 -->
+  <!-- 鎖屏 - 強制整塊可點擊 -->
 <div id="lock" class="screen" 
-     style="cursor: pointer; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; height: 100%; width: 100%;">
+     style="position: absolute; inset: 0; cursor: pointer; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center;">
   
   <div class="time" id="time"></div>
   <div class="date" id="date"></div>
@@ -157,7 +157,7 @@ function renderLove() {
 window.onload = function() {
     console.log("✅ onload 執行成功");
 
-    // 鎖屏點擊（直接綁定在 lock）
+    // 鎖屏點擊
     const lock = document.getElementById('lock');
     if (lock) {
         lock.addEventListener('click', () => {
@@ -192,7 +192,6 @@ window.onload = function() {
         }
     });
 
-    // 時間
     updateTime();
     setInterval(updateTime, 1000);
 
