@@ -176,8 +176,12 @@ function unlockPhone() {
     }
 }
 
-window.onload = function() {
-    console.log("✅ onload 執行成功");
+    // 鎖屏點擊 - 綁定在 overlay
+    const overlay = document.getElementById('lockOverlay');
+    if (overlay) {
+        overlay.addEventListener('click', unlockPhone);
+        console.log("✅ 暴力全屏 overlay 已綁定");
+    }
 
     // 鎖屏點擊（直接綁定在 #lock）
     const lock = document.getElementById('lock');
