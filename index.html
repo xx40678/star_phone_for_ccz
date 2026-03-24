@@ -122,48 +122,44 @@ body{
 </div>
 
 <script>
-// ==================== 極簡穩定版 ====================
+// 傻瓜最終版 - 把所有東西都寫在外面
 
-console.log("🚀 Script 開始執行");
+// 1. 時間更新
+function updateTime() {
+    const timeEl = document.getElementById('time');
+    const dateEl = document.getElementById('date');
+    if (timeEl) {
+        let d = new Date();
+        timeEl.innerText = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    }
+}
 
-window.closeApp = function() {
-    console.log("🔙 執行 closeApp()");
+// 2. 開啟 App
+function openApp(id) {
+    console.log("📱 點擊開啟:", id);
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
-};
+    const target = document.getElementById(id);
+    if (target) target.classList.add("active");
+}
 
-window.renderChat = function() {
-    const chat = document.getElementById("chat");
-    if (!chat) return;
-    chat.innerHTML = `
-        <div class="bubble you">今天有好好吃飯嗎</div>
-        <div class="bubble me">…有</div>
-        <div class="bubble me">別管那麼多</div>
-        <div class="bubble you">你在生氣？</div>
-    `;
-};
+// 3. 關閉 App
+function closeApp() {
+    console.log("🔙 執行 closeApp");
+    document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
+}
 
-window.renderLove = function() {
-    const el = document.getElementById("loveContent");
-    if (!el) return;
-    el.innerHTML = `
-        關係強度：80%<br><br>
-        狀態評價：還行<br><br>
-        備註：<br>「你如果再晚睡，我不保證我還會這麼冷靜。」
-    `;
-};
-
-// ==================== 頁面載入 ====================
+// 4. 頁面載入
 window.onload = function() {
     console.log("✅ onload 執行成功");
 
     // 解鎖
     const overlay = document.getElementById('lockOverlay');
     if (overlay) {
-        overlay.addEventListener('click', () => {
+        overlay.addEventListener('click', function() {
             console.log("🖱️ 點擊解鎖");
             const lock = document.getElementById('lock');
             const home = document.getElementById('home');
-            lock.style.transition = 'all 0.6s ease';
+            lock.style.transition = 'all 0.6s';
             lock.style.opacity = '0';
             setTimeout(() => {
                 lock.classList.add("hidden");
@@ -172,44 +168,29 @@ window.onload = function() {
         });
     }
 
-    // 主畫面兩個 App（用 addEventListener 綁定）
-    const appsHTML = `
-        <div class="app" id="app-messages">
+    // 生成兩個 App
+    const grid = document.getElementById("apps");
+    grid.innerHTML = `
+        <div class="app" style="cursor: pointer;" onclick="openApp('messages')">
             <div class="icon"><i class="fa-solid fa-comment"></i></div>messages
         </div>
-        <div class="app" id="app-love">
+        <div class="app" style="cursor: pointer;" onclick="openApp('love')">
             <div class="icon"><i class="fa-solid fa-heart"></i></div>love
         </div>
     `;
-    document.getElementById("apps").innerHTML = appsHTML;
-
-    // 綁定 messages
-    document.getElementById("app-messages").addEventListener("click", () => {
-        console.log("📱 點擊 messages");
-        window.openApp = function() {   // 臨時定義
-            document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
-            document.getElementById("messages").classList.add("active");
-            window.renderChat();
-        };
-        window.openApp();
-    });
-
-    // 綁定 love
-    document.getElementById("app-love").addEventListener("click", () => {
-        console.log("📱 點擊 love");
-        document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
-        document.getElementById("love").classList.add("active");
-        window.renderLove();
-    });
 
     // 返回按鈕
     document.querySelectorAll('.btn').forEach(btn => {
         if (btn.innerText.includes('返回')) {
-            btn.addEventListener('click', window.closeApp);
+            btn.addEventListener('click', closeApp);
         }
     });
 
-    console.log("✅ 主畫面 App 已生成並綁定");
+    // 啟動時間
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    console.log("✅ 所有設定完成");
 };
 </script>
 </body>
