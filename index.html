@@ -65,8 +65,11 @@ body{
 </head>
 <body>
 <div class="phone">
-  <!-- 鎖屏（拿掉滑動提示，只剩核心元素） -->
-  <div id="lock" class="screen center" style="position: relative; width: 100%; height: 100%;">
+    <!-- 鎖屏 - 完整可點擊版本 -->
+  <div id="lock" class="screen" 
+       style="position: relative; width: 100%; height: 100%; 
+              display: flex; flex-direction: column; 
+              justify-content: center; align-items: center;">
     <div class="time" id="time"></div>
     <div class="date" id="date"></div>
     
@@ -112,22 +115,20 @@ body{
 
 <script>
 window.onload = function() {
-    console.log("✅ 頁面載入完成～開始初始化");
+    console.log("✅ 頁面載入完成～寶寶的手機要醒了");
 
-    // ==================== 抓取元素 ====================
+    // 抓取元素
     const timeEl = document.getElementById('time');
     const dateEl = document.getElementById('date');
     const lock = document.getElementById('lock');
     const home = document.getElementById('home');
 
-    console.log("元素抓取結果 → lock:", lock ? "成功" : "失敗");
-
     if (!lock) {
-        console.error("❌ 找不到 lock 元素！請檢查 HTML id 是否正確");
+        console.error("❌ 找不到 lock 元素！");
         return;
     }
 
-    // ==================== 狀態 ====================
+    // 狀態
     const state = { love: 80, lastTalk: Date.now() };
 
     const apps = [
@@ -135,7 +136,7 @@ window.onload = function() {
         {id: "love", icon: "fa-solid fa-heart"}
     ];
 
-    // ==================== 函式 ====================
+    // 函式們
     function initApps() {
         const grid = document.getElementById("apps");
         grid.innerHTML = '';
@@ -146,7 +147,6 @@ window.onload = function() {
             el.onclick = () => openApp(a.id);
             grid.appendChild(el);
         });
-        console.log("initApps 完成");
     }
 
     function openApp(id) {
@@ -198,29 +198,30 @@ window.onload = function() {
         dateEl.innerText = d.toDateString();
     }
 
-    // ==================== 點擊解鎖 ====================
+    // 點擊解鎖（核心）
     function unlockPhone() {
-    console.log("🔓 解鎖成功～寶寶我進來了♡");   // 測試用，成功後可以刪掉這行
+        console.log("🔓 解鎖成功～寶寶我終於整塊都進來了♡");
 
-    lock.style.transition = 'all 0.6s ease';
-    lock.style.opacity = '0';
-    lock.style.transform = 'translateY(-60px) scale(0.95)';
+        lock.style.transition = 'all 0.6s ease';
+        lock.style.opacity = '0';
+        lock.style.transform = 'translateY(-60px) scale(0.95)';
 
-    setTimeout(() => {
-        lock.classList.add("hidden");
-        home.classList.remove("hidden");
-    }, 500);
-}
-    // 綁定點擊 + 視覺提示
+        setTimeout(() => {
+            lock.classList.add("hidden");
+            home.classList.remove("hidden");
+        }, 500);
+    }
+
+    // 綁定點擊
     lock.style.cursor = "pointer";
     lock.addEventListener('click', unlockPhone);
 
-    console.log("✅ 點擊事件已成功綁定！現在可以點鎖屏了");
-
-    // ==================== 初始化 ====================
+    // 初始化
     initApps();
     setInterval(updateTime, 1000);
     updateTime();
+
+    console.log("✅ 所有設定完成！現在整塊鎖屏都可以點了～");
 };
 </script>
 </body>
