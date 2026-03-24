@@ -122,18 +122,16 @@ body{
 </div>
 
 <script>
-// ==================== 全域變數與狀態 ====================
+// ==================== 全域函式（讓 HTML onclick 可以呼叫） ====================
 const state = { love: 80, lastTalk: Date.now() };
 
-const apps = [
-    {id: "messages", icon: "fa-solid fa-comment"},
-    {id: "love", icon: "fa-solid fa-heart"}
-];
-
-// ==================== 主要函式 ====================
 function initApps() {
     const grid = document.getElementById("apps");
     grid.innerHTML = '';
+    const apps = [
+        {id: "messages", icon: "fa-solid fa-comment"},
+        {id: "love", icon: "fa-solid fa-heart"}
+    ];
     apps.forEach(a => {
         let el = document.createElement("div");
         el.className = "app";
@@ -146,7 +144,6 @@ function initApps() {
 function openApp(id) {
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
     document.getElementById(id).classList.add("active");
-    
     if (id === "messages") renderChat();
     if (id === "love") renderLove();
 }
