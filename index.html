@@ -114,8 +114,9 @@ body{
 </div>
 
 <script>
-// ==================== 最終版 ====================
+// ==================== 最終修正版 ====================
 
+// 時間更新
 function updateTime() {
     const timeEl = document.getElementById('time');
     if (timeEl) {
@@ -124,6 +125,7 @@ function updateTime() {
     }
 }
 
+// 開啟 App
 function openApp(id) {
     console.log("📱 點擊開啟:", id);
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
@@ -134,11 +136,13 @@ function openApp(id) {
     if (id === "love") renderLove();
 }
 
+// 關閉 App
 function closeApp() {
     console.log("🔙 執行 closeApp");
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
 }
 
+// 渲染聊天
 function renderChat() {
     const chat = document.getElementById("chat");
     if (chat) {
@@ -151,6 +155,7 @@ function renderChat() {
     }
 }
 
+// 渲染關係
 function renderLove() {
     const el = document.getElementById("loveContent");
     if (el) {
@@ -162,6 +167,7 @@ function renderLove() {
     }
 }
 
+// 解鎖
 function unlockPhone() {
     console.log("🖱️ 點擊解鎖");
     const lock = document.getElementById('lock');
@@ -176,16 +182,16 @@ function unlockPhone() {
     }
 }
 
-    // 鎖屏點擊 - 綁定在 overlay
-    const overlay = document.getElementById('lockOverlay');
-    if (overlay) {
-        overlay.addEventListener('click', unlockPhone);
-        console.log("✅ 暴力全屏 overlay 已綁定");
-    }
+// ==================== 頁面載入 ====================
+window.onload = function() {
+    console.log("✅ onload 執行成功");
 
-    // 鎖屏點擊（直接綁定在 #lock）
+    // 鎖屏點擊（直接綁定在 lock）
     const lock = document.getElementById('lock');
-    if (lock) lock.addEventListener('click', unlockPhone);
+    if (lock) {
+        lock.addEventListener('click', unlockPhone);
+        console.log("✅ 鎖屏點擊已綁定（整塊）");
+    }
 
     // 主畫面 App
     const grid = document.getElementById("apps");
@@ -207,7 +213,7 @@ function unlockPhone() {
         }
     });
 
-    // 時間
+    // 啟動時間
     updateTime();
     setInterval(updateTime, 1000);
 
