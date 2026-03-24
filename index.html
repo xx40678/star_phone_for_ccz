@@ -122,68 +122,96 @@ body{
 </div>
 
 <script>
-// 極簡測試版 - 只保留核心功能
-window.state = { love: 80 };
+// 極簡救命版 - 什麼 console 都不要，只求能動
 
-window.openApp = function(id) {
+// 時間更新
+function updateTime() {
+    const timeEl = document.getElementById('time');
+    const dateEl = document.getElementById('date');
+    if (!timeEl || !dateEl) return;
+    
+    let d = new Date();
+    timeEl.innerText = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    dateEl.innerText = d.toLocaleDateString('zh-TW', {weekday:'long', month:'long', day:'numeric'});
+}
+
+// 開啟 App
+function openApp(id) {
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
     document.getElementById(id).classList.add("active");
-    
-    if (id === "messages") window.renderChat();
-    if (id === "love") window.renderLove();
-};
+}
 
-window.closeApp = function() {
+// 關閉 App
+function closeApp() {
     document.querySelectorAll(".app-window").forEach(a => a.classList.remove("active"));
-};
+}
 
-window.renderChat = function() {
+// 渲染聊天
+function renderChat() {
     const chat = document.getElementById("chat");
-    chat.innerHTML = `<div class="bubble you">今天有好好吃飯嗎</div><div class="bubble me">…有</div>`;
-};
+    chat.innerHTML = `
+        <div class="bubble you">今天有好好吃飯嗎</div>
+        <div class="bubble me">…有</div>
+        <div class="bubble me">別管那麼多</div>
+        <div class="bubble you">你在生氣？</div>
+    `;
+}
 
-window.renderLove = function() {
+// 渲染關係
+function renderLove() {
     const el = document.getElementById("loveContent");
-    el.innerHTML = `關係強度：${window.state.love}%<br><button onclick="window.increaseLove()">靠近她</button>`;
-};
+    el.innerHTML = `
+        關係強度：80%<br><br>
+        狀態評價：還行<br><br>
+        備註：<br>
+        「你如果再晚睡，我不保證我還會這麼冷靜。」<br><br>
+        <button class="btn" onclick="increaseLove()">靠近她</button>
+    `;
+}
 
-window.increaseLove = function() {
-    window.state.love += 2;
-    window.renderLove();
-};
+function increaseLove() {
+    alert("❤️ 關係強度 +2！");
+}
 
-window.unlockPhone = function() {
+// 解鎖
+function unlockPhone() {
     const lock = document.getElementById('lock');
     const home = document.getElementById('home');
+    lock.style.transition = 'opacity 0.5s';
     lock.style.opacity = '0';
     setTimeout(() => {
         lock.classList.add("hidden");
         home.classList.remove("hidden");
     }, 400);
-};
+}
 
+// ==================== 頁面載入 ====================
 window.onload = function() {
-    // 解鎖
+    // 綁定解鎖
     const overlay = document.getElementById('lockOverlay');
-    if (overlay) overlay.addEventListener('click', window.unlockPhone);
+    if (overlay) overlay.addEventListener('click', unlockPhone);
 
-    // 初始化主畫面 apps
+    // 綁定返回按鈕
+    document.querySelectorAll('.btn').forEach(btn => {
+        if (btn.innerText.includes('返回')) {
+            btn.addEventListener('click', closeApp);
+        }
+    });
+
+    // 初始化主畫面
     const grid = document.getElementById("apps");
     grid.innerHTML = `
-        <div class="app" onclick="window.openApp('messages')">
+        <div class="app" onclick="openApp('messages')">
             <div class="icon"><i class="fa-solid fa-comment"></i></div>messages
         </div>
-        <div class="app" onclick="window.openApp('love')">
+        <div class="app" onclick="openApp('love')">
             <div class="icon"><i class="fa-solid fa-heart"></i></div>love
         </div>
     `;
 
-    // 返回按鈕
-    document.querySelectorAll('.btn').forEach(btn => {
-        if (btn.textContent.includes('返回')) {
-            btn.addEventListener('click', window.closeApp);
-        }
-    });
+    // 啟動時間
+    updateTime();
+    setInterval(updateTime, 1000);
 };
 </script>
 </body>
