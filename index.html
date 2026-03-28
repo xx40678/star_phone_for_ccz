@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>iPhone Perfect Logic Edition</title>
+<title>iPhone UX Optimized Edition</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root {
@@ -44,13 +44,12 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 .app-window { position: absolute; inset: 0; z-index: 1500; background: #000; display: none; flex-direction: column; }
 .app-window.active { display: flex; }
 
-/* 修復後的返回按鈕與 Header */
 .nav-header { padding: 50px 15px 15px; display: flex; align-items: center; justify-content: space-between; background: rgba(20, 20, 20, 0.9); border-bottom: 0.5px solid #333; }
 .back-btn { color: var(--ios-blue); font-size: 17px; cursor: pointer; display: flex; align-items: center; min-width: 80px; }
 .header-title { color: #fff; font-weight: 600; text-align: center; flex: 1; font-size: 17px; }
 
 .chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-.bubble { max-width: 78%; padding: 12px 16px; border-radius: 20px; color: #fff; font-size: 16px; line-height: 1.4; position: relative; }
+.bubble { max-width: 78%; padding: 12px 16px; border-radius: 20px; color: #fff; font-size: 16px; line-height: 1.4; }
 .you { background: #262629; align-self: flex-start; border-bottom-left-radius: 4px; }
 .me { background: var(--ios-blue); align-self: flex-end; border-bottom-right-radius: 4px; }
 
@@ -117,7 +116,6 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
       <div class="header-title">Safari</div>
       <div style="min-width:80px;"></div>
     </div>
-    <div style="padding:20px; color:#fff;"><div style="padding:15px; border-bottom:1px solid #333;">台北拉麵推薦</div><div style="padding:15px; border-bottom:1px solid #333;">Apex 槍法教學</div></div>
   </div>
 
   <div id="options" class="options-overlay"></div>
@@ -135,52 +133,39 @@ setInterval(updateClock, 1000); updateClock();
 
 let currentKey = '';
 const gameData = {
-    'morning': { msg: "......早。怎麼這時間醒著？", options: [
-        { text: "就剛好醒了。你呢？", next: 'm_1' },
-        { text: "餓醒的，想吃拉麵。", next: 'm_2' },
-        { text: "等某個高冷帥哥回訊息啊。", next: 'm_3' }
-    ]},
+    'morning': { msg: "......早。怎麼這時間醒著？", options: [{ text: "就剛好醒了。你呢？", next: 'm_1' }, { text: "餓醒的，想吃拉麵。", next: 'm_2' }, { text: "等某個高冷帥哥回訊息啊。", next: 'm_3' }] },
     'm_1': { msg: "我也剛醒。順路帶妳去吃早午餐？", options: [{ text: "好啊，你載我？", next: 'm_1_a' }] },
     'm_1_a': { msg: "不然妳想走路？十五分鐘後到妳家樓下。", options: [{ text: "好，等你。", next: 'end' }] },
     'm_2': { msg: "早上吃拉麵太鹹。帶妳去喝熱豆漿，快去換衣服。", options: [{ text: "聽你的。", next: 'end' }] },
     'm_3': { msg: "回了。去補眠，黑眼圈都要掉到地上了。", options: [{ text: "哪有！下午見。", next: 'end' }] },
-
-    'afternoon': { msg: "在忙。妳沒在偷懶吧？", options: [
-        { text: "研究 Apex 設定算嗎？", next: 'a_1' },
-        { text: "想去網咖開包廂打遊戲。", next: 'a_2' }
-    ]},
-    'a_1': { msg: "妳那槍法研究再多也沒用。下班帶妳去網咖練？", options: [
-        { text: "我也沒那麼爛吧！", next: 'a_1_b' },
-        { text: "那你帶我啊。", next: 'a_1_a' }
-    ]},
+    'afternoon': { msg: "在忙。妳沒在偷懶吧？", options: [{ text: "研究 Apex 設定算嗎？", next: 'a_1' }, { text: "想去網咖開包廂打遊戲。", next: 'a_2' }] },
+    'a_1': { msg: "妳那槍法研究再多也沒用。下班帶妳去網咖練？", options: [{ text: "我也沒那麼爛吧！", next: 'a_1_b' }, { text: "那你帶我啊。", next: 'a_1_a' }] },
     'a_1_a': { msg: "可以。去開個包廂，那邊設備比較好。", options: [{ text: "成交。", next: 'end' }] },
     'a_1_b': { msg: "對，只有更爛。所以才要練，下班接妳。", options: [{ text: "這就對了。", next: 'end' }] },
-    'a_2': { msg: "找包廂？妳想打遊戲？我知道一家環境不錯的。", options: [
-        { text: "你要載我？", next: 'a_2_a' },
-        { text: "要去嗎？", next: 'a_1_a' }
-    ]},
+    'a_2': { msg: "找包廂？妳想打遊戲？我知道一家環境不錯的。", options: [{ text: "你要載我？", next: 'a_2_a' }, { text: "要去嗎？", next: 'a_1_a' }] },
     'a_2_a': { msg: "順路而已。兩點到，別遲到。", options: [{ text: "收到！", next: 'end' }] },
-
-    'night': { msg: "......妳還沒睡？", options: [
-        { text: "你不也醒著。在想誰？", next: 'n_1' },
-        { text: "在想你今天說的話。", next: 'n_2' }
-    ]},
-    'n_1': { msg: "想一個半夜不睡覺的笨蛋。", options: [
-        { text: "誰笨蛋了！", next: 'n_1_a' },
-        { text: "笨蛋也想你了。", next: 'end' }
-    ]},
-    'n_1_a': { msg: "說妳。看窗外，我在妳家樓下。", options: [
-        { text: "天啊你瘋了！", next: 'end' },
-        { text: "憋死你算了，不下去。", next: 'n_1_aa' }
-    ]},
+    'night': { msg: "......妳還沒睡？", options: [{ text: "你不也醒著。在想誰？", next: 'n_1' }, { text: "在想你今天說的話。", next: 'n_2' }] },
+    'n_1': { msg: "想一個半夜不睡覺的笨蛋。", options: [{ text: "誰笨蛋了！", next: 'n_1_a' }, { text: "笨蛋也想你了。", next: 'end' }] },
+    'n_1_a': { msg: "說妳。看窗外，我在妳家樓下。", options: [{ text: "天啊你瘋了！", next: 'end' }, { text: "憋死你算了，不下去。", next: 'n_1_aa' }] },
     'n_1_aa': { msg: "那我就等妳消氣。自己看著辦。", options: [{ text: "好啦，現在下去。", next: 'end' }] },
     'n_2': { msg: "別想了。去睡覺，晚安。", options: [{ text: "憋死你算了，晚安。", next: 'end' }] },
     'end': { msg: "乖。見面再說。", options: [] }
 };
 
 function openApp(id) { document.getElementById(id).classList.add('active'); }
-function goHome() { document.querySelectorAll('.app-window').forEach(el=>el.classList.remove('active')); }
-function closeChat() { document.getElementById('chat-detail').classList.remove('active'); }
+
+// 【關鍵優化】點擊返回或主畫面時，隱藏選項
+function hideOptions() { document.getElementById('options').style.display = 'none'; }
+
+function goHome() { 
+    document.querySelectorAll('.app-window').forEach(el=>el.classList.remove('active')); 
+    hideOptions(); // 返回主畫面時收起選單
+}
+
+function closeChat() { 
+    document.getElementById('chat-detail').classList.remove('active'); 
+    hideOptions(); // 退回訊息列表時收起選單
+}
 
 function openChat() { 
     const box = document.getElementById('chat-box');
@@ -203,7 +188,7 @@ function showOptions() {
         const btn = document.createElement('div'); btn.className = 'option-btn';
         btn.innerText = opt.text;
         btn.onclick = () => {
-            overlay.style.display = 'none';
+            hideOptions(); // 點擊選項後收起
             box.innerHTML += `<div class="bubble me">${opt.text}</div>`;
             currentKey = opt.next;
             setTimeout(() => {
