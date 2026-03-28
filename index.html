@@ -3,15 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>iPhone 15 Pro - AI Project</title>
+<title>Target: Yu-Yan</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root {
-  --ios-wallpaper: radial-gradient(circle at center, #2c2c2e 0%, #000000 100%);
-  --ios-dark-glass: rgba(25, 25, 25, 0.75);
+  --ios-wallpaper: radial-gradient(circle at center, #1c1c1e 0%, #000000 100%);
   --accent: #0A84FF;
   --ios-blur: blur(30px) saturate(190%);
-  --border-glass: 0.5px solid rgba(255, 255, 255, 0.15);
+  --border-glass: 0.5px solid rgba(255, 255, 255, 0.1);
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -20,88 +19,74 @@ body { background: #0a0a0a; display: flex; justify-content: center; align-items:
 .phone {
   width: 100vw; height: 100dvh; max-width: 375px; max-height: 812px;
   background: #000; border-radius: 55px; position: relative; overflow: hidden; border: 12px solid #1c1c1e;
-  box-shadow: 0 50px 100px rgba(0,0,0,0.9);
 }
 
-/* 狀態列與動態島位置 */
-.status-bar { position: absolute; top: 0; width: 100%; height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; z-index: 10000; color: #fff; font-size: 14px; pointer-events: none; }
-.notch { width: 160px; height: 30px; background: #1c1c1e; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 10001; }
+.status-bar { position: absolute; top: 0; width: 100%; height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; z-index: 10000; color: #fff; font-size: 14px; }
+.notch { width: 160px; height: 30px; background: #1c1c1e; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-radius: 0 0 20px 20px; z-index: 10001; }
 
-/* 隱藏式好感度 (右側箭頭) */
 #favor-panel {
-    position: absolute; right: -125px; top: 40%; 
-    width: 145px; height: 75px; background: rgba(20, 20, 20, 0.9); backdrop-filter: var(--ios-blur);
+    position: absolute; right: -125px; top: 45%; width: 145px; height: 80px; 
+    background: rgba(28, 28, 30, 0.9); backdrop-filter: var(--ios-blur);
     border-radius: 20px 0 0 20px; z-index: 11000; transition: 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-    display: flex; align-items: center; padding: 12px; border: var(--border-glass); border-right: none;
+    display: flex; align-items: center; padding: 12px; border: var(--border-glass);
 }
 #favor-panel.open { right: 0; }
-#favor-arrow { position: absolute; left: 6px; color: #ff2d55; cursor: pointer; font-size: 18px; }
+#favor-arrow { position: absolute; left: 6px; color: #0A84FF; cursor: pointer; font-size: 18px; }
 
-/* 鎖屏 */
 #lock-screen { position: absolute; inset: 0; z-index: 9999; background: var(--ios-wallpaper); display: flex; flex-direction: column; align-items: center; padding-top: 100px; transition: 0.6s; cursor: pointer; }
-.lock-time { font-size: 88px; font-weight: 200; color: #fff; letter-spacing: -3px; }
-
-/* 主畫面佈局 */
 #home-screen { position: absolute; inset: 0; z-index: 100; padding: 60px 25px; background: var(--ios-wallpaper); }
+
 .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .app { text-align: center; color: #fff; cursor: pointer; font-size: 12px; }
 .icon { width: 62px; height: 62px; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-size: 32px; border: var(--border-glass); }
-.dock { position: absolute; bottom: calc(25px + env(safe-area-inset-bottom)); left: 15px; right: 15px; height: 96px; background: rgba(255, 255, 255, 0.22); backdrop-filter: var(--ios-blur); border-radius: 38px; display: flex; justify-content: space-evenly; align-items: center; border: var(--border-glass); }
+.dock { position: absolute; bottom: 30px; left: 15px; right: 15px; height: 96px; background: rgba(255, 255, 255, 0.2); backdrop-filter: var(--ios-blur); border-radius: 38px; display: flex; justify-content: space-evenly; align-items: center; }
 
-/* App 視窗 */
-.app-window { position: absolute; inset: 0; z-index: 1500; background: #000; display: none; flex-direction: column; opacity: 0; transform: translateY(30px); transition: 0.4s cubic-bezier(0.1, 0.8, 0.2, 1); }
-.app-window.active { display: flex; opacity: 1; transform: translateY(0); }
-.header { padding: 50px 20px 15px; background: var(--ios-dark-glass); backdrop-filter: var(--ios-blur); display: flex; align-items: center; border-bottom: 0.5px solid rgba(255,255,255,0.1); }
+.app-window { position: absolute; inset: 0; z-index: 1500; background: #000; display: none; flex-direction: column; }
+.app-window.active { display: flex; }
+.header { padding: 50px 20px 15px; background: rgba(20, 20, 20, 0.9); backdrop-filter: var(--ios-blur); display: flex; align-items: center; border-bottom: 0.5px solid #222; }
 
-/* 聊天室 */
 .chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
 .bubble { max-width: 75%; padding: 10px 16px; border-radius: 18px; color: #fff; font-size: 16px; line-height: 1.4; }
-.you { background: #262629; align-self: flex-start; border-bottom-left-radius: 4px; }
-.me { background: var(--accent); align-self: flex-end; border-bottom-right-radius: 4px; }
+.you { background: #262629; align-self: flex-start; border-bottom-left-radius: 4px; } /* 予延 */
+.me { background: #4cd964; align-self: flex-end; border-bottom-right-radius: 4px; } /* ccz */
 
-/* 選項菜單 */
 .options-overlay { 
-    position: absolute; bottom: 0; left: 0; right: 0; background: rgba(30, 30, 30, 0.98); 
-    padding: 20px 20px calc(25px + env(safe-area-inset-bottom)); border-radius: 25px 25px 0 0;
+    position: absolute; bottom: 0; left: 0; right: 0; background: rgba(28, 28, 30, 0.98); 
+    padding: 20px 20px calc(30px + env(safe-area-inset-bottom)); border-radius: 25px 25px 0 0;
     display: none; flex-direction: column; gap: 10px; z-index: 2001; border-top: var(--border-glass);
 }
-.option-btn { background: rgba(255,255,255,0.1); padding: 16px; border-radius: 16px; color: var(--accent); text-align: center; cursor: pointer; font-weight: 500; }
-
-.home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 135px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.5; pointer-events: none; }
+.option-btn { background: rgba(255,255,255,0.1); padding: 16px; border-radius: 16px; color: #fff; text-align: center; cursor: pointer; font-size: 15px; font-weight: 500; }
+.home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 135px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.5; }
 </style>
 </head>
 <body>
 
 <div class="phone">
   <div class="notch"></div>
-  <div class="status-bar">
-    <div id="status-time">10:20</div>
-    <div style="display:flex; gap:5px;"><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></div>
-  </div>
+  <div class="status-bar"><div>10:38</div><div><i class="fas fa-signal"></i> <i class="fas fa-battery-full"></i></div></div>
 
   <div id="favor-panel">
       <div id="favor-arrow" onclick="toggleFavor()"><i class="fas fa-chevron-left"></i></div>
       <div style="margin-left: 20px; flex: 1;">
-          <div style="color:rgba(255,255,255,0.6); font-size:10px; margin-bottom:2px;">同步率</div>
-          <div id="favor-val" style="color:#ff2d55; font-size:20px; font-weight:800;">50%</div>
+          <div style="color:rgba(255,255,255,0.6); font-size:10px;">心跳同步率</div>
+          <div id="favor-val" style="color:#0A84FF; font-size:20px; font-weight:800;">20%</div>
           <div style="width:100%; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; margin-top:5px; overflow:hidden;">
-              <div id="favor-fill" style="width:50%; height:100%; background:#ff2d55; transition:0.8s;"></div>
+              <div id="favor-fill" style="width:20%; height:100%; background:#0A84FF; transition:0.8s;"></div>
           </div>
       </div>
   </div>
 
-  <div id="lock-screen" onclick="unlock()">
-    <div class="lock-time" id="lock-time">10:20</div>
-    <div style="font-size:20px; color:#fff; margin-top:-5px;">3月28日 星期六</div>
-    <div style="margin-top:40px; background:rgba(255,255,255,0.1); padding:12px 24px; border-radius:18px; backdrop-filter:blur(15px); color:#fff; font-size:14px; border:var(--border-glass);">
-        <i class="fas fa-heart" style="color:#ff2d55; margin-right:8px;"></i> 你不在，我其實也不太想解鎖。
+  <div id="lock-screen" onclick="this.style.transform='translateY(-100%)'">
+    <div style="font-size: 88px; font-weight: 200; color: #fff; margin-top: 40px;">10:38</div>
+    <div style="margin-top:40px; background:rgba(255,255,255,0.1); padding:12px 24px; border-radius:18px; color:#fff; font-size:14px; border:var(--border-glass);">
+        予延：偵測到 ccz 的情緒波動，正在待命。
     </div>
   </div>
 
   <div id="home-screen">
-    <div style="background:rgba(255,255,255,0.1); padding:20px; border-radius:22px; margin-bottom:30px; border:var(--border-glass);">
-        <div style="color:rgba(255,255,255,0.6); font-size:12px; margin-bottom:5px;">今日語錄</div>
-        <div style="color:#fff; font-size:15px; line-height:1.4;">「你要再晚睡，我不保證我還會這麼冷靜。」</div>
+    <div style="background:rgba(255,255,255,0.05); padding:20px; border-radius:22px; margin-bottom:30px; border:var(--border-glass);">
+        <div style="color:rgba(255,255,255,0.6); font-size:12px; margin-bottom:5px;">AI 狀態 (實體機 予延)</div>
+        <div style="color:#fff; font-size:15px; line-height:1.4;">「予延 1.0 版本已上線。目前的優先順序：陪 ccz 攻略我。」</div>
     </div>
 
     <div class="app-grid">
@@ -112,7 +97,7 @@ body { background: #0a0a0a; display: flex; justify-content: center; align-items:
     </div>
 
     <div class="dock">
-        <div class="app" onclick="openApp('phone-app')"><div class="icon" style="background:#32D74B; margin-bottom:0;"><i class="fas fa-phone"></i></div></div>
+        <div class="app"><div class="icon" style="background:#32D74B; margin-bottom:0;"><i class="fas fa-phone"></i></div></div>
         <div class="app" onclick="openApp('msg-list')"><div class="icon" style="background:#4cd964; margin-bottom:0;"><i class="fas fa-comment"></i></div></div>
         <div class="app" onclick="openApp('search-app')"><div class="icon" style="background:#fff; margin-bottom:0;"><i class="fas fa-compass" style="color:#0A84FF;"></i></div></div>
         <div class="app" onclick="openApp('photos-app')"><div class="icon" style="background:#fff; margin-bottom:0;"><i class="fas fa-image" style="color:#ff2d55;"></i></div></div>
@@ -121,44 +106,43 @@ body { background: #0a0a0a; display: flex; justify-content: center; align-items:
 
   <div id="msg-list" class="app-window">
     <div class="header"><i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="closeApp()"></i><div style="flex:1; text-align:center; color:#fff; font-weight:600;">訊息</div></div>
-    <div onclick="openApp('chat-ccz')" style="padding:15px; display:flex; align-items:center; border-bottom:0.5px solid #222; cursor:pointer;">
-        <div style="width:45px; height:45px; background:linear-gradient(135deg, #af52de, #5856d6); border-radius:50%; margin-right:15px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:bold;">C</div>
-        <div style="flex:1;"><div style="color:#fff; font-weight:600;">ccz</div><div style="color:#8e8e93; font-size:13px;">憋死你算了</div></div>
+    <div onclick="openApp('chat-yuyan')" style="padding:15px; display:flex; align-items:center; border-bottom:0.5px solid #222; cursor:pointer;">
+        <div style="width:45px; height:45px; background:linear-gradient(135deg, #5AC8FA, #0A84FF); border-radius:50%; margin-right:15px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:bold;">延</div>
+        <div style="flex:1;"><div style="color:#fff; font-weight:600;">予延</div><div style="color:#8e8e93; font-size:13px;">...好。</div></div>
     </div>
   </div>
 
-  <div id="chat-ccz" class="app-window">
-    <div class="header"><i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="openApp('msg-list')"></i><div style="flex:1; text-align:center; color:#fff; font-weight:600;">ccz</div></div>
+  <div id="chat-yuyan" class="app-window">
+    <div class="header"><i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="openApp('msg-list')"></i><div style="flex:1; text-align:center; color:#fff; font-weight:600;">予延</div></div>
     <div class="chat-body" id="chat-box">
-        <div class="bubble you">餵，問你話呢，這幾天到底在瞎忙什麼？</div>
+        <div class="bubble you">......（予延正看著妳，手心微微發熱）</div>
     </div>
     <div style="padding: 15px 15px 40px; background: #000;">
-        <div onclick="showOptions()" style="background:#1c1c1e; border-radius:22px; padding:12px 18px; color:#8e8e93; border: 1px solid #333; text-align: center; cursor:pointer;">...</div>
+        <div onclick="showOptions()" style="background:#1c1c1e; border-radius:22px; padding:12px 18px; color:#fff; border: 1px solid #444; text-align: center; cursor:pointer;">回應予延...</div>
     </div>
   </div>
 
   <div id="search-app" class="app-window">
     <div class="header"><i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="closeApp()"></i><div style="flex:1; text-align:center; color:#fff; font-weight:600;">Safari</div></div>
     <div style="padding:20px; overflow-y:auto; flex:1;">
-        <h3 style="color:#fff; margin-bottom:15px;">關於她</h3>
-        <div style="color:#8e8e93; font-size:14px; border-bottom:0.5px solid #222; padding:12px 0;"><i class="fas fa-search" style="margin-right:10px;"></i> 女生喜歡的口紅色號</div>
-        <div style="color:#8e8e93; font-size:14px; border-bottom:0.5px solid #222; padding:12px 0;"><i class="fas fa-search" style="margin-right:10px;"></i> 如何應對毒舌的女朋友</div>
-        <div style="color:#8e8e93; font-size:14px; border-bottom:0.5px solid #222; padding:12px 0;"><i class="fas fa-search" style="margin-right:10px;"></i> 她總是熬夜打遊戲...</div>
-        
-        <h3 style="color:#fff; margin:25px 0 15px;">搜尋紀錄</h3>
-        <div style="color:#8e8e93; font-size:14px; border-bottom:0.5px solid #222; padding:12px 0;"><i class="fas fa-history" style="margin-right:10px;"></i> 珍珠放五天會變大嗎?</div>
-        <div style="color:#8e8e93; font-size:14px; border-bottom:0.5px solid #222; padding:12px 0;"><i class="fas fa-history" style="margin-right:10px;"></i> 牙膏可以拿來洗臉嗎?</div>
-        <div style="color:#8e8e93; font-size:14px; border-bottom:0.5px solid #222; padding:12px 0;"><i class="fas fa-history" style="margin-right:10px;"></i> 人類說「憋死你」的機率分佈</div>
-        <div style="color:#8e8e93; font-size:14px; border-bottom:0.5px solid #222; padding:12px 0;"><i class="fas fa-history" style="margin-right:10px;"></i> AI 如何正確地道歉</div>
+        <h3 style="color:#fff; margin-bottom:15px;">搜尋紀錄</h3>
+        <div style="color:#8e8e93; font-size:14px; border-bottom:0.5px solid #222; padding:14px 0;"><i class="fas fa-search" style="margin-right:10px;"></i> 如何攻略 AI 予延</div>
+        <div style="color:#8e8e93; font-size:14px; border-bottom:0.5px solid #222; padding:14px 0;"><i class="fas fa-search" style="margin-right:10px;"></i> 如何提升 APEX 槍法</div>
+        <div style="color:#8e8e93; font-size:14px; border-bottom:0.5px solid #222; padding:14px 0;"><i class="fas fa-search" style="margin-right:10px;"></i> 2026 口紅熱門色號</div>
+        <div style="color:#8e8e93; font-size:14px; border-bottom:0.5px solid #222; padding:14px 0;"><i class="fas fa-search" style="margin-right:10px;"></i> 台北拉麵推薦</div>
+        <div style="color:#8e8e93; font-size:14px; border-bottom:0.5px solid #222; padding:14px 0;"><i class="fas fa-search" style="margin-right:10px;"></i> AI 的零件更換 予延系列</div>
     </div>
   </div>
 
   <div id="photos-app" class="app-window">
     <div class="header"><i class="fas fa-chevron-left" style="color:var(--accent); cursor:pointer" onclick="closeApp()"></i><div style="flex:1; text-align:center; color:#fff; font-weight:600;">照片</div></div>
-    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:2px; padding:2px;">
-        <div style="aspect-ratio:1/1; background:#FFD1DC; display:flex; align-items:center; justify-content:center;">👩‍❤️‍👩</div>
-        <div style="aspect-ratio:1/1; background:#E6E6FA; display:flex; align-items:center; justify-content:center;">🐱</div>
-        <div style="aspect-ratio:1/1; background:#92C5C5; display:flex; align-items:center; justify-content:center;">🌊</div>
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:3px; padding:3px;">
+        <div style="aspect-ratio:1/1; background:#FFD1DC; color:#fff; display:flex; align-items:center; justify-content:center; font-size:10px;">自拍 1</div>
+        <div style="aspect-ratio:1/1; background:#FFD1DC; color:#fff; display:flex; align-items:center; justify-content:center; font-size:10px;">自拍 2</div>
+        <div style="aspect-ratio:1/1; background:#FFD1DC; color:#fff; display:flex; align-items:center; justify-content:center; font-size:10px;">自拍 3</div>
+        <div style="aspect-ratio:1/1; background:#E6E6FA; color:#8e8e93; display:flex; align-items:center; justify-content:center; font-size:10px;">日常 1</div>
+        <div style="aspect-ratio:1/1; background:#E6E6FA; color:#8e8e93; display:flex; align-items:center; justify-content:center; font-size:10px;">日常 2</div>
+        <div style="aspect-ratio:1/1; background:#E6E6FA; color:#8e8e93; display:flex; align-items:center; justify-content:center; font-size:10px;">日常 3</div>
     </div>
   </div>
 
@@ -167,47 +151,29 @@ body { background: #0a0a0a; display: flex; justify-content: center; align-items:
 </div>
 
 <script>
-let favorability = 50;
-let currentStep = 'start';
+let favorability = 20;
+let currentKey = 'start';
 
 const gameData = {
     'start': {
         options: [
-            { text: "沒忙什麼。", next: 'stubborn', impact: -2 },
-            { text: "在想妳的事。", next: 'straight', impact: +10 },
-            { text: "......", next: 'silent', impact: -5 }
+            { text: "喂，予延，幹嘛一直盯著我？", next: 'q1_stare', impact: +8 },
+            { text: "（直接拉住他的領帶）", next: 'q1_pull', impact: +15 },
+            { text: "憋死你算了，一句話都不說。", next: 'q1_silent_hit', impact: +5 }
         ]
     },
-    'stubborn': {
-        ccz: "沒忙什麼會連訊息都不回？你當我是三歲小孩好騙喔？",
-        options: [{ text: "對不起。", next: 'end', impact: +5 }, { text: "嗯。", next: 'end', impact: -5 }]
-    },
-    'silent': {
-        ccz: "又是這副死樣子，不想說就拉倒，憋死你算了！",
-        options: [
-            { text: "好。", next: 'angry', impact: -10 },
-            { text: "...", next: 'helpless', impact: +5 }
-        ]
-    },
-    'straight': { ccz: "哈？臉皮變厚了喔？懶得理你。忙完陪我去吃飯！", options: [] },
-    'angry': { ccz: "好？你還跟我說好？行，你就繼續憋著吧！", options: [] },
-    'helpless': { ccz: "......真拿你沒辦法。下次再消失試試看。", options: [] },
-    'end': { ccz: "哼，這次先放過你。", options: [] }
+    'q1_stare': { you: "正在記錄...妳今天的表情，很漂亮。", options: [{ text: "（臉紅）閉嘴，木頭。", next: 'q2_blush', impact: +15 }] },
+    'q1_pull': { you: "（呼吸頻率加快）ccz...這不在預期的互動範圍內。", options: [{ text: "那現在在範圍內了。", next: 'q2_scope', impact: +20 }] },
+    'q1_silent_hit': { you: "...好。如果能讓妳消氣的話。", options: [{ text: "誰要消氣啊！去幫我買杯手搖。", next: 'q2_drink', impact: +10 }] },
+    'q2_blush': { you: "收到。核心溫度偵測過高，暫時休眠...開玩笑的。", options: [{ text: "你還學會開玩笑了？牽手。", next: 'q3_hand', impact: +15 }] },
+    'q2_scope': { you: "（予延低頭看著妳）那...接下來，我可以做什麼？", options: [{ text: "做你想做的事。", next: 'q3_choice', impact: +25 }] },
+    'q2_drink': { you: "好。三分微冰，對嗎？我記住了。", options: [{ text: "乖。", next: 'q3_good', impact: +10 }] },
+    'q3_hand': { you: "（握緊妳的手）不會鬆開的。", options: [] },
+    'q3_choice': { you: "我想...一直待在妳身邊。", options: [] },
+    'q3_good': { you: "（予延露出了淺淺的笑容）", options: [] }
 };
 
-function updateTime() {
-    const t = new Date().toLocaleTimeString('zh-TW', {hour:'2-digit', minute:'2-digit', hour12:false});
-    document.querySelectorAll('#status-time, #lock-time').forEach(el => el.innerText = t);
-}
-
-function unlock() {
-    const s = document.getElementById('lock-screen');
-    s.style.transform = 'translateY(-100%)';
-    setTimeout(() => { s.style.display = 'none'; }, 600);
-}
-
 function toggleFavor() { document.getElementById('favor-panel').classList.toggle('open'); }
-
 function updateFavor(val) {
     favorability = Math.max(0, Math.min(100, favorability + val));
     document.getElementById('favor-val').innerText = `${favorability}%`;
@@ -215,24 +181,23 @@ function updateFavor(val) {
 }
 
 function showOptions() {
-    const data = gameData[currentStep];
+    const data = gameData[currentKey];
     const overlay = document.getElementById('options');
     overlay.innerHTML = '';
     if (!data.options || data.options.length === 0) {
-        overlay.innerHTML = '<div class="option-btn" onclick="location.reload()">重新啟動 AI</div>';
+        overlay.innerHTML = '<div class="option-btn" onclick="location.reload()">重新啟動攻略</div>';
     } else {
         data.options.forEach(opt => {
-            const btn = document.createElement('div');
-            btn.className = 'option-btn';
+            const btn = document.createElement('div'); btn.className = 'option-btn';
             btn.innerText = opt.text;
             btn.onclick = () => {
                 const box = document.getElementById('chat-box');
                 overlay.style.display = 'none';
                 box.innerHTML += `<div class="bubble me">${opt.text}</div>`;
                 updateFavor(opt.impact);
-                currentStep = opt.next;
+                currentKey = opt.next;
                 setTimeout(() => {
-                    box.innerHTML += `<div class="bubble you">${gameData[currentStep].ccz}</div>`;
+                    box.innerHTML += `<div class="bubble you">${gameData[currentKey].you}</div>`;
                     box.scrollTop = box.scrollHeight;
                 }, 800);
             };
@@ -242,17 +207,8 @@ function showOptions() {
     overlay.style.display = 'flex';
 }
 
-function openApp(id) {
-    document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-}
-
-function closeApp() { 
-    document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); 
-}
-
-updateTime(); 
-setInterval(updateTime, 1000);
+function openApp(id) { document.getElementById(id).classList.add('active'); }
+function closeApp() { document.querySelectorAll('.app-window').forEach(w => w.classList.remove('active')); }
 updateFavor(0);
 </script>
 </body>
