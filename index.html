@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>iPhone Dark Custom Edition</title>
+<title>iPhone Final Soul Edition</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root {
   --ios-bg: radial-gradient(circle at center, #1c1c1e 0%, #000 100%);
   --ios-blue: #0A84FF;
   --glass: rgba(255, 255, 255, 0.08);
-  --blur: blur(25px) saturate(180%);
+  --blur: blur(30px) saturate(180%);
   --icon-bg: #1c1c1e;
 }
 
@@ -32,8 +32,8 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 /* Home Screen */
 #home-screen { position: absolute; inset: 0; padding: 60px 20px; background: var(--ios-bg); z-index: 100; }
 .memo-widget { background: var(--glass); backdrop-filter: var(--blur); border-radius: 22px; width: 100%; padding: 20px; color: #fff; border: 0.5px solid rgba(255,255,255,0.1); margin-bottom: 30px; }
-.memo-title { font-size: 12px; color: #ff9500; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
-.memo-content { font-size: 16px; line-height: 1.6; letter-spacing: 0.5px; }
+.memo-title { font-size: 12px; color: #ff9500; font-weight: bold; margin-bottom: 8px; }
+.memo-content { font-size: 16px; line-height: 1.6; }
 
 .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 10px; }
 .app { text-align: center; color: rgba(255,255,255,0.9); cursor: pointer; font-size: 11px; }
@@ -47,12 +47,12 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 
 .chat-header { padding: 20px 15px 15px; display: flex; align-items: center; border-bottom: 0.5px solid #222; }
 .chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-.bubble { max-width: 78%; padding: 12px 16px; border-radius: 20px; color: #fff; font-size: 16px; }
+.bubble { max-width: 78%; padding: 12px 16px; border-radius: 20px; color: #fff; font-size: 16px; line-height: 1.4; }
 .you { background: #262629; align-self: flex-start; border-bottom-left-radius: 4px; }
 .me { background: var(--ios-blue); align-self: flex-end; border-bottom-right-radius: 4px; }
 
 .options-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(28, 28, 30, 0.98); padding: 20px 20px 45px; border-radius: 30px 30px 0 0; display: none; flex-direction: column; gap: 10px; z-index: 6000; }
-.option-btn { background: rgba(255,255,255,0.08); padding: 18px; border-radius: 15px; color: #fff; text-align: center; }
+.option-btn { background: rgba(255,255,255,0.08); padding: 18px; border-radius: 15px; color: #fff; text-align: center; cursor: pointer; }
 .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 135px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.5; z-index: 7000; cursor: pointer; }
 </style>
 </head>
@@ -71,18 +71,13 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
   <div id="home-screen">
     <div class="memo-widget">
       <div class="memo-title"><i class="fas fa-sticky-note"></i> 備忘錄</div>
-      <div class="memo-content">
-        ¹ 記得喝水<br>
-        ² 記得回訊息
-      </div>
+      <div class="memo-content">¹ 記得喝水<br>² 記得回訊息</div>
     </div>
-
     <div class="app-grid">
       <div class="app" onclick="openApp('messages-app')"><div class="icon" style="color:#34c759;"><i class="fas fa-comment"></i></div><span>訊息</span></div>
       <div class="app"><div class="icon" style="color:#ff3b30;"><i class="fas fa-calendar-alt"></i></div><span>行事曆</span></div>
-      <div class="app" onclick="openApp('ig-app')"><div class="icon" style="color:#dc2743;"><i class="fab fa-instagram"></i></div><span>Instagram</span></div>
+      <div class="app"><div class="icon" style="color:#dc2743;"><i class="fab fa-instagram"></i></div><span>Instagram</span></div>
     </div>
-
     <div class="dock">
       <div class="app"><div class="icon" style="color:#30D158; margin:0;"><i class="fas fa-phone"></i></div></div>
       <div class="app" onclick="openApp('safari-app')"><div class="icon" style="color:#0A84FF; margin:0;"><i class="fas fa-compass"></i></div></div>
@@ -106,16 +101,13 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
         <div style="flex:1; text-align:center; color:#fff; font-weight:600; margin-right:60px;">予延</div>
     </div>
     <div class="chat-body" id="chat-box"></div>
-    <div style="padding: 15px 15px 45px; background: #000;"><div onclick="showOptions()" style="background:#1c1c1e; border-radius:22px; padding:12px 18px; color:#fff; border: 1px solid #444; text-align:center;">回覆予延...</div></div>
+    <div style="padding: 15px 15px 45px; background: #000;"><div onclick="showOptions()" id="input-trigger" style="background:#1c1c1e; border-radius:22px; padding:12px 18px; color:#fff; border: 1px solid #444; text-align:center;">回覆予延...</div></div>
   </div>
 
   <div id="safari-app" class="app-window">
     <div class="nav-back" onclick="goHome()"><i class="fas fa-chevron-left"></i> 主畫面</div>
     <div style="padding: 20px 20px 10px; font-size: 34px; font-weight: 700; color: #fff;">Safari</div>
-    <div style="padding:20px; color:#fff;">
-      <div style="padding:15px; border-bottom:1px solid #333;">台北拉麵推薦</div>
-      <div style="padding:15px; border-bottom:1px solid #333;">Apex 槍法教學</div>
-    </div>
+    <div style="padding:20px; color:#fff;"><div style="padding:15px; border-bottom:1px solid #333;">台北拉麵推薦</div><div style="padding:15px; border-bottom:1px solid #333;">Apex 槍法教學</div></div>
   </div>
 
   <div id="options" class="options-overlay"></div>
@@ -123,7 +115,6 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 </div>
 
 <script>
-// --- 此處保持原本的 gameData 邏輯不變，僅更新 UI 切換功能 ---
 function updateClock() {
     const now = new Date();
     const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
@@ -133,9 +124,23 @@ function updateClock() {
 setInterval(updateClock, 1000); updateClock();
 
 let currentKey = '';
-const gameData = { /* ... 保持寶寶剛才滿意的曖昧版內容 ... */ };
+const gameData = {
+    'morning': { msg: "......早。怎麼這時間醒著？", options: [{ text: "想你想醒了。", next: 'm_1' }, { text: "餓醒的，想吃拉麵。", next: 'm_2' }, { text: "等某人回訊息啊。", next: 'm_3' }] },
+    'm_1': { msg: "順路帶妳去吃早午餐？十五分鐘後到。", options: [{ text: "好，等我。", next: 'end' }] },
+    'm_2': { msg: "早上吃拉麵太鹹。帶妳去喝熱的，快換衣服。", options: [{ text: "聽你的。", next: 'end' }] },
+    'm_3': { msg: "現在回了。去補眠，黑眼圈都要掉到地上了。", options: [{ text: "哪有！下午見。", next: 'end' }] },
+    'afternoon': { msg: "在忙。妳沒在偷懶吧？", options: [{ text: "研究 Apex 設定算嗎？", next: 'a_1' }, { text: "想去網咖開包廂打遊戲。", next: 'a_2' }] },
+    'a_1': { msg: "妳那槍法研究也沒用。下班帶妳去網咖練？", options: [{ text: "好啊，你訂位。", next: 'end' }] },
+    'a_2': { msg: "包廂訂好了，環境不錯。兩點去接妳。", options: [{ text: "收到！", next: 'end' }] },
+    'evening': { msg: "下班了嗎？我剛好在附近。", options: [{ text: "又是順路？", next: 'e_1' }, { text: "想吃拉麵。", next: 'e_2' }] },
+    'e_1': { msg: "不然呢？快上車，這裡不能久停。", options: [{ text: "這就下去。", next: 'end' }] },
+    'e_2': { msg: "排隊很長。不過我可以陪妳。", options: [{ text: "走吧！", next: 'end' }] },
+    'night': { msg: "......還沒睡？", options: [{ text: "你不也醒著。在想誰？", next: 'n_1' }, { text: "在想你今天說的話。", next: 'n_2' }] },
+    'n_1': { msg: "想一個半夜不睡覺的笨蛋。快去睡。", options: [{ text: "笨蛋也想你了。", next: 'end' }, { text: "憋死你算了，不睡。", next: 'end' }] },
+    'n_2': { msg: "別想了。明天見，晚安。", options: [{ text: "晚安。", next: 'end' }] },
+    'end': { msg: "乖。見面再說。", options: [] }
+};
 
-// 修復後的開啟邏輯
 function openApp(id) { document.getElementById(id).classList.add('active'); }
 function goHome() { document.querySelectorAll('.app-window').forEach(el=>el.classList.remove('active')); }
 function closeChat() { document.getElementById('chat-detail').classList.remove('active'); }
@@ -147,12 +152,34 @@ function openChat() {
         const hr = new Date().getHours();
         let start = (hr>=5&&hr<11)?'morning':(hr>=11&&hr<17)?'afternoon':(hr>=17&&hr<22)?'evening':'night';
         currentKey = start;
-        // 這裡會調用妳剛才滿意的對話內容
-        box.innerHTML = `<div class="bubble you">......（予延發來了訊息）</div>`;
+        box.innerHTML = `<div class="bubble you">${gameData[start].msg}</div>`;
     }
 }
-// 這裡僅示意，實際執行時會跑妳剛才確認過的邏輯
-function showOptions() { document.getElementById('options').style.display = 'flex'; }
+
+function showOptions() {
+    const data = gameData[currentKey];
+    const overlay = document.getElementById('options');
+    const box = document.getElementById('chat-box');
+    if (!data || !data.options || data.options.length === 0) return;
+    overlay.innerHTML = '';
+    data.options.forEach(opt => {
+        const btn = document.createElement('div'); btn.className = 'option-btn';
+        btn.innerText = opt.text;
+        btn.onclick = () => {
+            overlay.style.display = 'none';
+            box.innerHTML += `<div class="bubble me">${opt.text}</div>`;
+            currentKey = opt.next;
+            setTimeout(() => {
+                const node = gameData[currentKey];
+                box.innerHTML += `<div class="bubble you">${node.msg}</div>`;
+                document.getElementById('last-msg').innerText = node.msg;
+                box.scrollTop = box.scrollHeight;
+            }, 800);
+        };
+        overlay.appendChild(btn);
+    });
+    overlay.style.display = 'flex';
+}
 </script>
 </body>
 </html>
