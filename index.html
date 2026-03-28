@@ -2,8 +2,8 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>iPhone Pro Elite - v30 Secret Gift</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>iPhone Pro Elite - v31 Full View</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root {
@@ -23,12 +23,25 @@ body {
 }
 
 .phone {
-  width: 375px; height: 812px; background: #000; border-radius: 55px; 
-  position: relative; overflow: hidden; border: 12px solid #1c1c1e;
+  /* 關鍵修正：使用 dvh 單位避開網址列 */
+  width: 100vw; 
+  height: 100dvh; 
+  max-width: 375px; 
+  max-height: 812px;
+  background: #000; 
+  border-radius: 55px; 
+  position: relative; 
+  overflow: hidden; 
+  border: 12px solid #1c1c1e;
   box-shadow: 0 50px 100px rgba(0,0,0,0.9);
 }
 
-.status-bar { position: absolute; top: 0; width: 100%; height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; z-index: 10000; color: #fff; font-size: 14px; pointer-events: none; }
+/* 針對電腦版顯示微調 */
+@media (min-width: 400px) {
+  .phone { height: 812px; width: 375px; }
+}
+
+.status-bar { position: absolute; top: 0; width: 100%; height: 44px; display: flex; justify-content: space-between; align-items: center; padding: env(safe-area-inset-top) 32px 0; z-index: 10000; color: #fff; font-size: 14px; pointer-events: none; }
 .notch { width: 160px; height: 30px; background: #1c1c1e; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 10001; }
 
 #lock-screen { position: absolute; inset: 0; z-index: 9999; background: var(--ios-wallpaper); display: flex; flex-direction: column; align-items: center; padding-top: 100px; transition: 0.6s; cursor: pointer; }
@@ -39,7 +52,22 @@ body {
 .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .app { text-align: center; color: #fff; cursor: pointer; }
 .icon { width: 62px; height: 62px; border-radius: 15px; background: rgba(30, 30, 30, 0.85); display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-size: 32px; border: var(--border-glass); }
-.dock { position: absolute; bottom: 25px; left: 15px; right: 15px; height: 96px; background: rgba(255, 255, 255, 0.22); backdrop-filter: var(--ios-blur); border-radius: 38px; display: flex; justify-content: space-evenly; align-items: center; border: var(--border-glass); }
+
+/* 關鍵修正：Dock 加入安全區域距離 */
+.dock { 
+  position: absolute; 
+  bottom: calc(25px + env(safe-area-inset-bottom)); 
+  left: 15px; 
+  right: 15px; 
+  height: 96px; 
+  background: rgba(255, 255, 255, 0.22); 
+  backdrop-filter: var(--ios-blur); 
+  border-radius: 38px; 
+  display: flex; 
+  justify-content: space-evenly; 
+  align-items: center; 
+  border: var(--border-glass); 
+}
 
 .app-window { position: absolute; inset: 0; z-index: 1500; background: #000; display: none; flex-direction: column; opacity: 0; transform: translateY(30px); transition: 0.4s cubic-bezier(0.1, 0.8, 0.2, 1); }
 .app-window.active { display: flex; opacity: 1; transform: translateY(0); }
@@ -54,9 +82,15 @@ body {
 .me { background: var(--accent); align-self: flex-end; border-bottom-right-radius: 4px; }
 .you { background: #262629; align-self: flex-start; border-bottom-left-radius: 4px; }
 
+/* 關鍵修正：輸入框區塊加入底部安全距離 */
+.chat-input-area { 
+  padding: 15px 15px calc(15px + env(safe-area-inset-bottom)); 
+  background: #000; 
+}
+
 .custom-alert { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 270px; background: rgba(35, 35, 35, 0.9); backdrop-filter: var(--ios-blur); border-radius: 14px; display: none; flex-direction: column; z-index: 10000; border: var(--border-glass); }
 .alert-btn { padding: 14px; color: var(--accent); text-align: center; border-top: 0.5px solid rgba(255,255,255,0.1); cursor: pointer; font-weight: 600; }
-.reply-menu { position: absolute; bottom: 100px; left: 15px; right: 15px; background: rgba(44, 44, 46, 0.98); backdrop-filter: var(--ios-blur); border-radius: 14px; display: none; flex-direction: column; z-index: 3000; border: var(--border-glass); }
+.reply-menu { position: absolute; bottom: calc(100px + env(safe-area-inset-bottom)); left: 15px; right: 15px; background: rgba(44, 44, 46, 0.98); backdrop-filter: var(--ios-blur); border-radius: 14px; display: none; flex-direction: column; z-index: 3000; border: var(--border-glass); }
 .reply-menu.show { display: flex; }
 .menu-item { padding: 16px; color: var(--accent); text-align: center; border-bottom: 0.5px solid rgba(255,255,255,0.1); cursor: pointer; }
 .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 135px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.5; pointer-events: none; }
@@ -116,7 +150,7 @@ body {
     <div class="chat-body">
         <div class="bubble you">您訂購的貨物已到達門市，請在時間內來取貨，謝謝</div>
     </div>
-    <div style="padding:15px 15px 40px; background:#000;">
+    <div class="chat-input-area">
         <div onclick="showAlert('是給ccz的禮物')" style="background:#1c1c1e; border-radius:22px; padding:10px 18px; color:#8e8e93; border: 1px solid #333; cursor:pointer;">iMessage</div>
     </div>
   </div>
@@ -138,7 +172,7 @@ body {
         <div class="menu-item" onclick="sendReply('怎麼會對你生氣', '乖乖等我回家')">怎麼會對你生氣</div>
         <div class="menu-item" onclick="sendReply('哪有', '憋死你算了')">哪有</div>
     </div>
-    <div style="padding:15px 15px 40px; background:#000;"><div onclick="toggleReply(event)" style="background:#1c1c1e; border-radius:22px; padding:10px 18px; color:#8e8e93; border: 1px solid #333; cursor:pointer;">iMessage</div></div>
+    <div class="chat-input-area"><div onclick="toggleReply(event)" style="background:#1c1c1e; border-radius:22px; padding:10px 18px; color:#8e8e93; border: 1px solid #333; cursor:pointer;">iMessage</div></div>
   </div>
 
   <div id="search-app" class="app-window">
