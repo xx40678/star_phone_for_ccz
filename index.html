@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>iPhone Final Edition</title>
+<title>iPhone Final Soul Edition</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root {
@@ -18,7 +18,7 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 
 .phone { width: 100vw; height: 100dvh; max-width: 375px; max-height: 812px; background: #000; border-radius: 55px; position: relative; overflow: hidden; border: 12px solid #1c1c1e; }
 
-/* 頂部與狀態欄 */
+/* 頂部狀態與返回 */
 .status-bar { position: absolute; top: 0; width: 100%; height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; z-index: 5000; color: #fff; font-size: 14px; }
 .system-back { position: absolute; top: 46px; left: 20px; z-index: 4000; color: var(--ios-blue); font-size: 13px; display: none; align-items: center; font-weight: 500; cursor: pointer; }
 .notch { width: 160px; height: 30px; background: #1c1c1e; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-radius: 0 0 20px 20px; z-index: 5001; }
@@ -35,13 +35,13 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 .icon { width: 62px; height: 62px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-size: 30px; background: #2c2c2e; border: var(--border-glass); }
 .dock { position: absolute; bottom: 30px; left: 15px; right: 15px; height: 96px; background: rgba(255, 255, 255, 0.1); backdrop-filter: var(--ios-blur); border-radius: 38px; display: flex; justify-content: space-evenly; align-items: center; border: var(--border-glass); }
 
-/* 聊天介面 */
+/* 聊天與選項 */
 .app-window { position: absolute; inset: 0; z-index: 1500; background: #000; display: none; flex-direction: column; }
 .app-window.active { display: flex; }
 .chat-header { padding: 50px 15px 15px; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(20px); display: flex; align-items: center; border-bottom: 0.5px solid #222; }
 .chat-back-btn { color: var(--ios-blue); font-size: 17px; width: 85px; cursor: pointer; }
 .chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-.bubble { max-width: 78%; padding: 12px 16px; border-radius: 20px; color: #fff; font-size: 16px; line-height: 1.5; }
+.bubble { max-width: 78%; padding: 12px 16px; border-radius: 20px; color: #fff; font-size: 16px; line-height: 1.5; word-wrap: break-word; }
 .you { background: #262629; align-self: flex-start; border-bottom-left-radius: 4px; }
 .me { background: var(--ios-blue); align-self: flex-end; border-bottom-right-radius: 4px; }
 
@@ -78,7 +78,7 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
     <div style="padding: 65px 20px 10px; font-size: 34px; font-weight: 700; color: #fff;">訊息</div>
     <div style="display:flex; align-items:center; padding:15px 20px; border-bottom:0.5px solid #222;" onclick="openChat()">
       <div style="width:50px; height:50px; background:#333; border-radius:50%; margin-right:15px; display:flex; align-items:center; justify-content:center; color:#fff;">延</div>
-      <div style="flex:1;"><div style="color:#fff; font-weight:600;">予延</div><div id="last-msg" style="color:#8e8e93; font-size:14px;">點擊開啟...</div></div>
+      <div style="flex:1;"><div style="color:#fff; font-weight:600;">予延</div><div id="last-msg" style="color:#8e8e93; font-size:14px;">點擊開啟對話...</div></div>
     </div>
   </div>
 
@@ -94,8 +94,8 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
   <div id="safari-app" class="app-window">
     <div style="padding: 65px 20px 10px; font-size: 34px; font-weight: 700; color: #fff;">Safari</div>
     <div style="padding:15px; color:#fff; border-bottom:1px solid #333;">如何攻略予延</div>
-    <div style="padding:15px; color:#fff; border-bottom:1px solid #333;">如何提升apex槍法</div>
     <div style="padding:15px; color:#fff; border-bottom:1px solid #333;">台北拉麵推薦</div>
+    <div style="padding:15px; color:#fff; border-bottom:1px solid #333;">網咖包廂價錢</div>
   </div>
 
   <div id="options" class="options-overlay"></div>
@@ -114,39 +114,83 @@ setInterval(updateClock, 1000); updateClock();
 let currentKey = '';
 const gameData = {
     // 【晨間】
-    'morning': { msg: "......早。怎麼這時間醒著？", options: [{ text: "想你想醒了。", next: 'm_1' }, { text: "剛醒，想聽你的聲音。", next: 'm_2' }, { text: "肚子餓了。", next: 'm_3' }] },
-    'm_1': { msg: "大清早就不正經。起床，帶妳去吃好吃的。", options: [{ text: "好啊，老地方等你。", next: 'end_coffee' }, { text: "我想吃你做的。", next: 'end_cook' }] },
-    'm_2': { msg: "我聲音有什麼好聽的？掛掉，直接通視訊。", options: [{ text: "好啊，不准掛喔。", next: 'end_video' }, { text: "我還沒梳妝打扮啦！", next: 'm_2a' }] },
-    'm_2a': { msg: "妳什麼樣子我沒看過？接就對了。", options: [{ text: "霸道鬼。", next: 'end_video' }] },
+    'morning': { msg: "......早。怎麼這時間醒著？", options: [
+        { text: "想你想醒了。", next: 'm_1' },
+        { text: "肚子餓醒了，帶我去吃拉麵。", next: 'm_2' },
+        { text: "某個高冷帥哥沒回我訊息，我睡不著。", next: 'm_3' }
+    ]},
+    'm_1': { msg: "大清早就不正經。起床，我去載妳。", options: [
+        { text: "那我要在車上補眠喔。", next: 'm_1_a' },
+        { text: "你開車還是騎車？我想抱你。", next: 'm_1_b' }
+    ]},
+    'm_1_a': { msg: "睡吧，到了我會抱妳下車。別流口水在我座位上。", options: [{ text: "討厭！晚點見。", next: 'end_date' }] },
+    'm_1_b': { msg: "騎車。自己帶好外套，外面冷。", options: [{ text: "知道了，等你。", next: 'end_date' }] },
+    'm_2': { msg: "大早上吃什麼拉麵？胃不要了？先去喝熱粥。", options: [
+        { text: "不要，我要吃你做的。", next: 'm_2_a' },
+        { text: "好吧，聽你的。", next: 'end_breakfast' }
+    ]},
+    'm_2_a': { msg: "真麻煩。過來吧，我下廚。", options: [{ text: "馬上飛過去！", next: 'end_home' }] },
+    'm_3': { msg: "我這不是回了嗎。再睡會，乖。", options: [
+        { text: "那你哄我睡。", next: 'm_3_a' },
+        { text: "不要，我要你現在陪我。", next: 'm_shock' }
+    ]},
+    'm_3_a': { msg: "掛著視訊吧，我讀書給妳聽。", options: [{ text: "好，不准掛喔。", next: 'end_video' }] },
 
     // 【午間】
-    'afternoon': { msg: "忙到一半。妳在幹嘛？沒在偷懶吧？", options: [{ text: "在偷懶，想打 APEX。", next: 'a_1' }, { text: "在想你，想得快瘋了。", next: 'a_2' }, { text: "在找台北拉麵推薦。", next: 'a_3' }] },
-    'a_1': { msg: "妳那種槍法，沒我帶妳吃得下雞嗎？上線。", options: [{ text: "去電競網咖開包廂打？比較有感。", next: 'a_1a' }, { text: "你帶我飛就好。", next: 'end_apex' }] },
-    'a_1a': { msg: "可以。我現在過去載妳，包廂我訂好了。", options: [{ text: "這麼快！", next: 'end_cybercafe' }] },
+    'afternoon': { msg: "在忙。妳沒在偷懶吧？", options: [
+        { text: "在想你，算偷懶嗎？", next: 'a_1' },
+        { text: "想去網咖開包廂打 APEX。", next: 'a_2' },
+        { text: "我搜尋了台北拉麵，要一起去嗎？", next: 'a_3' }
+    ]},
+    'a_1': { msg: "算。效率這麼低，下班我得好好盯著妳。", options: [
+        { text: "你要怎麼盯？", next: 'a_1_a' },
+        { text: "那我也要盯著你。", next: 'a_1_b' }
+    ]},
+    'a_1_a': { msg: "關在房間裡盯。怕了嗎？", options: [{ text: "誰怕誰啊！", next: 'end_home' }] },
+    'a_2': { msg: "妳那種槍法，沒我帶妳吃得下雞？走吧，包廂我訂好了。", options: [
+        { text: "你竟然已經訂好了？", next: 'a_2_a' },
+        { text: "那我要選有沙發的那種包廂。", next: 'end_cyber' }
+    ]},
+    'a_2_a': { msg: "因為我知道妳這小腦袋在想什麼。兩點門口見。", options: [{ text: "收到！", next: 'end_cyber' }] },
 
     // 【傍晚】
-    'evening': { msg: "下班了嗎？我在妳公司附近，順路接妳。", options: [{ text: "自戀，誰說要讓你接的？", next: 'e_1' }, { text: "剛好想約你吃拉麵。", next: 'e_2' }, { text: "今天太累了...", next: 'e_3' }] },
-    'e_1': { msg: "我說的。路邊不能久停，限妳三分鐘下來。", options: [{ text: "討厭，等我啦！", next: 'end_pickup' }, { text: "我偏要五分鐘。", next: 'e_1a' }] },
-    'e_1a': { msg: "遲到一分鐘扣一個親親。妳自己看著辦。", options: [{ text: "我馬上飛下去！", next: 'end_pickup' }] },
+    'evening': { msg: "下班了嗎？三分鐘後到妳公司樓下。", options: [
+        { text: "你怎麼知道我這時候下班？", next: 'e_1' },
+        { text: "我想先去逛街。", next: 'e_2' },
+        { text: "今天被主管罵了...憋死我了。", next: 'e_3' }
+    ]},
+    'e_3': { msg: "誰敢罵妳？跟我說，我去處理。先上車，帶妳去吃好吃的消氣。", options: [
+        { text: "你最好了。", next: 'e_3_a' },
+        { text: "我只想抱抱你。", next: 'end_hug' }
+    ]},
+    'e_3_a': { msg: "只有這時候才嘴甜。坐好，帶妳去吃那家妳搜過的拉麵。", options: [{ text: "走吧！", next: 'end_ramen' }] },
 
     // 【深夜】
-    'night': { msg: "......妳還沒睡？", options: [{ text: "想你，睡不著。", next: 'n_1' }, { text: "你不也醒著？在幹嘛？", next: 'n_2' }, { text: "在看你之前發的照片。", next: 'n_3' }] },
-    'n_1': { msg: "睡不著就出來。我在妳家門口。", options: [{ text: "真的假的？你瘋了？", next: 'n_1a' }, { text: "好，我現在下去。", next: 'end_midnight_hug' }] },
-    'n_1a': { msg: "看窗外。路燈下那個帥哥是誰？", options: [{ text: "看到了，等我！", next: 'end_window' }] },
-    'n_2': { msg: "在想一個不聽話、大半夜還在滑手機的笨蛋。", options: [{ text: "說誰笨蛋呢！", next: 'n_2a' }, { text: "那個笨蛋也想你了。", next: 'end_phone_love' }] },
-    'n_2a': { msg: "說妳。再不睡，我就過去把妳手機收走。", options: [{ text: "那我也要憋死你，不理你了。", next: 'end_silent' }, { text: "你收啊，看你敢不敢。", next: 'end_midnight_hug' }] },
+    'night': { msg: "......妳還沒睡？", options: [
+        { text: "你不也醒著。在想誰？", next: 'n_1' },
+        { text: "睡不著，心跳很快。", next: 'n_2' },
+        { text: "我剛剛在看我們之前的照片。", next: 'n_3' }
+    ]},
+    'n_1': { msg: "想一個半夜不睡覺、還在跟我鬧脾氣的笨蛋。", options: [
+        { text: "誰跟你鬧脾氣了！", next: 'n_1_a' },
+        { text: "笨蛋也正在想你。", next: 'end_love' }
+    ]},
+    'n_1_a': { msg: "還說沒有？語氣都變了。出來，我在妳家樓下。", options: [
+        { text: "現在？天啊你瘋了！", next: 'end_midnight' },
+        { text: "憋死妳算了，我不下去。", next: 'n_1_b' }
+    ]},
+    'n_1_b': { msg: "那我就在下面等到妳消氣。自己看著辦。", options: [{ text: "厚...等我啦！", next: 'end_midnight' }] },
 
-    // 結局節點
-    'end_coffee': { msg: "十五分鐘後到。乖一點。", options: [] },
-    'end_cook': { msg: "真拿妳沒辦法。過來吧，我下廚。", options: [] },
-    'end_video': { msg: "（已撥通視訊...）妳臉怎麼這麼紅？", options: [] },
-    'end_apex': { msg: "房號 0328。遲到的話我直接開了。", options: [] },
-    'end_cybercafe': { msg: "網咖包廂冷氣冷，記得帶外套。我到了。", options: [] },
-    'end_pickup': { msg: "看到妳了。這裡，別跑錯車。", options: [] },
-    'end_midnight_hug': { msg: "乖。過來抱一個，不然不放妳回去睡。", options: [] },
-    'end_window': { msg: "別看了，快下來。外面冷。", options: [] },
-    'end_phone_love': { msg: "既然想我，那就掛著電話睡吧。不准掛斷。", options: [] },
-    'end_silent': { msg: "......好啊，看誰憋得久。晚安。", options: [] }
+    // 結局列表
+    'end_date': { msg: "看好妳的訊息，快到了會敲妳。", options: [] },
+    'end_home': { msg: "密碼沒改，自己進來。我正在煮。", options: [] },
+    'end_video': { msg: "（已開啟視訊）妳頭髮亂得跟鳥窩一樣，真可愛。", options: [] },
+    'end_breakfast': { msg: "乖。吃完記得拍給我看。", options: [] },
+    'end_cyber': { msg: "包廂冷氣冷，我帶了外套給妳。到了。", options: [] },
+    'end_ramen': { msg: "這家店要排很久。妳准許靠在我肩膀上休息。", options: [] },
+    'end_hug': { msg: "過來。抱緊一點，我就在妳後面。", options: [] },
+    'end_midnight': { msg: "看窗外。路燈下那個最帥的就是我。快下來。", options: [] },
+    'end_love': { msg: "既然想我，那就掛著電話睡吧。不准掛斷。", options: [] }
 };
 
 function openApp(id) { document.getElementById(id).classList.add('active'); document.getElementById('sys-back').style.display='flex'; }
@@ -168,7 +212,10 @@ function openChat() {
 function showOptions() {
     const data = gameData[currentKey];
     const overlay = document.getElementById('options');
-    if (!data || !data.options || data.options.length === 0) return;
+    if (!data || !data.options || data.options.length === 0) {
+        box.innerHTML += `<div class="bubble you">予延：乖，這次聊完了。</div>`;
+        return;
+    }
     overlay.innerHTML = '';
     data.options.forEach(opt => {
         const btn = document.createElement('div'); btn.className = 'option-btn';
@@ -180,9 +227,11 @@ function showOptions() {
             currentKey = opt.next;
             setTimeout(() => {
                 const node = gameData[currentKey];
-                box.innerHTML += `<div class="bubble you">${node.msg}</div>`;
-                document.getElementById('last-msg').innerText = node.msg;
-                box.scrollTop = box.scrollHeight;
+                if(node) {
+                    box.innerHTML += `<div class="bubble you">${node.msg}</div>`;
+                    document.getElementById('last-msg').innerText = node.msg;
+                    box.scrollTop = box.scrollHeight;
+                }
             }, 800);
         };
         overlay.appendChild(btn);
