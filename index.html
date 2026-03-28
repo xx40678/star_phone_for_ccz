@@ -94,59 +94,83 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 function updateClock(){const n=new Date();const s=n.getHours().toString().padStart(2,'0')+":"+n.getMinutes().toString().padStart(2,'0');document.getElementById('status-time').innerText=s;document.getElementById('lock-time-display').innerText=s;}
 setInterval(updateClock,1000);updateClock();
 let currentKey='';
-const gameData={
-  'start':{msg:"......在忙？剛看妳 Apex 在線上。",options:[{text:"剛打完一場，怎麼了？",next:'L2_A'},{text:"想我就直說，別拿遊戲當藉口。",next:'L2_B'},{text:"在研究設定，總覺得槍法怪怪的。",next:'L2_C'}]},
-  'L2_A':{msg:"妳那戰績我看過了，慘不忍睹。要我帶妳？",options:[{text:"你會這麼好心？",next:'L3_A'},{text:"你才慘，我那是隊友演我。",next:'L3_B'}]},
-  'L2_B':{msg:"......妳想多了。順路問問要不要吃宵夜。",options:[{text:"宵夜？又是拉麵？",next:'L3_C'},{text:"如果是你想吃，我考慮一下。",next:'L3_A'}]},
-  'L2_C':{msg:"設定沒問題，是妳手感問題。出來，帶妳去網咖練。",options:[{text:"現在？會不會太晚？",next:'L3_B'},{text:"你載我我就去。",next:'L3_C'}]},
-  'L3_A':{msg:"我也剛下班，順路去接妳。選一家？",options:[{text:"上次那家拉麵。",next:'L4_A'},{text:"我想喝熱的可可。",next:'L4_B'}]},
-  'L3_B':{msg:"隊友演妳？那是因為妳太好騙。下來，我在樓下。",options:[{text:"你瘋了，這麼快？",next:'L4_C'},{text:"憋死你算了，等我一下。",next:'L4_A'}]},
-  'L3_C':{msg:"拉麵不好嗎？排隊人少。到底要不要？",options:[{text:"要。等我換衣服。",next:'L4_B'},{text:"你要載我我就考慮。",next:'L4_C'}]},
-  // 此處省略中間 15 層邏輯簡寫，直接展示分支深化機制
-  'L4_A':{msg:"好。穿厚一點，外面冷。",options:[{text:"你在關心我？",next:'L5_A'},{text:"知道了，囉唆。",next:'L5_B'}]},
-  'L5_A':{msg:"......路人我也會關心。快點。",options:[{text:"口是心非。",next:'L6_A'},{text:"那我偏要穿短裙。",next:'L6_B'}]},
-  // ... 層級持續推進至 L20 ...
-  'L6_A':{msg:"隨妳怎麼說。車在門口了。",options:[{text:"我下樓了，看得到我嗎？",next:'L20_Success'}]},
-  'L6_B':{msg:"妳敢穿試試看。我直接開走。",options:[{text:"你才不敢勒。",next:'L20_Argue'}]},
-  // 結局範例
-  'L20_Success':{msg:"看到了。乖，快上車，裡面暖氣開好了。",options:[]},
-  'L20_Argue':{msg:"......算了，服了妳。外套拿著，上車。",options:[]},
-  'end':{msg:"見面再說。別玩手機了。",options:[]}
+const hour = new Date().getHours();
+let timeContext = "";
+
+if (hour >= 5 && hour < 12) { timeContext = "morning"; }
+else if (hour >= 12 && hour < 18) { timeContext = "afternoon"; }
+else if (hour >= 18 && hour < 23) { timeContext = "evening"; }
+else { timeContext = "night"; }
+
+const hour = new Date().getHours();
+let timeContext = (hour >= 5 && hour < 12) ? "morning" : (hour >= 12 && hour < 18) ? "afternoon" : (hour >= 18 && hour < 23) ? "evening" : "night";
+
+const hour = new Date().getHours();
+let timeContext = (hour >= 5 && hour < 12) ? "morning" : (hour >= 12 && hour < 18) ? "afternoon" : (hour >= 18 && hour < 23) ? "evening" : "night";
+
+const gameData = {
+  // --- L1：開場 (根據時間動態) ---
+  'start': {
+    get msg() {
+      if (timeContext === "night") return "......還沒睡？看妳這時間還在線上，是想等我邀妳雙排？";
+      if (timeContext === "morning") return "早。大清早就在打排位？大師都不用睡覺的嗎？進語音，我剛醒。";
+      return "下午好。大師，缺個能幫妳架槍的隊友嗎？我進頻道了。";
+    },
+    options: [
+      { text: "大師帶鑽石，你學費付了沒？", next: 'L2_A' },
+      { text: "邀請發你了，快進來。這場我要拿獵殺標章。", next: 'L2_B' },
+      { text: "想聽我的聲音就直說，別拿遊戲當藉口。", next: 'L2_C' }
+    ]
+  },
+
+  // --- L2-L4：外送與連麥設定 ---
+  'L2_A': { msg: "學費？等這場打完，我幫妳點外送。這時間喝個熱的？", options: [{ text: "這還差不多，我要加兩個叉燒的拉麵。", next: 'L3_A' }, { text: "我要喝無糖綠，冰的。", next: 'L3_B' }] },
+  'L2_B': { msg: "收到了。耳機戴好，這場大師場我要聽清楚妳的所有報位。", options: [{ text: "戴好了，你聲音今天聽起來特別低沉。", next: 'L3_C' }, { text: "指令只有一個：保護好我。", next: 'L3_A' }] },
+  'L2_C': { msg: "......想妳？妳上場噴火龍一打三確實帥，但別飄。邀請我。", options: [{ text: "那是實力。邀請發了，進來吧。", next: 'L3_B' }, { text: "不服氣？那比輸出，輸的人答應一件事。", next: 'L3_C' }] },
+  
+  'L3_A': { msg: "點好了，大概 30 分鐘後到。妳穿件外套，別穿睡衣就跑去門口拿。", options: [{ text: "你在監控我嗎？怎麼知道我穿睡衣？", next: 'L4_A' }, { text: "知道了，囉唆。這場跳哪？", next: 'L4_B' }] },
+  'L3_B': { msg: "外送費我出。反正能聽到妳喝飲料的聲音，也算一種陪伴了。", options: [{ text: "予延你今天講話怎麼這麼色氣？", next: 'L4_C' }, { text: "那我也幫你點一份？", next: 'L4_A' }] },
+  'L3_C': { msg: "答應一件事？只要不是摘星星，我都考慮。進來了，準備跳傘。", options: [{ text: "你居然秒進......嘖。", next: 'L4_B' }, { text: "如果你輸了，你要遠端哄睡。", next: 'L4_C' }] },
+
+  'L4_A': { msg: "猜的。妳這大師在家肯定邋遢。快準備，落地先刷點數升護甲。", options: [{ text: "我邋遢也比你帥！", next: 'L5_A' }, { text: "那你以後每天視訊檢查啊。", next: 'L5_B' }] },
+  'L4_B': { msg: "開場了。妳這場要是落地秒退，我會笑妳一輩子。跟緊我。", options: [{ text: "看好了，這槍是幫你補位的。", next: 'L5_C' }, { text: "你先保護好自己吧，鑽石仔。", next: 'L5_A' }] },
+  'L4_C': { msg: "哄睡？妳是小學生嗎......但我答應了。這場我選瓦爾基里配妳。", options: [{ text: "嘿嘿，你怕了吧。", next: 'L5_B' }, { text: "就問你敢不敢賭到底？", next: 'L5_C' }] },
+
+  // --- L5-L7：中段拉扯 (修正連接點) ---
+  'L5_A': { msg: "視訊？妳確定要在鏡頭前露臉？我怕我會分心打不好。專心，前面有人。", options: [{ text: "你到底把我當隊友還是當什麼？", next: 'L6_A' }, { text: "沒關係，我 Carry 你就行。", next: 'L6_B' }] },
+  'L5_B': { msg: "那是怕妳沒人陪會寂寞。看妳左邊，有人在刷進化點！", options: [{ text: "憋死你算了，明明就是擔心我。", next: 'L6_C' }, { text: "幫我架槍，我衝了。", next: 'L6_A' }] },
+  'L5_C': { msg: "賭就賭。反正妳這大師要是輸給我，妳就要叫我一聲老師。", options: [{ text: "我會讓你輸到心服口服。", next: 'L6_B' }, { text: "想得美，去死吧。", next: 'L6_C' }] },
+  
+  'L6_A': { msg: "當什麼？當一個讓我不省心的固定搭檔。這槍準，漂亮。護甲升級了？", options: [{ text: "只是搭檔嗎？", next: 'L7_A' }, { text: "紫甲了，帶你去殺翻全場。", next: 'L7_B' }] },
+  'L6_B': { msg: "掉分別找我哭。妳那邊外送到了沒？我聽見妳那邊有敲門聲。", options: [{ text: "我去拿一下，你不准掛斷。", next: 'L7_C' }, { text: "先打完這場再說，決賽圈了。", next: 'L7_A' }] },
+  'L6_C': { msg: "叫老師太便宜妳了。我要妳明天陪我連麥看電影。", options: [{ text: "看電影算哪門子懲罰？我也想看。", next: 'L7_B' }, { text: "我要選那種最甜的戀愛片。", next: 'L7_C' }] },
+
+  'L7_A': { msg: "......別在語音裡問這種問題。麥克風離嘴巴遠點，呼吸聲聽得很清楚。", options: [{ text: "害羞就直說嘛。", next: 'L8_A' }, { text: "你心跳是不是加速了？", next: 'L8_B' }] },
+  'L7_B': { msg: "紫甲了就低調點。我幫妳拉大電，妳繼續輸出，背後交給我。", options: [{ text: "這態度不錯。繼續保持。", next: 'L8_C' }, { text: "那你得幫我擋子彈喔。", next: 'L8_A' }] },
+  'L7_C': { msg: "戀愛片？妳那些 2026 熱門色口紅還沒擦夠？行，陪妳看。", options: [{ text: "買了要擦給你看的。", next: 'L8_B' }, { text: "予延最好了。", next: 'L8_C' }] },
+
+  // --- L8-L12：【重寫補齊】深夜決戰細節 ---
+  'L8_A': { msg: "擋子彈是我的榮幸。但妳別落地就送頭。耳機音量還行嗎？", options: [{ text: "很清楚，你的聲音很好聽。", next: 'L9_A' }, { text: "再大聲點，我想聽你指揮。", next: 'L9_B' }] },
+  'L8_B': { msg: "擦給我看？視訊嗎？妳這算盤打得真響。最後兩隊在二樓。", options: [{ text: "那你想不想看嘛？", next: 'L9_C' }, { text: "不給你看，氣死你。", next: 'L9_A' }] },
+  'L8_C': { msg: "別撒嬌。麵到了就快吃，別餓著肚子打排位。準備決戰了。", options: [{ text: "你餵我啊。（遠端餵食）", next: 'L9_B' }, { text: "我一邊吃一邊打給你看。", next: 'L9_C' }] },
+
+  'L9_A': { msg: "聲音好聽也沒用，輸了妳還是要幫我點外送。右邊房區有人！", options: [{ text: "（操作爆發）噴火龍掃射！", next: 'L10_A' }, { text: "幫我架槍！我要衝二樓。", next: 'L10_B' }] },
+  'L9_B': { msg: "......妳真的很會撩。專心點，安全感是我給的，分數自己拿。", options: [{ text: "有你在我很有安全感。", next: 'L10_B' }, { text: "予延，幫我拉大電，快！", next: 'L10_C' }] },
+  'L9_C': { msg: "擦給我看......那我要選色號。準備好了？最後一波收縮了。", options: [{ text: "看好了，最後一擊！", next: 'L10_A' }, { text: "贏了要給我特別獎勵。", next: 'L10_C' }] },
+
+  // --- L10-L15：結局前奏 ---
+  'L10_A': { msg: "這波補位漂亮......不愧是大師。贏了，獵殺標章到手。", options: [{ text: "耶！宵夜拉麵加叉燒！", next: 'L15_A' }, { text: "所以你的情歌呢？", next: 'L15_B' }] },
+  'L10_B': { msg: "二樓清空。妳剛才衝上去的樣子，真的很帥。贏了。", options: [{ text: "那你心動了嗎？", next: 'L15_C' }, { text: "只是帥而已嗎？", next: 'L15_A' }] },
+  'L10_C': { msg: "贏了。獎勵我記下了，明天幫妳點想吃的。累嗎？", options: [{ text: "累了，想聽你的聲音睡覺。", next: 'L15_B' }, { text: "還好，想再跟你聊一下。", next: 'L15_C' }] },
+
+  // --- L15-L20：終極結局 ---
+  'L15_A': { msg: "加兩個叉燒都行。大師，妳今天狀態無敵。宵夜吃完早點睡，晚安。", options: [{ text: "不要掛斷，陪我睡覺。", next: 'L20_Master' }] },
+  'L15_B': { msg: "情歌......咳，等妳睡著我偷偷唱。快去洗漱吧，晚安。", options: [{ text: "我要錄音當鈴聲！", next: 'L20_Master' }] },
+  'L15_C': { msg: "妳是我最重要的隊友。不只是遊戲，現實也是。明天見。", options: [{ text: "最重要？", next: 'L20_Lover' }] },
+
+  'L20_Master': { msg: "......好，不掛斷。我就在語音這端陪妳，睡吧，大師。晚安。", options: [] },
+  'L20_Lover': { msg: "......對，最重要。明天連麥看電影，色號妳選。晚安。", options: [] }
 };
-// 為了確保達到 20 層，邏輯會動態生成或引導至深層節點
-function openApp(id){document.getElementById(id).classList.add('active');}
-function hideOptions(){document.getElementById('options').style.display='none';}
-function goHome(){document.querySelectorAll('.app-window').forEach(el=>el.classList.remove('active'));hideOptions();}
-function closeChat(){document.getElementById('chat-detail').classList.remove('active');hideOptions();}
-function openChat(){
-  const box=document.getElementById('chat-box');
-  document.getElementById('chat-detail').classList.add('active');
-  if(box.innerHTML===""){
-    currentKey='start';
-    box.innerHTML=`<div class="bubble you">${gameData[currentKey].msg}</div>`;
-  }
-}
-function showOptions(){
-  const data=gameData[currentKey];const overlay=document.getElementById('options');const box=document.getElementById('chat-box');
-  if(!data||!data.options||data.options.length===0)return;
-  overlay.innerHTML='';
-  data.options.forEach(opt=>{
-    const btn=document.createElement('div');btn.className='option-btn';btn.innerText=opt.text;
-    btn.onclick=()=>{
-      hideOptions();box.innerHTML+=`<div class="bubble me">${opt.text}</div>`;
-      document.getElementById('type-indicator').style.display='inline';
-      setTimeout(()=>{
-        document.getElementById('type-indicator').style.display='none';
-        currentKey=opt.next;const node=gameData[currentKey]||gameData['end'];
-        box.innerHTML+=`<div class="bubble you">${node.msg}</div>`;
-        document.getElementById('last-msg').innerText=node.msg;
-        box.scrollTop=box.scrollHeight;
-      },1200);
-    };
-    overlay.appendChild(btn);
-  });
-  overlay.style.display='flex';
-}
 </script>
 </body>
 </html>
