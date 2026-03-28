@@ -140,22 +140,27 @@ let currentKey = 'start';
 const gameData = {
     'start': {
         options: [
-            { text: "在等你回訊息啊，高冷帥哥。（故意調侃他）", next: 'q1_wait', impact: 'surprised' },
-            { text: "睡不著。你呢？為什麼還醒著？", next: 'q1_why', impact: 'calm' }
+            { text: "在等你回訊息啊，高冷帥哥。", next: 'q1_wait' },
+            { text: "睡不著。你呢？為什麼還醒著？", next: 'q1_why' }
         ]
     },
     'q1_wait': { 
-        you: "予延：......別亂叫。*心情：耳根有點紅*", 
-        options: [{ text: "臉紅了嗎？真可惜隔著螢幕看不到。", next: 'q2_face', impact: 'teasing' }] 
+        you: "予延：......別亂叫。", 
+        options: [{ text: "臉紅了嗎？真可惜隔著螢幕看不到。", next: 'q2_face' }] 
     },
     'q1_why': { 
-        you: "予延：在看妳之前發的那張照片。*心情：專注*", 
-        options: [{ text: "哪一張？我有發過照片嗎？", next: 'q2_photo', impact: 'curious' }] 
+        you: "予延：在看妳之前發的那張照片。", 
+        options: [{ text: "哪一張？我有發過照片嗎？", next: 'q2_photo' }] 
     },
-    'q2_face': { you: "予延：沒紅。快去睡覺。*心情：有些羞赧，不自覺地抓了抓頭髮*", options: [] },
-    'q2_photo': { you: "予延：這張。妳笑得很傻的那張。*心情：嘴角微微上揚*", options: [] }
+    'q2_face': { 
+        you: "予延：沒紅。快去睡覺。", 
+        options: [] 
+    },
+    'q2_photo': { 
+        you: "予延：這張。妳笑得很傻的那張。", 
+        options: [] 
+    }
 };
-
 function openApp(id) { document.getElementById(id).classList.add('active'); }
 function closeApp() { 
     if(document.getElementById('chat-yuyan').classList.contains('active')) return; 
