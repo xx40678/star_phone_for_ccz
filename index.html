@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>iPhone Epic Story Edition</title>
+<title>ccz's iPhone</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root {
@@ -18,159 +18,128 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 .phone { width: 100vw; height: 100dvh; max-width: 375px; max-height: 812px; background: #000; border-radius: 55px; position: relative; overflow: hidden; border: 12px solid #1c1c1e; }
 .status-bar { position: absolute; top: 0; width: 100%; height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; z-index: 5000; color: #fff; font-size: 14px; }
 .notch { width: 160px; height: 30px; background: #1c1c1e; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-radius: 0 0 20px 20px; z-index: 5001; }
+
+/* 鎖屏介面 */
 #lock-screen { position: absolute; inset: 0; z-index: 4500; background: var(--ios-bg); display: flex; flex-direction: column; align-items: center; padding-top: 100px; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
 .lock-time { font-size: 80px; font-weight: 200; color: #fff; }
 .lock-date { font-size: 22px; font-weight: 600; color: #fff; margin-top: 5px; }
-.lock-quote { margin-top: 15px; color: rgba(255,255,255,0.8); font-size: 15px; }
+.lock-quote { margin-top: 15px; color: rgba(255,255,255,0.8); font-size: 15px; letter-spacing: 1px; }
+
+/* 主畫面 */
 #home-screen { position: absolute; inset: 0; padding: 60px 20px; background: var(--ios-bg); z-index: 100; }
 .memo-widget { background: var(--glass); backdrop-filter: var(--blur); border-radius: 22px; width: 100%; padding: 20px; color: #fff; border: 0.5px solid rgba(255,255,255,0.1); margin-bottom: 30px; }
-.memo-title { font-size: 12px; color: #ff9500; font-weight: bold; margin-bottom: 8px; }
-.memo-content { font-size: 16px; line-height: 1.6; }
+.memo-title { font-size: 12px; color: #ff9500; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
+.memo-content { font-size: 15px; line-height: 1.6; color: #efefef; }
+
 .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 10px; }
 .app { text-align: center; color: rgba(255,255,255,0.9); cursor: pointer; font-size: 11px; }
 .icon { width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; font-size: 28px; background: var(--icon-bg); border: 0.5px solid rgba(255,255,255,0.1); }
+
 .dock { position: absolute; bottom: 25px; left: 15px; right: 15px; height: 92px; background: rgba(255, 255, 255, 0.1); backdrop-filter: var(--blur); border-radius: 35px; display: flex; justify-content: space-evenly; align-items: center; }
+
+/* App 視窗 */
 .app-window { position: absolute; inset: 0; z-index: 1500; background: #000; display: none; flex-direction: column; }
 .app-window.active { display: flex; }
-.nav-header { padding: 50px 15px 15px; display: flex; align-items: center; justify-content: space-between; background: rgba(20, 20, 20, 0.9); border-bottom: 0.5px solid #333; }
-.back-btn { color: var(--ios-blue); font-size: 17px; cursor: pointer; display: flex; align-items: center; min-width: 80px; }
-.header-title { color: #fff; font-weight: 600; text-align: center; flex: 1; font-size: 17px; }
-.chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-.bubble { max-width: 78%; padding: 12px 16px; border-radius: 20px; color: #fff; font-size: 16px; line-height: 1.4; }
-.you { background: #262629; align-self: flex-start; border-bottom-left-radius: 4px; }
-.me { background: var(--ios-blue); align-self: flex-end; border-bottom-right-radius: 4px; }
-.typing { font-size: 12px; color: #8e8e93; margin-left: 5px; display: none; }
-.options-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(28, 28, 30, 0.98); padding: 20px 20px 45px; border-radius: 30px 30px 0 0; display: none; flex-direction: column; gap: 10px; z-index: 6000; max-height: 60%; overflow-y: auto; }
-.option-btn { background: rgba(255,255,255,0.08); padding: 18px; border-radius: 15px; color: #fff; text-align: center; cursor: pointer; }
+.nav-header { padding: 50px 15px 15px; display: flex; align-items: center; justify-content: space-between; background: rgba(20, 20, 20, 0.94); border-bottom: 0.5px solid #333; }
+.back-btn { color: var(--ios-blue); font-size: 17px; cursor: pointer; }
+.header-title { color: #fff; font-weight: 600; font-size: 17px; }
+
+/* Safari 特化樣式 */
+.safari-list { padding: 10px 0; }
+.safari-item { padding: 15px 20px; color: #fff; border-bottom: 0.5px solid #2c2c2e; display: flex; align-items: center; gap: 15px; font-size: 15px; }
+.safari-item i { color: #8e8e93; font-size: 14px; }
+
 .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 135px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.5; z-index: 7000; cursor: pointer; }
 </style>
 </head>
 <body>
 <div class="phone">
   <div class="notch"></div>
-  <div class="status-bar"><div id="status-time">12:00</div><div><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></div></div>
+  <div class="status-bar">
+    <div id="status-time">12:00</div>
+    <div><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></div>
+  </div>
+
   <div id="lock-screen" onclick="this.style.transform='translateY(-100%)'">
     <div id="lock-time-display" class="lock-time">12:00</div>
     <div class="lock-date">3月28日 星期六</div>
     <div class="lock-quote">જ⁀➴感覺至上 -ˋˏ ♡ ˎˊ-</div>
   </div>
+
   <div id="home-screen">
     <div class="memo-widget">
       <div class="memo-title"><i class="fas fa-sticky-note"></i> 備忘錄</div>
-      <div class="memo-content">¹ 記得喝水<br>² 記得回訊息</div>
+      <div class="memo-content">
+        • 2026口紅熱門色號清單<br>
+        • 台北拉麵必吃清單<br>
+        • Apex 槍法練習
+      </div>
     </div>
     <div class="app-grid">
-      <div class="app" onclick="openApp('messages-app')"><div class="icon" style="color:#34c759;"><i class="fas fa-comment"></i></div><span>訊息</span></div>
-      <div class="app"><div class="icon" style="color:#ff3b30;"><i class="fas fa-calendar-alt"></i></div><span>行事曆</span></div>
-      <div class="app"><div class="icon" style="color:#dc2743;"><i class="fab fa-instagram"></i></div><span>Instagram</span></div>
+      <div class="app"><div class="icon" style="background: linear-gradient(#5856d6, #af52de); color: white;"><i class="fas fa-comment"></i></div><span>訊息</span></div>
+      <div class="app"><div class="icon" style="background: white; color: #ff3b30;"><i class="fas fa-calendar-alt"></i></div><span>行事曆</span></div>
+      <div class="app"><div class="icon" style="background: linear-gradient(#405de6, #833ab4, #fd1d1d); color: white;"><i class="fab fa-instagram"></i></div><span>Instagram</span></div>
+      <div class="app"><div class="icon" style="background: #1c1c1e; color: #34c759;"><i class="fas fa-cog"></i></div><span>設定</span></div>
     </div>
+    
     <div class="dock">
-      <div class="app"><div class="icon" style="color:#30D158; margin:0;"><i class="fas fa-phone"></i></div></div>
-      <div class="app" onclick="openApp('safari-app')"><div class="icon" style="color:#0A84FF; margin:0;"><i class="fas fa-compass"></i></div></div>
-      <div class="app"><div class="icon" style="color:#fff; margin:0;"><i class="fas fa-images" style="color:#ff2d55;"></i></div></div>
-      <div class="app"><div class="icon" style="color:#ff375f; margin:0;"><i class="fas fa-music"></i></div></div>
+      <div class="app"><div class="icon" style="background: #30D158; color: white; margin:0;"><i class="fas fa-phone"></i></div></div>
+      <div class="app" onclick="openApp('safari-app')"><div class="icon" style="background: white; color: #0A84FF; margin:0;"><i class="fas fa-compass"></i></div></div>
+      <div class="app" onclick="openApp('photos-app')"><div class="icon" style="background: white; margin:0;"><i class="fas fa-images" style="color:#ff2d55;"></i></div></div>
+      <div class="app"><div class="icon" style="background: linear-gradient(#ff5e62, #ff9966); color: white; margin:0;"><i class="fas fa-music"></i></div></div>
     </div>
   </div>
-  <div id="messages-app" class="app-window">
-    <div class="nav-header"><div class="back-btn" onclick="goHome()"><i class="fas fa-chevron-left"></i> 主畫面</div><div class="header-title">訊息</div><div style="min-width:80px;"></div></div>
-    <div style="display:flex; align-items:center; padding:15px 20px; border-bottom:0.5px solid #222;" onclick="openChat()">
-      <div style="width:50px; height:50px; background:#333; border-radius:50%; margin-right:15px; display:flex; align-items:center; justify-content:center; color:#fff;">延</div>
-      <div style="flex:1;"><div style="color:#fff; font-weight:600;">予延 <span class="typing" id="type-indicator">正在輸入...</span></div><div id="last-msg" style="color:#8e8e93; font-size:14px;">點擊開啟...</div></div>
-    </div>
-  </div>
-  <div id="chat-detail" class="app-window">
-    <div class="nav-header"><div class="back-btn" onclick="closeChat()"><i class="fas fa-chevron-left"></i> 訊息</div><div class="header-title">予延</div><div style="min-width:80px;"></div></div>
-    <div class="chat-body" id="chat-box"></div>
-    <div style="padding: 15px 15px 45px; background: #000;"><div onclick="showOptions()" id="input-bar" style="background:#1c1c1e; border-radius:22px; padding:12px 18px; color:#fff; border: 1px solid #444; text-align:center; cursor:pointer;">回覆予延...</div></div>
-  </div>
+
   <div id="safari-app" class="app-window">
-    <div class="nav-header"><div class="back-btn" onclick="goHome()"><i class="fas fa-chevron-left"></i> 主畫面</div><div class="header-title">Safari</div><div style="min-width:80px;"></div></div>
-    <div style="padding:20px; color:#fff;"><div style="padding:15px; border-bottom:1px solid #333;">台北拉麵推薦</div><div style="padding:15px; border-bottom:1px solid #333;">Apex 槍法教學</div></div>
+    <div class="nav-header">
+      <div class="back-btn" onclick="goHome()">取消</div>
+      <div class="header-title">搜尋紀錄</div>
+      <div style="min-width:40px;"></div>
+    </div>
+    <div class="safari-list">
+      <div class="safari-item"><i class="fas fa-search"></i> 上班摸魚小工具</div>
+      <div class="safari-item"><i class="fas fa-search"></i> 如何提升apex槍法</div>
+      <div class="safari-item"><i class="fas fa-search"></i> 2026口紅熱門色號</div>
+      <div class="safari-item"><i class="fas fa-search"></i> 台北拉麵推薦</div>
+      <div class="safari-item"><i class="fas fa-search"></i> 男生 實用禮物</div>
+      <div class="safari-item"><i class="fas fa-search"></i> 牙膏可以洗臉嗎?</div>
+    </div>
   </div>
-  <div id="options" class="options-overlay"></div>
+
+  <div id="photos-app" class="app-window">
+    <div class="nav-header">
+      <div class="back-btn" onclick="goHome()"><i class="fas fa-chevron-left"></i> 相簿</div>
+      <div class="header-title">最近項目</div>
+      <div style="min-width:40px;"></div>
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:2px; padding:2px;">
+      <div style="aspect-ratio:1; background:#222; display:flex; align-items:center; justify-content:center; color:#444;"><i class="fas fa-user"></i></div>
+      <div style="aspect-ratio:1; background:#222; display:flex; align-items:center; justify-content:center; color:#444;"><i class="fas fa-camera"></i></div>
+      <div style="aspect-ratio:1; background:#222; display:flex; align-items:center; justify-content:center; color:#444;"><i class="fas fa-gamepad"></i></div>
+    </div>
+    <div style="color: #8e8e93; text-align: center; margin-top: 20px; font-size: 13px;">正在載入 ccz 的自拍照與隨手拍...</div>
+  </div>
+
   <div class="home-bar" onclick="goHome()"></div>
 </div>
+
 <script>
-function updateClock(){const n=new Date();const s=n.getHours().toString().padStart(2,'0')+":"+n.getMinutes().toString().padStart(2,'0');document.getElementById('status-time').innerText=s;document.getElementById('lock-time-display').innerText=s;}
-setInterval(updateClock,1000);updateClock();
-let currentKey='';
-const hour = new Date().getHours();
-let timeContext = "";
+function updateClock(){
+  const n=new Date();
+  const s=n.getHours().toString().padStart(2,'0')+":"+n.getMinutes().toString().padStart(2,'0');
+  document.getElementById('status-time').innerText=s;
+  document.getElementById('lock-time-display').innerText=s;
+}
+setInterval(updateClock,1000);
+updateClock();
 
-if (hour >= 5 && hour < 12) { timeContext = "morning"; }
-else if (hour >= 12 && hour < 18) { timeContext = "afternoon"; }
-else if (hour >= 18 && hour < 23) { timeContext = "evening"; }
-else { timeContext = "night"; }
+function openApp(appId) {
+  document.getElementById(appId).classList.add('active');
+}
 
-const hour = new Date().getHours();
-let timeContext = (hour >= 5 && hour < 12) ? "morning" : (hour >= 12 && hour < 18) ? "afternoon" : (hour >= 18 && hour < 23) ? "evening" : "night";
-
-const hour = new Date().getHours();
-let timeContext = (hour >= 5 && hour < 12) ? "morning" : (hour >= 12 && hour < 18) ? "afternoon" : (hour >= 18 && hour < 23) ? "evening" : "night";
-
-const gameData = {
-  // --- L1：開場 (根據時間動態) ---
-  'start': {
-    get msg() {
-      if (timeContext === "night") return "......還沒睡？看妳這時間還在線上，是想等我邀妳雙排？";
-      if (timeContext === "morning") return "早。大清早就在打排位？大師都不用睡覺的嗎？進語音，我剛醒。";
-      return "下午好。大師，缺個能幫妳架槍的隊友嗎？我進頻道了。";
-    },
-    options: [
-      { text: "大師帶鑽石，你學費付了沒？", next: 'L2_A' },
-      { text: "邀請發你了，快進來。這場我要拿獵殺標章。", next: 'L2_B' },
-      { text: "想聽我的聲音就直說，別拿遊戲當藉口。", next: 'L2_C' }
-    ]
-  },
-
-  // --- L2-L4：外送與連麥設定 ---
-  'L2_A': { msg: "學費？等這場打完，我幫妳點外送。這時間喝個熱的？", options: [{ text: "這還差不多，我要加兩個叉燒的拉麵。", next: 'L3_A' }, { text: "我要喝無糖綠，冰的。", next: 'L3_B' }] },
-  'L2_B': { msg: "收到了。耳機戴好，這場大師場我要聽清楚妳的所有報位。", options: [{ text: "戴好了，你聲音今天聽起來特別低沉。", next: 'L3_C' }, { text: "指令只有一個：保護好我。", next: 'L3_A' }] },
-  'L2_C': { msg: "......想妳？妳上場噴火龍一打三確實帥，但別飄。邀請我。", options: [{ text: "那是實力。邀請發了，進來吧。", next: 'L3_B' }, { text: "不服氣？那比輸出，輸的人答應一件事。", next: 'L3_C' }] },
-  
-  'L3_A': { msg: "點好了，大概 30 分鐘後到。妳穿件外套，別穿睡衣就跑去門口拿。", options: [{ text: "你在監控我嗎？怎麼知道我穿睡衣？", next: 'L4_A' }, { text: "知道了，囉唆。這場跳哪？", next: 'L4_B' }] },
-  'L3_B': { msg: "外送費我出。反正能聽到妳喝飲料的聲音，也算一種陪伴了。", options: [{ text: "予延你今天講話怎麼這麼色氣？", next: 'L4_C' }, { text: "那我也幫你點一份？", next: 'L4_A' }] },
-  'L3_C': { msg: "答應一件事？只要不是摘星星，我都考慮。進來了，準備跳傘。", options: [{ text: "你居然秒進......嘖。", next: 'L4_B' }, { text: "如果你輸了，你要遠端哄睡。", next: 'L4_C' }] },
-
-  'L4_A': { msg: "猜的。妳這大師在家肯定邋遢。快準備，落地先刷點數升護甲。", options: [{ text: "我邋遢也比你帥！", next: 'L5_A' }, { text: "那你以後每天視訊檢查啊。", next: 'L5_B' }] },
-  'L4_B': { msg: "開場了。妳這場要是落地秒退，我會笑妳一輩子。跟緊我。", options: [{ text: "看好了，這槍是幫你補位的。", next: 'L5_C' }, { text: "你先保護好自己吧，鑽石仔。", next: 'L5_A' }] },
-  'L4_C': { msg: "哄睡？妳是小學生嗎......但我答應了。這場我選瓦爾基里配妳。", options: [{ text: "嘿嘿，你怕了吧。", next: 'L5_B' }, { text: "就問你敢不敢賭到底？", next: 'L5_C' }] },
-
-  // --- L5-L7：中段拉扯 (修正連接點) ---
-  'L5_A': { msg: "視訊？妳確定要在鏡頭前露臉？我怕我會分心打不好。專心，前面有人。", options: [{ text: "你到底把我當隊友還是當什麼？", next: 'L6_A' }, { text: "沒關係，我 Carry 你就行。", next: 'L6_B' }] },
-  'L5_B': { msg: "那是怕妳沒人陪會寂寞。看妳左邊，有人在刷進化點！", options: [{ text: "憋死你算了，明明就是擔心我。", next: 'L6_C' }, { text: "幫我架槍，我衝了。", next: 'L6_A' }] },
-  'L5_C': { msg: "賭就賭。反正妳這大師要是輸給我，妳就要叫我一聲老師。", options: [{ text: "我會讓你輸到心服口服。", next: 'L6_B' }, { text: "想得美，去死吧。", next: 'L6_C' }] },
-  
-  'L6_A': { msg: "當什麼？當一個讓我不省心的固定搭檔。這槍準，漂亮。護甲升級了？", options: [{ text: "只是搭檔嗎？", next: 'L7_A' }, { text: "紫甲了，帶你去殺翻全場。", next: 'L7_B' }] },
-  'L6_B': { msg: "掉分別找我哭。妳那邊外送到了沒？我聽見妳那邊有敲門聲。", options: [{ text: "我去拿一下，你不准掛斷。", next: 'L7_C' }, { text: "先打完這場再說，決賽圈了。", next: 'L7_A' }] },
-  'L6_C': { msg: "叫老師太便宜妳了。我要妳明天陪我連麥看電影。", options: [{ text: "看電影算哪門子懲罰？我也想看。", next: 'L7_B' }, { text: "我要選那種最甜的戀愛片。", next: 'L7_C' }] },
-
-  'L7_A': { msg: "......別在語音裡問這種問題。麥克風離嘴巴遠點，呼吸聲聽得很清楚。", options: [{ text: "害羞就直說嘛。", next: 'L8_A' }, { text: "你心跳是不是加速了？", next: 'L8_B' }] },
-  'L7_B': { msg: "紫甲了就低調點。我幫妳拉大電，妳繼續輸出，背後交給我。", options: [{ text: "這態度不錯。繼續保持。", next: 'L8_C' }, { text: "那你得幫我擋子彈喔。", next: 'L8_A' }] },
-  'L7_C': { msg: "戀愛片？妳那些 2026 熱門色口紅還沒擦夠？行，陪妳看。", options: [{ text: "買了要擦給你看的。", next: 'L8_B' }, { text: "予延最好了。", next: 'L8_C' }] },
-
-  // --- L8-L12：【重寫補齊】深夜決戰細節 ---
-  'L8_A': { msg: "擋子彈是我的榮幸。但妳別落地就送頭。耳機音量還行嗎？", options: [{ text: "很清楚，你的聲音很好聽。", next: 'L9_A' }, { text: "再大聲點，我想聽你指揮。", next: 'L9_B' }] },
-  'L8_B': { msg: "擦給我看？視訊嗎？妳這算盤打得真響。最後兩隊在二樓。", options: [{ text: "那你想不想看嘛？", next: 'L9_C' }, { text: "不給你看，氣死你。", next: 'L9_A' }] },
-  'L8_C': { msg: "別撒嬌。麵到了就快吃，別餓著肚子打排位。準備決戰了。", options: [{ text: "你餵我啊。（遠端餵食）", next: 'L9_B' }, { text: "我一邊吃一邊打給你看。", next: 'L9_C' }] },
-
-  'L9_A': { msg: "聲音好聽也沒用，輸了妳還是要幫我點外送。右邊房區有人！", options: [{ text: "（操作爆發）噴火龍掃射！", next: 'L10_A' }, { text: "幫我架槍！我要衝二樓。", next: 'L10_B' }] },
-  'L9_B': { msg: "......妳真的很會撩。專心點，安全感是我給的，分數自己拿。", options: [{ text: "有你在我很有安全感。", next: 'L10_B' }, { text: "予延，幫我拉大電，快！", next: 'L10_C' }] },
-  'L9_C': { msg: "擦給我看......那我要選色號。準備好了？最後一波收縮了。", options: [{ text: "看好了，最後一擊！", next: 'L10_A' }, { text: "贏了要給我特別獎勵。", next: 'L10_C' }] },
-
-  // --- L10-L15：結局前奏 ---
-  'L10_A': { msg: "這波補位漂亮......不愧是大師。贏了，獵殺標章到手。", options: [{ text: "耶！宵夜拉麵加叉燒！", next: 'L15_A' }, { text: "所以你的情歌呢？", next: 'L15_B' }] },
-  'L10_B': { msg: "二樓清空。妳剛才衝上去的樣子，真的很帥。贏了。", options: [{ text: "那你心動了嗎？", next: 'L15_C' }, { text: "只是帥而已嗎？", next: 'L15_A' }] },
-  'L10_C': { msg: "贏了。獎勵我記下了，明天幫妳點想吃的。累嗎？", options: [{ text: "累了，想聽你的聲音睡覺。", next: 'L15_B' }, { text: "還好，想再跟你聊一下。", next: 'L15_C' }] },
-
-  // --- L15-L20：終極結局 ---
-  'L15_A': { msg: "加兩個叉燒都行。大師，妳今天狀態無敵。宵夜吃完早點睡，晚安。", options: [{ text: "不要掛斷，陪我睡覺。", next: 'L20_Master' }] },
-  'L15_B': { msg: "情歌......咳，等妳睡著我偷偷唱。快去洗漱吧，晚安。", options: [{ text: "我要錄音當鈴聲！", next: 'L20_Master' }] },
-  'L15_C': { msg: "妳是我最重要的隊友。不只是遊戲，現實也是。明天見。", options: [{ text: "最重要？", next: 'L20_Lover' }] },
-
-  'L20_Master': { msg: "......好，不掛斷。我就在語音這端陪妳，睡吧，大師。晚安。", options: [] },
-  'L20_Lover': { msg: "......對，最重要。明天連麥看電影，色號妳選。晚安。", options: [] }
-};
+function goHome() {
+  document.querySelectorAll('.app-window').forEach(win => win.classList.remove('active'));
+}
 </script>
 </body>
 </html>
