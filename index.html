@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>iPhone Ambiguous Edition</title>
+<title>iPhone Omni-Fix Edition</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root {
-  --ios-wallpaper: radial-gradient(circle at center, #1c1c1e 0%, #000000 100%);
-  --ios-blur: blur(35px) saturate(200%);
-  --border-glass: 0.5px solid rgba(255, 255, 255, 0.12);
+  --ios-bg: radial-gradient(circle at center, #1c1c1e 0%, #000 100%);
   --ios-blue: #0A84FF;
+  --glass: rgba(255, 255, 255, 0.12);
+  --blur: blur(30px) saturate(180%);
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -18,33 +18,36 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 
 .phone { width: 100vw; height: 100dvh; max-width: 375px; max-height: 812px; background: #000; border-radius: 55px; position: relative; overflow: hidden; border: 12px solid #1c1c1e; }
 
+/* 狀態欄與 Notch */
 .status-bar { position: absolute; top: 0; width: 100%; height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; z-index: 5000; color: #fff; font-size: 14px; }
-.system-back { position: absolute; top: 46px; left: 20px; z-index: 4000; color: var(--ios-blue); font-size: 13px; display: none; align-items: center; font-weight: 500; cursor: pointer; }
 .notch { width: 160px; height: 30px; background: #1c1c1e; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-radius: 0 0 20px 20px; z-index: 5001; }
 
-#lock-screen { position: absolute; inset: 0; z-index: 4500; background: var(--ios-wallpaper); display: flex; flex-direction: column; align-items: center; padding-top: 100px; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+/* 鎖屏 */
+#lock-screen { position: absolute; inset: 0; z-index: 4500; background: var(--ios-bg); display: flex; flex-direction: column; align-items: center; padding-top: 100px; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
 .lock-time { font-size: 80px; font-weight: 200; color: #fff; }
 .lock-date { font-size: 22px; font-weight: 600; color: #fff; margin-top: 5px; }
-.quote-widget { margin-top: 30px; padding: 12px 24px; background: rgba(255, 255, 255, 0.1); border-radius: 20px; color: #fff; font-size: 14px; backdrop-filter: blur(15px); border: var(--border-glass); }
 
-#home-screen { position: absolute; inset: 0; padding: 60px 25px; background: var(--ios-wallpaper); z-index: 100; display: flex; flex-direction: column; }
-.app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 25px; }
-.app { text-align: center; color: #fff; cursor: pointer; }
-.icon { width: 62px; height: 62px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-size: 30px; background: #2c2c2e; border: var(--border-glass); }
-.dock { position: absolute; bottom: 30px; left: 15px; right: 15px; height: 96px; background: rgba(255, 255, 255, 0.1); backdrop-filter: var(--ios-blur); border-radius: 38px; display: flex; justify-content: space-evenly; align-items: center; border: var(--border-glass); }
+/* 主畫面 UI */
+#home-screen { position: absolute; inset: 0; padding: 60px 20px; background: var(--ios-bg); z-index: 100; overflow-y: auto; }
+.widget-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+.widget { background: var(--glass); backdrop-filter: var(--blur); border-radius: 22px; height: 155px; padding: 15px; color: #fff; border: 0.5px solid rgba(255,255,255,0.1); }
+.app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 10px; }
+.app { text-align: center; color: #fff; cursor: pointer; font-size: 11px; }
+.icon { width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; font-size: 28px; background: #2c2c2e; border: 0.5px solid rgba(255,255,255,0.1); }
+.dock { position: absolute; bottom: 25px; left: 15px; right: 15px; height: 92px; background: rgba(255, 255, 255, 0.15); backdrop-filter: var(--blur); border-radius: 35px; display: flex; justify-content: space-evenly; align-items: center; z-index: 1000; }
 
+/* 視窗與對話 */
 .app-window { position: absolute; inset: 0; z-index: 1500; background: #000; display: none; flex-direction: column; }
 .app-window.active { display: flex; }
-.chat-header { padding: 50px 15px 15px; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(20px); display: flex; align-items: center; border-bottom: 0.5px solid #222; }
-.chat-back-btn { color: var(--ios-blue); font-size: 17px; width: 85px; cursor: pointer; }
+.chat-header { padding: 50px 15px 15px; background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(20px); display: flex; align-items: center; border-bottom: 0.5px solid #333; }
 .chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-.bubble { max-width: 78%; padding: 12px 16px; border-radius: 20px; color: #fff; font-size: 16px; line-height: 1.5; }
+.bubble { max-width: 78%; padding: 12px 16px; border-radius: 20px; color: #fff; font-size: 16px; line-height: 1.4; }
 .you { background: #262629; align-self: flex-start; border-bottom-left-radius: 4px; }
 .me { background: var(--ios-blue); align-self: flex-end; border-bottom-right-radius: 4px; }
 
-.options-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(28, 28, 30, 0.98); padding: 25px 20px 45px; border-radius: 30px 30px 0 0; display: none; flex-direction: column; gap: 12px; z-index: 6000; }
-.option-btn { background: rgba(255,255,255,0.08); padding: 18px; border-radius: 18px; color: #fff; text-align: center; cursor: pointer; font-size: 15px; border: 0.5px solid rgba(255,255,255,0.1); }
-.home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 135px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.5; z-index: 7000; }
+.options-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(28, 28, 30, 0.98); padding: 20px 20px 45px; border-radius: 30px 30px 0 0; display: none; flex-direction: column; gap: 10px; z-index: 6000; }
+.option-btn { background: rgba(255,255,255,0.1); padding: 16px; border-radius: 15px; color: #fff; text-align: center; cursor: pointer; border: 0.5px solid rgba(255,255,255,0.1); }
+.home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 135px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.5; z-index: 7000; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -52,47 +55,62 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 <div class="phone">
   <div class="notch"></div>
   <div class="status-bar"><div id="status-time">12:00</div><div><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></div></div>
-  <div id="sys-back" class="system-back" onclick="goHome()"><i class="fas fa-chevron-left"></i> 主畫面</div>
 
   <div id="lock-screen" onclick="this.style.transform='translateY(-100%)'">
     <div id="lock-time-display" class="lock-time">12:00</div>
     <div class="lock-date">3月28日 星期六</div>
-    <div class="quote-widget">જ⁀➴感覺至上 -ˋˏ ♡ ˎˊ-</div>
+    <div style="margin-top:40px; color:rgba(255,255,255,0.6); font-size:14px;"><i class="fas fa-lock"></i> 向上滑動以解鎖</div>
   </div>
 
   <div id="home-screen">
+    <div class="widget-row">
+      <div class="widget" style="background: linear-gradient(135deg, #1d1d1f, #2c2c2e);">
+        <div style="font-size:12px; opacity:0.6; margin-bottom:10px;">備忘錄</div>
+        <div style="font-size:16px;">જ⁀➴感覺至上<br>-ˋˏ ♡ ˎˊ-</div>
+      </div>
+      <div class="widget" style="background:#fff; color:#000;">
+        <div style="font-size:12px; color:red; font-weight:bold;">星期六</div>
+        <div style="font-size:45px; font-weight:200;">28</div>
+      </div>
+    </div>
     <div class="app-grid">
-      <div class="app" onclick="openApp('messages-app')"><div class="icon" style="color:#34c759;"><i class="fas fa-comment"></i></div><span>訊息</span></div>
-      <div class="app" onclick="openApp('safari-app')"><div class="icon" style="color:#0A84FF;"><i class="fas fa-compass"></i></div><span>Safari</span></div>
+      <div class="app"><div class="icon" style="background:#ff9500;"><i class="fas fa-calculator"></i></div><span>計算機</span></div>
+      <div class="app" onclick="openApp('ig-app')"><div class="icon" style="background:linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);"><i class="fab fa-instagram"></i></div><span>Instagram</span></div>
+      <div class="app"><div class="icon" style="background:#1c1c1e;"><i class="fas fa-cog"></i></div><span>設定</span></div>
+      <div class="app"><div class="icon" style="background:#ff3b30;"><i class="fas fa-music"></i></div><span>音樂</span></div>
     </div>
     <div class="dock">
-      <div class="app"><div class="icon" style="color:#30D158; margin:0;"><i class="fas fa-phone"></i></div></div>
-      <div class="app"><div class="icon" style="color:#FF375F; margin:0;"><i class="fas fa-image"></i></div></div>
+      <div class="app"><div class="icon" style="background:#34c759; margin:0;"><i class="fas fa-phone"></i></div></div>
+      <div class="app" onclick="openApp('safari-app')"><div class="icon" style="background:#fff; margin:0;"><i class="fas fa-compass" style="color:#0A84FF;"></i></div></div>
+      <div class="app" onclick="openApp('messages-app')"><div class="icon" style="background:#34c759; margin:0;"><i class="fas fa-comment"></i></div></div>
+      <div class="app"><div class="icon" style="background:#fff; margin:0;"><i class="fas fa-images" style="color:#ff2d55;"></i></div></div>
     </div>
   </div>
 
   <div id="messages-app" class="app-window">
     <div style="padding: 65px 20px 10px; font-size: 34px; font-weight: 700; color: #fff;">訊息</div>
     <div style="display:flex; align-items:center; padding:15px 20px; border-bottom:0.5px solid #222;" onclick="openChat()">
-      <div style="width:50px; height:50px; background:#333; border-radius:50%; margin-right:15px; display:flex; align-items:center; justify-content:center; color:#fff;">延</div>
-      <div style="flex:1;"><div style="color:#fff; font-weight:600;">予延</div><div id="last-msg" style="color:#8e8e93; font-size:14px;">點擊開啟對話...</div></div>
+      <div style="width:50px; height:50px; background:#333; border-radius:50%; margin-right:15px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:20px;">延</div>
+      <div style="flex:1;"><div style="color:#fff; font-weight:600;">予延</div><div id="last-msg" style="color:#8e8e93; font-size:14px;">點擊開啟...</div></div>
     </div>
   </div>
 
   <div id="chat-detail" class="app-window">
     <div class="chat-header">
-        <div class="chat-back-btn" onclick="closeChat()"><i class="fas fa-chevron-left"></i> 訊息</div>
-        <div style="flex:1; text-align:center; color:#fff; font-weight:600; margin-right:85px;">予延</div>
+        <div onclick="closeChat()" style="color:var(--ios-blue); font-size:17px; cursor:pointer;"><i class="fas fa-chevron-left"></i> 訊息</div>
+        <div style="flex:1; text-align:center; color:#fff; font-weight:600; margin-right:60px;">予延</div>
     </div>
     <div class="chat-body" id="chat-box"></div>
-    <div style="padding: 15px 15px 45px; background: #000;"><div onclick="showOptions()" style="background:#1c1c1e; border-radius:22px; padding:12px 18px; color:#fff; border: 1px solid #444; text-align:center; cursor:pointer;">回覆予延...</div></div>
+    <div style="padding: 15px 15px 45px; background: #000;"><div onclick="showOptions()" style="background:#1c1c1e; border-radius:22px; padding:12px 18px; color:#fff; border: 1px solid #444; text-align:center;">回覆...</div></div>
   </div>
 
   <div id="safari-app" class="app-window">
     <div style="padding: 65px 20px 10px; font-size: 34px; font-weight: 700; color: #fff;">Safari</div>
-    <div style="padding:15px; color:#fff; border-bottom:1px solid #333;">台北拉麵推薦 蘆洲</div>
-    <div style="padding:15px; color:#fff; border-bottom:1px solid #333;">Apex 腳步聲設定</div>
-    <div style="padding:15px; color:#fff; border-bottom:1px solid #333;">網咖包廂價目表</div>
+    <div style="padding:20px; color:#fff;">
+      <div style="padding:15px; border-bottom:1px solid #333;">台北拉麵推薦 蘆洲</div>
+      <div style="padding:15px; border-bottom:1px solid #333;">Apex 腳步聲設定</div>
+      <div style="padding:15px; border-bottom:1px solid #333;">網咖包廂價目表</div>
+    </div>
   </div>
 
   <div id="options" class="options-overlay"></div>
@@ -110,96 +128,59 @@ setInterval(updateClock, 1000); updateClock();
 
 let currentKey = '';
 const gameData = {
-    // 【晨間】
-    'morning': { msg: "......早。怎麼這時間醒著？", options: [
+    'morning': { msg: "早。怎麼這時間醒著？", options: [
         { text: "就剛好醒了。你呢？", next: 'm_1' },
         { text: "餓醒的，想吃拉麵。", next: 'm_2' },
         { text: "在等某個高冷帥哥回訊息啊。", next: 'm_3' }
     ]},
-    'm_1': { msg: "我也剛醒。既然醒了，要不要順路帶妳去吃早午餐？", options: [
+    'm_1': { msg: "剛醒。順路帶妳去吃早午餐？", options: [
         { text: "好啊，你載我？", next: 'm_1_a' },
         { text: "你要來接我嗎？", next: 'm_1_b' }
     ]},
     'm_1_a': { msg: "不然妳想走路？十五分鐘後門口見。", options: [{ text: "好，等我。", next: 'end_brunch' }] },
-    'm_1_b': { msg: "順路而已。別想太多，快去準備。", options: [{ text: "知道了啦。", next: 'end_brunch' }] },
-    'm_2': { msg: "早上吃什麼拉麵？空腹吃太重鹹不好。帶妳去喝熱的。", options: [
-        { text: "好吧，聽你的。", next: 'end_warm' },
-        { text: "那我想喝那家很有名的豆漿。", next: 'm_2_a' }
-    ]},
-    'm_2_a': { msg: "行。我查一下地圖。換好衣服敲我。", options: [{ text: "馬上！", next: 'end_warm' }] },
-    'm_3': { msg: "現在回了。再睡會吧，妳黑眼圈都要掉到地上了。", options: [
-        { text: "哪有這麼誇張！", next: 'm_3_a' },
-        { text: "你又不陪我睡。", next: 'm_3_b' }
-    ]},
-    'm_3_a': { msg: "就有。乖，去補眠。下午再說。", options: [{ text: "哼，下午見。", next: 'end_sleep' }] },
-    'm_3_b': { msg: "......別亂開玩笑。去睡覺。", options: [{ text: "好啦好啦。", next: 'end_sleep' }] },
+    'm_1_b': { msg: "順路而已。別想太多。", options: [{ text: "知道了啦。", next: 'end_brunch' }] },
+    'm_2': { msg: "早上吃拉麵太鹹。帶妳去喝熱豆漿？", options: [{ text: "好，聽你的。", next: 'end_warm' }, { text: "我要吃那家有名的。", next: 'end_warm' }] },
+    'm_3': { msg: "現在回了。快去睡，黑眼圈都要掉到地上了。", options: [{ text: "哪有這麼誇張！", next: 'end_sleep' }, { text: "下午見。", next: 'end_sleep' }] },
 
-    // 【午間】
     'afternoon': { msg: "在忙。妳沒在偷懶吧？", options: [
-        { text: "在研究 Apex 設定，算嗎？", next: 'a_1' },
-        { text: "在想下午要喝什麼咖啡。", next: 'a_2' },
-        { text: "剛看了一下網咖包廂，環境好像不錯。", next: 'a_3' }
+        { text: "在研究 Apex 設定。", next: 'a_1' },
+        { text: "在找網咖包廂。", next: 'a_2' }
     ]},
-    'a_1': { msg: "就妳那槍法，研究再多設定也沒用。還是我帶妳比較快。", options: [
-        { text: "那你帶我啊。", next: 'a_1_a' },
-        { text: "我也沒那麼爛吧！", next: 'a_1_b' }
-    ]},
-    'a_1_a': { msg: "可以。下班去網咖開個包廂？那邊設備比較好。", options: [{ text: "好啊，你訂位？", next: 'end_cyber' }] },
-    'a_3': { msg: "網咖包廂？妳想打遊戲？我剛好知道一家環境不錯的。", options: [
-        { text: "要去嗎？", next: 'a_1_a' },
-        { text: "你是不是也想打？", next: 'a_3_a' }
-    ]},
-    'a_3_a': { msg: "我是怕妳一個人被虐。走吧，兩點載妳。", options: [{ text: "收到。", next: 'end_cyber' }] },
+    'a_1': { msg: "妳那槍法研究也沒用。下班我帶妳去網咖練？", options: [{ text: "好啊，你訂位？", next: 'end_cyber' }, { text: "我沒那麼爛吧！", next: 'end_cyber' }] },
+    'a_2': { msg: "找包廂幹嘛？想打遊戲？我知道一家環境不錯。", options: [{ text: "要去嗎？", next: 'end_cyber' }, { text: "載我？", next: 'end_cyber' }] },
 
-    // 【傍晚】
-    'evening': { msg: "下班了嗎？我剛好在附近，要不要順路接妳？", options: [
+    'evening': { msg: "下班了嗎？我剛好在附近。", options: [
         { text: "又是順路？", next: 'e_1' },
-        { text: "我想吃拉麵耶。", next: 'e_2' },
-        { text: "今天好累喔。", next: 'e_3' }
+        { text: "想吃拉麵。", next: 'e_2' }
     ]},
-    'e_1': { msg: "不然呢？想上車就快點，這裡不能久停。", options: [
-        { text: "這就下去。", next: 'end_pickup' },
-        { text: "你就不能多等我一分鐘嗎？", next: 'e_1_a' }
-    ]},
-    'e_1_a': { msg: "多等一分鐘...那妳明天得陪我打 Apex 到宵夜時間。", options: [{ text: "成交！", next: 'end_pickup' }] },
-    'e_2': { msg: "妳搜的那家拉麵？那家排隊很長。不過，我可以陪妳排。", options: [{ text: "真的？走！", next: 'end_ramen' }] },
+    'e_1': { msg: "不然呢？快上車，這裡不能久停。", options: [{ text: "這就下去。", next: 'end_pickup' }, { text: "等我一分鐘。", next: 'end_pickup' }] },
+    'e_2': { msg: "妳搜的那家排隊很長。不過我可以陪妳。", options: [{ text: "真的？走！", next: 'end_ramen' }] },
 
-    // 【深夜】
     'night': { msg: "......妳還沒睡？", options: [
-        { text: "你不也醒著。在幹嘛？", next: 'n_1' },
-        { text: "剛看完電影，還不睏。", next: 'n_2' },
-        { text: "在想你今天說的話。", next: 'n_3' }
+        { text: "你不也醒著。在想誰？", next: 'n_1' },
+        { text: "在想你今天說的話。", next: 'n_2' }
     ]},
-    'n_1': { msg: "在忙一點事。倒是妳，熬夜會變笨。", options: [
-        { text: "我本來就不聰明。", next: 'n_1_a' },
-        { text: "你才笨！", next: 'n_1_b' }
-    ]},
-    'n_1_a': { msg: "知道就好。去睡覺，明天帶妳去妳想去的地方。", options: [{ text: "哪裡？", next: 'end_tomorrow' }] },
-    'n_3': { msg: "......我說什麼了？妳這記性，還是早點睡比較實在。", options: [
-        { text: "憋死你算了，不告訴你。", next: 'end_silent' },
-        { text: "就那句啊...", next: 'n_3_a' }
-    ]},
-    'n_3_a': { msg: "好了，別想了。快去睡，晚安。", options: [{ text: "晚安。", next: 'end_tomorrow' }] },
+    'n_1': { msg: "想一個半夜不睡覺、還在跟我鬧脾氣的笨蛋。", options: [{ text: "說誰笨蛋呢！", next: 'n_1_a' }, { text: "笨蛋也想你了。", next: 'end_tomorrow' }] },
+    'n_1_a': { msg: "說妳。看窗外，我在妳家樓下。", options: [{ text: "天啊你瘋了！", next: 'end_midnight' }, { text: "憋死你算了，不下去。", next: 'end_midnight' }] },
+    'n_2': { msg: "別想了。去睡覺，晚安。", options: [{ text: "憋死你算了，晚安。", next: 'end_tomorrow' }] },
 
-    // 結局列表
-    'end_brunch': { msg: "我快到了。在門口等，別讓我打給妳。", options: [] },
-    'end_warm': { msg: "乖。吃點熱的對身體好。下午再約。", options: [] },
-    'end_sleep': { msg: "知道了。夢裡見（誤）。晚安。", options: [] },
+    'end_brunch': { msg: "我快到了。門口等。", options: [] },
+    'end_warm': { msg: "吃完記得拍給我看。下午見。", options: [] },
+    'end_sleep': { msg: "知道了。晚安。", options: [] },
     'end_cyber': { msg: "包廂訂好了，我有帶外套。到了敲妳。", options: [] },
-    'end_ramen': { msg: "看到妳了。這裡，別低頭滑手機了。", options: [] },
-    'end_pickup': { msg: "坐好。想聽什麼音樂？自己連藍芽。", options: [] },
+    'end_ramen': { msg: "看到妳了。這裡。", options: [] },
+    'end_pickup': { msg: "上車。想聽什麼音樂自己連。", options: [] },
     'end_tomorrow': { msg: "晚安。明天見。", options: [] },
-    'end_silent': { msg: "......好啊，看誰憋得久。明天別求我帶妳打 Apex。", options: [] }
+    'end_midnight': { msg: "別看了，快下來。外面冷。", options: [] }
 };
 
-function openApp(id) { document.getElementById(id).classList.add('active'); document.getElementById('sys-back').style.display='flex'; }
-function goHome() { document.querySelectorAll('.app-window').forEach(el=>el.classList.remove('active')); document.getElementById('sys-back').style.display='none'; }
-function closeChat() { document.getElementById('chat-detail').classList.remove('active'); document.getElementById('sys-back').style.display='flex'; }
+function openApp(id) { document.getElementById(id).classList.add('active'); }
+function goHome() { document.querySelectorAll('.app-window').forEach(el=>el.classList.remove('active')); }
+function closeChat() { document.getElementById('chat-detail').classList.remove('active'); }
 
 function openChat() { 
     const box = document.getElementById('chat-box');
     document.getElementById('chat-detail').classList.add('active');
-    document.getElementById('sys-back').style.display='none';
     if (box.innerHTML === "") {
         const hr = new Date().getHours();
         let start = (hr>=5&&hr<11)?'morning':(hr>=11&&hr<17)?'afternoon':(hr>=17&&hr<22)?'evening':'night';
