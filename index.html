@@ -3,121 +3,100 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>ccz's iPhone</title>
+<title>ccz's iPhone Dark Edition</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root {
   --ios-bg: radial-gradient(circle at center, #1c1c1e 0%, #000 100%);
   --ios-blue: #0A84FF;
   --glass: rgba(255, 255, 255, 0.08);
-  --blur: blur(30px) saturate(180%);
-  --icon-bg: #1c1c1e;
+  --blur: blur(40px) saturate(180%);
+  --dark-icon: #1c1c1e; /* 深色模式圖標底色 */
+  --icon-border: rgba(255, 255, 255, 0.1);
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
 body { background: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
 .phone { width: 100vw; height: 100dvh; max-width: 375px; max-height: 812px; background: #000; border-radius: 55px; position: relative; overflow: hidden; border: 12px solid #1c1c1e; }
+
+/* 狀態列 */
 .status-bar { position: absolute; top: 0; width: 100%; height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; z-index: 5000; color: #fff; font-size: 14px; }
 .notch { width: 160px; height: 30px; background: #1c1c1e; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-radius: 0 0 20px 20px; z-index: 5001; }
 
-/* 鎖屏介面 */
+/* 鎖屏 */
 #lock-screen { position: absolute; inset: 0; z-index: 4500; background: var(--ios-bg); display: flex; flex-direction: column; align-items: center; padding-top: 100px; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
 .lock-time { font-size: 80px; font-weight: 200; color: #fff; }
-.lock-date { font-size: 22px; font-weight: 600; color: #fff; margin-top: 5px; }
-.lock-quote { margin-top: 15px; color: rgba(255,255,255,0.8); font-size: 15px; letter-spacing: 1px; }
+.lock-quote { margin-top: 15px; color: rgba(255,255,255,0.8); font-size: 15px; }
 
 /* 主畫面 */
 #home-screen { position: absolute; inset: 0; padding: 60px 20px; background: var(--ios-bg); z-index: 100; }
-.memo-widget { background: var(--glass); backdrop-filter: var(--blur); border-radius: 22px; width: 100%; padding: 20px; color: #fff; border: 0.5px solid rgba(255,255,255,0.1); margin-bottom: 30px; }
-.memo-title { font-size: 12px; color: #ff9500; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
-.memo-content { font-size: 15px; line-height: 1.6; color: #efefef; }
 
+/* 備忘錄 Widget 改回原始版 */
+.memo-widget { background: var(--glass); backdrop-filter: var(--blur); border-radius: 22px; width: 100%; padding: 20px; color: #fff; border: 0.5px solid var(--icon-border); margin-bottom: 30px; }
+.memo-title { font-size: 12px; color: #ff9500; font-weight: bold; margin-bottom: 8px; }
+.memo-content { font-size: 16px; line-height: 1.8; }
+
+/* 深色模式 App 圖標 */
 .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 10px; }
-.app { text-align: center; color: rgba(255,255,255,0.9); cursor: pointer; font-size: 11px; }
-.icon { width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; font-size: 28px; background: var(--icon-bg); border: 0.5px solid rgba(255,255,255,0.1); }
+.app { text-align: center; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 11px; }
+.icon { width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; font-size: 26px; background: var(--dark-icon); border: 0.5px solid var(--icon-border); transition: transform 0.1s; }
+.icon:active { transform: scale(0.9); }
 
-.dock { position: absolute; bottom: 25px; left: 15px; right: 15px; height: 92px; background: rgba(255, 255, 255, 0.1); backdrop-filter: var(--blur); border-radius: 35px; display: flex; justify-content: space-evenly; align-items: center; }
+/* 下方 Dock */
+.dock { position: absolute; bottom: 25px; left: 15px; right: 15px; height: 92px; background: rgba(255, 255, 255, 0.05); backdrop-filter: var(--blur); border-radius: 35px; display: flex; justify-content: space-evenly; align-items: center; border: 0.5px solid rgba(255,255,255,0.05); }
 
 /* App 視窗 */
 .app-window { position: absolute; inset: 0; z-index: 1500; background: #000; display: none; flex-direction: column; }
 .app-window.active { display: flex; }
-.nav-header { padding: 50px 15px 15px; display: flex; align-items: center; justify-content: space-between; background: rgba(20, 20, 20, 0.94); border-bottom: 0.5px solid #333; }
+.nav-header { padding: 50px 15px 15px; display: flex; align-items: center; background: #111; border-bottom: 0.5px solid #222; }
 .back-btn { color: var(--ios-blue); font-size: 17px; cursor: pointer; }
-.header-title { color: #fff; font-weight: 600; font-size: 17px; }
+.header-title { color: #fff; font-weight: 600; text-align: center; flex: 1; margin-right: 40px; }
 
-/* Safari 特化樣式 */
-.safari-list { padding: 10px 0; }
-.safari-item { padding: 15px 20px; color: #fff; border-bottom: 0.5px solid #2c2c2e; display: flex; align-items: center; gap: 15px; font-size: 15px; }
-.safari-item i { color: #8e8e93; font-size: 14px; }
+.safari-item { padding: 16px 20px; color: #fff; border-bottom: 0.5px solid #222; font-size: 15px; }
 
-.home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 135px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.5; z-index: 7000; cursor: pointer; }
+.home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 135px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.3; z-index: 7000; }
 </style>
 </head>
 <body>
 <div class="phone">
   <div class="notch"></div>
-  <div class="status-bar">
-    <div id="status-time">12:00</div>
-    <div><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></div>
-  </div>
-
+  <div class="status-bar"><div id="status-time">12:00</div><div><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></div></div>
+  
   <div id="lock-screen" onclick="this.style.transform='translateY(-100%)'">
     <div id="lock-time-display" class="lock-time">12:00</div>
-    <div class="lock-date">3月28日 星期六</div>
+    <div style="font-size: 22px; color: #fff; margin-top: 5px;">3月28日 星期六</div>
     <div class="lock-quote">જ⁀➴感覺至上 -ˋˏ ♡ ˎˊ-</div>
   </div>
 
   <div id="home-screen">
     <div class="memo-widget">
       <div class="memo-title"><i class="fas fa-sticky-note"></i> 備忘錄</div>
-      <div class="memo-content">
-        • 2026口紅熱門色號清單<br>
-        • 台北拉麵必吃清單<br>
-        • Apex 槍法練習
-      </div>
+      <div class="memo-content">¹ 記得喝水<br>² 記得回訊息</div>
     </div>
+
     <div class="app-grid">
-      <div class="app"><div class="icon" style="background: linear-gradient(#5856d6, #af52de); color: white;"><i class="fas fa-comment"></i></div><span>訊息</span></div>
-      <div class="app"><div class="icon" style="background: white; color: #ff3b30;"><i class="fas fa-calendar-alt"></i></div><span>行事曆</span></div>
-      <div class="app"><div class="icon" style="background: linear-gradient(#405de6, #833ab4, #fd1d1d); color: white;"><i class="fab fa-instagram"></i></div><span>Instagram</span></div>
-      <div class="app"><div class="icon" style="background: #1c1c1e; color: #34c759;"><i class="fas fa-cog"></i></div><span>設定</span></div>
+      <div class="app"><div class="icon" style="color:#34c759;"><i class="fas fa-comment"></i></div><span>訊息</span></div>
+      <div class="app"><div class="icon" style="color:#ff3b30;"><i class="fas fa-calendar-alt"></i></div><span>行事曆</span></div>
+      <div class="app"><div class="icon" style="color:#e1306c;"><i class="fab fa-instagram"></i></div><span>Instagram</span></div>
+      <div class="app"><div class="icon" style="color:#8e8e93;"><i class="fas fa-cog"></i></div><span>設定</span></div>
     </div>
-    
+
     <div class="dock">
-      <div class="app"><div class="icon" style="background: #30D158; color: white; margin:0;"><i class="fas fa-phone"></i></div></div>
-      <div class="app" onclick="openApp('safari-app')"><div class="icon" style="background: white; color: #0A84FF; margin:0;"><i class="fas fa-compass"></i></div></div>
-      <div class="app" onclick="openApp('photos-app')"><div class="icon" style="background: white; margin:0;"><i class="fas fa-images" style="color:#ff2d55;"></i></div></div>
-      <div class="app"><div class="icon" style="background: linear-gradient(#ff5e62, #ff9966); color: white; margin:0;"><i class="fas fa-music"></i></div></div>
+      <div class="app"><div class="icon" style="color:#30D158; margin:0;"><i class="fas fa-phone"></i></div></div>
+      <div class="app" onclick="openApp('safari-app')"><div class="icon" style="color:#0A84FF; margin:0;"><i class="fas fa-compass"></i></div></div>
+      <div class="app"><div class="icon" style="color:#ff2d55; margin:0;"><i class="fas fa-images"></i></div></div>
+      <div class="app"><div class="icon" style="color:#ff375f; margin:0;"><i class="fas fa-music"></i></div></div>
     </div>
   </div>
 
   <div id="safari-app" class="app-window">
-    <div class="nav-header">
-      <div class="back-btn" onclick="goHome()">取消</div>
-      <div class="header-title">搜尋紀錄</div>
-      <div style="min-width:40px;"></div>
-    </div>
+    <div class="nav-header"><div class="back-btn" onclick="goHome()">取消</div><div class="header-title">最近搜尋</div></div>
     <div class="safari-list">
-      <div class="safari-item"><i class="fas fa-search"></i> 上班摸魚小工具</div>
-      <div class="safari-item"><i class="fas fa-search"></i> 如何提升apex槍法</div>
-      <div class="safari-item"><i class="fas fa-search"></i> 2026口紅熱門色號</div>
-      <div class="safari-item"><i class="fas fa-search"></i> 台北拉麵推薦</div>
-      <div class="safari-item"><i class="fas fa-search"></i> 男生 實用禮物</div>
-      <div class="safari-item"><i class="fas fa-search"></i> 牙膏可以洗臉嗎?</div>
+      <div class="safari-item">🔍 摸魚小技巧</div>
+      <div class="safari-item">🔍 如何提升apex槍法</div>
+      <div class="safari-item">🔍 2026口紅熱門色號</div>
+      <div class="safari-item">🔍 台北拉麵推薦</div>
+      <div class="safari-item">🔍 重訓菜單</div>
     </div>
-  </div>
-
-  <div id="photos-app" class="app-window">
-    <div class="nav-header">
-      <div class="back-btn" onclick="goHome()"><i class="fas fa-chevron-left"></i> 相簿</div>
-      <div class="header-title">最近項目</div>
-      <div style="min-width:40px;"></div>
-    </div>
-    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:2px; padding:2px;">
-      <div style="aspect-ratio:1; background:#222; display:flex; align-items:center; justify-content:center; color:#444;"><i class="fas fa-user"></i></div>
-      <div style="aspect-ratio:1; background:#222; display:flex; align-items:center; justify-content:center; color:#444;"><i class="fas fa-camera"></i></div>
-      <div style="aspect-ratio:1; background:#222; display:flex; align-items:center; justify-content:center; color:#444;"><i class="fas fa-gamepad"></i></div>
-    </div>
-    <div style="color: #8e8e93; text-align: center; margin-top: 20px; font-size: 13px;">正在載入 ccz 的自拍照與隨手拍...</div>
   </div>
 
   <div class="home-bar" onclick="goHome()"></div>
@@ -130,16 +109,10 @@ function updateClock(){
   document.getElementById('status-time').innerText=s;
   document.getElementById('lock-time-display').innerText=s;
 }
-setInterval(updateClock,1000);
-updateClock();
+setInterval(updateClock,1000); updateClock();
 
-function openApp(appId) {
-  document.getElementById(appId).classList.add('active');
-}
-
-function goHome() {
-  document.querySelectorAll('.app-window').forEach(win => win.classList.remove('active'));
-}
+function openApp(id){ document.getElementById(id).classList.add('active'); }
+function goHome(){ document.querySelectorAll('.app-window').forEach(w=>w.classList.remove('active')); }
 </script>
 </body>
 </html>
