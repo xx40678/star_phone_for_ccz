@@ -19,17 +19,14 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 
 .phone { width: 100vw; height: 100dvh; max-width: 375px; max-height: 812px; background: #000; border-radius: 55px; position: relative; overflow: hidden; border: 12px solid #1c1c1e; }
 
-/* Status Bar & Notch */
 .status-bar { position: absolute; top: 0; width: 100%; height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; z-index: 5000; color: #fff; font-size: 14px; }
 .notch { width: 160px; height: 30px; background: #1c1c1e; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-radius: 0 0 20px 20px; z-index: 5001; }
 
-/* Lock Screen */
 #lock-screen { position: absolute; inset: 0; z-index: 4500; background: var(--ios-bg); display: flex; flex-direction: column; align-items: center; padding-top: 100px; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
 .lock-time { font-size: 80px; font-weight: 200; color: #fff; }
 .lock-date { font-size: 22px; font-weight: 600; color: #fff; margin-top: 5px; }
 .lock-quote { margin-top: 15px; color: rgba(255,255,255,0.8); font-size: 15px; letter-spacing: 1px; }
 
-/* Home Screen */
 #home-screen { position: absolute; inset: 0; padding: 60px 20px; background: var(--ios-bg); z-index: 100; }
 .memo-widget { background: var(--glass); backdrop-filter: var(--blur); border-radius: 22px; width: 100%; padding: 20px; color: #fff; border: 0.5px solid rgba(255,255,255,0.1); margin-bottom: 30px; }
 .memo-title { font-size: 12px; color: #ff9500; font-weight: bold; margin-bottom: 8px; }
@@ -40,7 +37,6 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 .icon { width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; font-size: 28px; background: var(--icon-bg); border: 0.5px solid rgba(255,255,255,0.1); }
 .dock { position: absolute; bottom: 25px; left: 15px; right: 15px; height: 92px; background: rgba(255, 255, 255, 0.1); backdrop-filter: var(--blur); border-radius: 35px; display: flex; justify-content: space-evenly; align-items: center; }
 
-/* Windows */
 .app-window { position: absolute; inset: 0; z-index: 1500; background: #000; display: none; flex-direction: column; }
 .app-window.active { display: flex; }
 .nav-back { padding: 50px 20px 0; color: var(--ios-blue); font-size: 17px; cursor: pointer; }
@@ -101,7 +97,7 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
         <div style="flex:1; text-align:center; color:#fff; font-weight:600; margin-right:60px;">予延</div>
     </div>
     <div class="chat-body" id="chat-box"></div>
-    <div style="padding: 15px 15px 45px; background: #000;"><div onclick="showOptions()" id="input-trigger" style="background:#1c1c1e; border-radius:22px; padding:12px 18px; color:#fff; border: 1px solid #444; text-align:center;">回覆予延...</div></div>
+    <div style="padding: 15px 15px 45px; background: #000;"><div onclick="showOptions()" id="input-trigger" style="background:#1c1c1e; border-radius:22px; padding:12px 18px; color:#fff; border: 1px solid #444; text-align:center; cursor:pointer;">回覆予延...</div></div>
   </div>
 
   <div id="safari-app" class="app-window">
@@ -125,20 +121,56 @@ setInterval(updateClock, 1000); updateClock();
 
 let currentKey = '';
 const gameData = {
-    'morning': { msg: "......早。怎麼這時間醒著？", options: [{ text: "想你想醒了。", next: 'm_1' }, { text: "餓醒的，想吃拉麵。", next: 'm_2' }, { text: "等某人回訊息啊。", next: 'm_3' }] },
-    'm_1': { msg: "順路帶妳去吃早午餐？十五分鐘後到。", options: [{ text: "好，等我。", next: 'end' }] },
-    'm_2': { msg: "早上吃拉麵太鹹。帶妳去喝熱的，快換衣服。", options: [{ text: "聽你的。", next: 'end' }] },
-    'm_3': { msg: "現在回了。去補眠，黑眼圈都要掉到地上了。", options: [{ text: "哪有！下午見。", next: 'end' }] },
-    'afternoon': { msg: "在忙。妳沒在偷懶吧？", options: [{ text: "研究 Apex 設定算嗎？", next: 'a_1' }, { text: "想去網咖開包廂打遊戲。", next: 'a_2' }] },
-    'a_1': { msg: "妳那槍法研究也沒用。下班帶妳去網咖練？", options: [{ text: "好啊，你訂位。", next: 'end' }] },
-    'a_2': { msg: "包廂訂好了，環境不錯。兩點去接妳。", options: [{ text: "收到！", next: 'end' }] },
-    'evening': { msg: "下班了嗎？我剛好在附近。", options: [{ text: "又是順路？", next: 'e_1' }, { text: "想吃拉麵。", next: 'e_2' }] },
-    'e_1': { msg: "不然呢？快上車，這裡不能久停。", options: [{ text: "這就下去。", next: 'end' }] },
-    'e_2': { msg: "排隊很長。不過我可以陪妳。", options: [{ text: "走吧！", next: 'end' }] },
-    'night': { msg: "......還沒睡？", options: [{ text: "你不也醒著。在想誰？", next: 'n_1' }, { text: "在想你今天說的話。", next: 'n_2' }] },
-    'n_1': { msg: "想一個半夜不睡覺的笨蛋。快去睡。", options: [{ text: "笨蛋也想你了。", next: 'end' }, { text: "憋死你算了，不睡。", next: 'end' }] },
-    'n_2': { msg: "別想了。明天見，晚安。", options: [{ text: "晚安。", next: 'end' }] },
-    'end': { msg: "乖。見面再說。", options: [] }
+    // 【晨間】
+    'morning': { msg: "......早。怎麼這時間醒著？", options: [
+        { text: "就剛好醒了。你呢？", next: 'm_1' },
+        { text: "餓醒的，想吃拉麵。", next: 'm_2' },
+        { text: "等某個高冷帥哥回訊息啊。", next: 'm_3' }
+    ]},
+    'm_1': { msg: "我也剛醒。順路帶妳去吃早午餐？", options: [
+        { text: "好啊，你載我？", next: 'm_1_a' },
+        { text: "你要來接我嗎？", next: 'm_1_b' }
+    ]},
+    'm_1_a': { msg: "不然妳想走路？十五分鐘後到妳門口。", options: [{ text: "好，等你。", next: 'end_morning' }] },
+    'm_1_b': { msg: "順路而已。別想太多，快去準備。", options: [{ text: "知道了啦。", next: 'end_morning' }] },
+    'm_2': { msg: "早上吃拉麵太鹹。帶妳去喝熱豆漿？", options: [{ text: "好，聽你的。", next: 'end_morning' }, { text: "那我想吃妳之前說的那家。", next: 'end_morning' }] },
+    'm_3': { msg: "回了。去補眠，黑眼圈都要掉到地上了。", options: [{ text: "哪有這麼誇張！", next: 'end_morning' }, { text: "那你陪我。", next: 'm_3_a' }] },
+    'm_3_a': { msg: "......別亂開玩笑。去睡覺，下午再說。", options: [{ text: "哼，晚點見。", next: 'end_morning' }] },
+
+    // 【午間】
+    'afternoon': { msg: "在忙。妳沒在偷懶吧？", options: [
+        { text: "研究 Apex 設定算嗎？", next: 'a_1' },
+        { text: "在想下午要去哪開包廂打遊戲。", next: 'a_2' }
+    ]},
+    'a_1': { msg: "妳那槍法研究也沒用。下班帶妳去網咖練？", options: [
+        { text: "好啊，你訂位？", next: 'a_1_a' },
+        { text: "我沒那麼爛吧！", next: 'a_1_b' }
+    ]},
+    'a_1_a': { msg: "可以。去開個包廂，那邊設備比較好。", options: [{ text: "成交。", next: 'end_afternoon' }] },
+    'a_1_b': { msg: "對，只有更爛。所以才要練，下班接妳。", options: [{ text: "這就對了。", next: 'end_afternoon' }] },
+    'a_2': { msg: "找包廂？妳想打遊戲？我知道一家環境不錯的。", options: [{ text: "要去嗎？", next: 'a_1_a' }, { text: "你要載我？", next: 'a_1_b' }] },
+
+    // 【深夜】
+    'night': { msg: "......妳還沒睡？", options: [
+        { text: "你不也醒著。在想誰？", next: 'n_1' },
+        { text: "在想你今天說的話。", next: 'n_2' }
+    ]},
+    'n_1': { msg: "想一個半夜不睡覺的笨蛋。", options: [
+        { text: "誰笨蛋了！", next: 'n_1_a' },
+        { text: "笨蛋也想你了。", next: 'n_1_b' }
+    ]},
+    'n_1_a': { msg: "說妳。看窗外，我在妳家樓下。", options: [
+        { text: "天啊你瘋了！", next: 'end_night' },
+        { text: "憋死你算了，我不下去。", next: 'n_1_aa' }
+    ]},
+    'n_1_aa': { msg: "那我就等妳消氣。自己看著辦。", options: [{ text: "等我啦，現在下去。", next: 'end_night' }] },
+    'n_1_b': { msg: "......別熬夜。明天見。", options: [{ text: "明天見，晚安。", next: 'end_night' }] },
+    'n_2': { msg: "別想了。去睡覺，晚安。", options: [{ text: "憋死你算了，晚安。", next: 'end_night' }] },
+
+    // 結局節點
+    'end_morning': { msg: "我快到了，門口等。", options: [] },
+    'end_afternoon': { msg: "乖。見面再說，專心上班。", options: [] },
+    'end_night': { msg: "晚安。明天見。", options: [] }
 };
 
 function openApp(id) { document.getElementById(id).classList.add('active'); }
@@ -150,7 +182,7 @@ function openChat() {
     document.getElementById('chat-detail').classList.add('active');
     if (box.innerHTML === "") {
         const hr = new Date().getHours();
-        let start = (hr>=5&&hr<11)?'morning':(hr>=11&&hr<17)?'afternoon':(hr>=17&&hr<22)?'evening':'night';
+        let start = (hr>=5&&hr<11)?'morning':(hr>=11&&hr<17)?'afternoon':'night';
         currentKey = start;
         box.innerHTML = `<div class="bubble you">${gameData[start].msg}</div>`;
     }
@@ -171,9 +203,11 @@ function showOptions() {
             currentKey = opt.next;
             setTimeout(() => {
                 const node = gameData[currentKey];
-                box.innerHTML += `<div class="bubble you">${node.msg}</div>`;
-                document.getElementById('last-msg').innerText = node.msg;
-                box.scrollTop = box.scrollHeight;
+                if(node) {
+                    box.innerHTML += `<div class="bubble you">${node.msg}</div>`;
+                    document.getElementById('last-msg').innerText = node.msg;
+                    box.scrollTop = box.scrollHeight;
+                }
             }, 800);
         };
         overlay.appendChild(btn);
