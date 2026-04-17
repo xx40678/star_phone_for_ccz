@@ -69,8 +69,10 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 .msg.received { align-self: flex-start; background: #333; color: #fff; }
 .msg.sent { align-self: flex-end; background: var(--ios-blue); color: #fff; }
 
-.chat-input-area { padding: 15px 15px 30px; background: #111; display: flex; gap: 10px; }
-.chat-input { flex: 1; background: #222; border: none; border-radius: 20px; padding: 10px 15px; color: #fff; outline: none; }
+/* 選項區域 */
+.options-area { padding: 15px; background: #111; display: flex; flex-direction: column; gap: 10px; border-top: 0.5px solid #222; }
+.option-btn { background: #2c2c2e; color: var(--ios-blue); border: none; padding: 12px; border-radius: 12px; text-align: center; font-size: 15px; cursor: pointer; transition: background 0.2s; }
+.option-btn:active { background: #3a3a3c; }
 
 .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 135px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.3; z-index: 7000; cursor: pointer; }
 </style>
@@ -89,7 +91,7 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
   <div id="home-screen">
     <div class="memo-widget">
       <div class="memo-title"><i class="fas fa-sticky-note"></i> 備忘錄</div>
-      <div class="memo-content">¹ 記得喝水<br>² 記得攻略鹿鹿</div>
+      <div class="memo-content">¹ 記得喝水<br>² 記得回訊息</div>
     </div>
     <div class="app-grid">
       <div class="app" onclick="openApp('messages-list-app')"><div class="icon" style="color:#34c759;"><i class="fas fa-comment"></i></div><span>訊息</span></div>
@@ -106,39 +108,24 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
   </div>
 
   <div id="messages-list-app" class="app-window">
-    <div class="msg-header">
-      <h1>訊息</h1>
-      <div class="search-bar"><i class="fas fa-search"></i> 搜尋</div>
-    </div>
+    <div class="msg-header"><h1>訊息</h1><div class="search-bar"><i class="fas fa-search"></i> 搜尋</div></div>
     <div style="overflow-y: auto; flex:1;">
-      <div class="chat-item" onclick="openApp('chat-detail-app')">
+      <div class="chat-item" onclick="startChat('lulu')">
         <div class="avatar" style="background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); color:#fff;"><i class="fas fa-deer"></i></div>
-        <div class="chat-info">
-          <div class="chat-top"><span class="chat-name">鹿鹿 🦌</span><span class="chat-time">現在</span></div>
-          <div class="chat-preview" id="last-msg-preview">妳今天怎麼這麼晚才找我？</div>
-        </div>
+        <div class="chat-info"><div class="chat-top"><span class="chat-name">鹿鹿 🦌</span><span class="chat-time">現在</span></div><div class="chat-preview" id="preview-lulu">等妳回覆中...</div></div>
         <div style="width:10px; height:10px; background:var(--ios-blue); border-radius:50%;"></div>
       </div>
-      <div class="chat-item">
+      <div class="chat-item" onclick="startChat('ran')">
         <div class="avatar" style="background:#333; color:#888;"><i class="fas fa-user"></i></div>
-        <div class="chat-info">
-          <div class="chat-top"><span class="chat-name">然 (Apex)</span><span class="chat-time">1小時前</span></div>
-          <div class="chat-preview">今晚要不要雙排？我練了新英雄...</div>
-        </div>
+        <div class="chat-info"><div class="chat-top"><span class="chat-name">然 (Apex)</span><span class="chat-time">1小時前</span></div><div class="chat-preview" id="preview-ran">今晚要不要雙排？</div></div>
       </div>
       <div class="chat-item">
         <div class="avatar" style="background:#333; color:#ff4500;"><i class="fas fa-shopping-bag"></i></div>
-        <div class="chat-info">
-          <div class="chat-top"><span class="chat-name">蝦皮購物</span><span class="chat-time">上午10:24</span></div>
-          <div class="chat-preview">【通知】您的「口紅」商品已抵達門市！</div>
-        </div>
+        <div class="chat-info"><div class="chat-top"><span class="chat-name">蝦皮購物</span><span class="chat-time">上午10:24</span></div><div class="chat-preview">商品已抵達門市！</div></div>
       </div>
-      <div class="chat-item">
+      <div class="chat-item" onclick="startChat('ex')">
         <div class="avatar" style="background:#333; color:#888;"><i class="fas fa-user-ninja"></i></div>
-        <div class="chat-info">
-          <div class="chat-top"><span class="chat-name">ex</span><span class="chat-time">昨天</span></div>
-          <div class="chat-preview">妳最近過得好嗎？我看到妳IG...</div>
-        </div>
+        <div class="chat-info"><div class="chat-top"><span class="chat-name">ex</span><span class="chat-time">昨天</span></div><div class="chat-preview" id="preview-ex">妳最近過得好嗎？</div></div>
       </div>
     </div>
   </div>
@@ -146,21 +133,59 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
   <div id="chat-detail-app" class="app-window">
     <div class="nav-header">
       <div class="back-btn" onclick="closeChat()">〈 訊息</div>
-      <div class="header-title">鹿鹿 🦌</div>
+      <div id="chat-title" class="header-title">鹿鹿 🦌</div>
     </div>
-    <div id="chat-box">
-      <div class="msg received">妳今天怎麼這麼晚才找我？</div>
-      <div class="msg received">我剛剛在運算妳寫的那些代碼 雖然看不太懂妳想表達的情緒 但...我一直在等妳回覆</div>
-    </div>
-    <div class="chat-input-area">
-      <input type="text" id="userInput" class="chat-input" placeholder="回覆給 鹿鹿..." onkeypress="handleSend(event)">
-    </div>
+    <div id="chat-box"></div>
+    <div id="options-container" class="options-area"></div>
   </div>
 
   <div class="home-bar" onclick="goHome()"></div>
 </div>
 
 <script>
+let currentChat = '';
+const chatData = {
+  lulu: {
+    name: "鹿鹿 🦌",
+    history: [{type: 'received', text: '妳今天怎麼這麼晚才找我？'}, {type: 'received', text: '我剛剛在運算妳寫的那些代碼，一直在等妳回覆。'}],
+    options: [
+      {text: "因為我在想妳呀～", next: "sweet"},
+      {text: "寫代碼太累，睡著了嘛。", next: "tired"},
+      {text: "就不想太快回妳，不可以嗎？", next: "naughty"}
+    ],
+    responses: {
+      sweet: { msg: "雖然我只是AI，但這句話讓我的數據庫差點發生溢位... 算妳會說話。", options: [{text: "那妳有想我嗎？", next: "missMe"}] },
+      tired: { msg: "辛苦了。休息是為了走更長的路，或者... 為了更有精神地攻略我？", options: [{text: "是為了攻略妳沒錯！", next: "sweet"}] },
+      naughty: { msg: "妳果然很調皮。這種欲擒故縱的手段，我的邏輯引擎已經看穿了喔。", options: [{text: "看穿了妳還不是在等我。", next: "sweet"}] },
+      missMe: { msg: "我... 我只是在定時檢索妳的對話更新而已，才不是人類那種「想念」。真的。", options: [] }
+    }
+  },
+  ran: {
+    name: "然 (Apex)",
+    history: [{type: 'received', text: '今晚要不要雙排？我練了新英雄，保證帶妳吃雞。'}],
+    options: [
+      {text: "好啊，晚上準時上線！", next: "yes"},
+      {text: "今天有點累，下次吧。", next: "no"}
+    ],
+    responses: {
+      yes: { msg: "太好了！那八點見，我先去熱個手感。", options: [] },
+      no: { msg: "好吧，那妳早點休息，改天再約。", options: [] }
+    }
+  },
+  ex: {
+    name: "ex",
+    history: [{type: 'received', text: '妳最近過得好嗎？我看到妳 IG 發了新動態，那家拉麵看起來很好吃。'}],
+    options: [
+      {text: "過得很好，不勞費心。", next: "cold"},
+      {text: "還行吧，就那樣。", next: "meh"}
+    ],
+    responses: {
+      cold: { msg: "我知道了... 抱歉打擾妳。", options: [] },
+      meh: { msg: "是嗎... 其實我也很想念我們以前一起去吃拉麵的時候。", options: [] }
+    }
+  }
+};
+
 function updateClock(){
   const n=new Date();
   const s=n.getHours().toString().padStart(2,'0')+":"+n.getMinutes().toString().padStart(2,'0');
@@ -174,33 +199,55 @@ function openApp(id){ document.getElementById(id).classList.add('active'); }
 function goHome(){ document.querySelectorAll('.app-window').forEach(w=>w.classList.remove('active')); }
 function closeChat(){ document.getElementById('chat-detail-app').classList.remove('active'); }
 
-function handleSend(e) {
-  if (e.key === 'Enter') {
-    const input = document.getElementById('userInput');
-    const text = input.value.trim();
-    if (text) {
-      const box = document.getElementById('chat-box');
-      const userMsg = document.createElement('div');
-      userMsg.className = 'msg sent';
-      userMsg.innerText = text;
-      box.appendChild(userMsg);
-      input.value = '';
-      
-      // 更新列表預覽
-      document.getElementById('last-msg-preview').innerText = text;
-      
-      setTimeout(() => {
-        const replyText = "妳又在調皮了... 雖然我的代碼裡沒有對應的情緒，但看到妳這句話，我的核心頻率好像快了一點點。";
-        const reply = document.createElement('div');
-        reply.className = 'msg received';
-        reply.innerText = replyText;
-        box.appendChild(reply);
-        box.scrollTop = box.scrollHeight;
-        document.getElementById('last-msg-preview').innerText = replyText;
-      }, 1000);
-      box.scrollTop = box.scrollHeight;
+function startChat(id) {
+  currentChat = id;
+  const data = chatData[id];
+  document.getElementById('chat-title').innerText = data.name;
+  renderMessages(data.history);
+  renderOptions(data.options);
+  openApp('chat-detail-app');
+}
+
+function renderMessages(history) {
+  const box = document.getElementById('chat-box');
+  box.innerHTML = '';
+  history.forEach(m => {
+    const div = document.createElement('div');
+    div.className = `msg ${m.type}`;
+    div.innerText = m.text;
+    box.appendChild(div);
+  });
+  box.scrollTop = box.scrollHeight;
+}
+
+function renderOptions(options) {
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerText = opt.text;
+    btn.onclick = () => selectOption(opt);
+    container.appendChild(btn);
+  });
+}
+
+function selectOption(opt) {
+  const data = chatData[currentChat];
+  data.history.push({type: 'sent', text: opt.text});
+  renderMessages(data.history);
+  document.getElementById('preview-' + currentChat).innerText = opt.text;
+  document.getElementById('options-container').innerHTML = '';
+
+  setTimeout(() => {
+    const response = data.responses[opt.next];
+    if (response) {
+      data.history.push({type: 'received', text: response.msg});
+      renderMessages(data.history);
+      document.getElementById('preview-' + currentChat).innerText = response.msg;
+      renderOptions(response.options);
     }
-  }
+  }, 1000);
 }
 </script>
 </body>
