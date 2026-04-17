@@ -89,7 +89,7 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
   <div id="home-screen">
     <div class="memo-widget">
       <div class="memo-title"><i class="fas fa-sticky-note"></i> 備忘錄</div>
-      <div class="memo-content">¹ 記得喝水<br>² 記得攻略鹿鹿</div>
+      <div class="memo-content">¹ 記得喝水<br>² 記得回訊息</div>
     </div>
     <div class="app-grid">
       <div class="app" onclick="openApp('messages-list-app')"><div class="icon" style="color:#34c759;"><i class="fas fa-comment"></i></div><span>訊息</span></div>
@@ -122,7 +122,7 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
       <div class="chat-item">
         <div class="avatar" style="background:#333; color:#888;"><i class="fas fa-user"></i></div>
         <div class="chat-info">
-          <div class="chat-top"><span class="chat-name">阿強 (Apex)</span><span class="chat-time">1小時前</span></div>
+          <div class="chat-top"><span class="chat-name">然 (Apex)</span><span class="chat-time">1小時前</span></div>
           <div class="chat-preview">今晚要不要雙排？我練了新英雄...</div>
         </div>
       </div>
