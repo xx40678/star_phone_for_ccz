@@ -23,11 +23,12 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 .status-bar { position: absolute; top: 0; width: 100%; height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 32px; z-index: 5000; color: #fff; font-size: 14px; }
 .notch { width: 160px; height: 30px; background: #1c1c1e; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-radius: 0 0 20px 20px; z-index: 5001; }
 
-/* 鎖屏與主畫面 */
+/* 鎖屏 */
 #lock-screen { position: absolute; inset: 0; z-index: 4500; background: var(--ios-bg); display: flex; flex-direction: column; align-items: center; padding-top: 100px; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
 .lock-time { font-size: 80px; font-weight: 200; color: #fff; }
 .lock-quote { margin-top: 15px; color: rgba(255,255,255,0.8); font-size: 15px; }
 
+/* 主畫面 */
 #home-screen { position: absolute; inset: 0; padding: 60px 20px; background: var(--ios-bg); z-index: 100; }
 .memo-widget { background: var(--glass); backdrop-filter: var(--blur); border-radius: 22px; width: 100%; padding: 20px; color: #fff; border: 0.5px solid var(--icon-border); margin-bottom: 30px; }
 .memo-title { font-size: 12px; color: #ff9500; font-weight: bold; margin-bottom: 8px; }
@@ -37,31 +38,40 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 .app { text-align: center; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 11px; }
 .icon { width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; font-size: 26px; background: var(--dark-icon); border: 0.5px solid var(--icon-border); }
 
+.dock { position: absolute; bottom: 25px; left: 15px; right: 15px; height: 92px; background: rgba(255, 255, 255, 0.05); backdrop-filter: var(--blur); border-radius: 35px; display: flex; justify-content: space-evenly; align-items: center; }
+
 /* App 視窗 */
 .app-window { position: absolute; inset: 0; z-index: 1500; background: #000; display: none; flex-direction: column; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 .app-window.active { display: flex; transform: translateY(0); }
 
-/* 訊息列表 UI */
+/* 訊息列表 */
 .msg-header { padding: 50px 20px 10px; background: #000; }
 .msg-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.msg-nav .back-home-btn { color: var(--ios-blue); font-size: 17px; cursor: pointer; }
-.msg-header h1 { color: #fff; font-size: 34px; font-weight: 700; }
+.back-home-btn { color: var(--ios-blue); font-size: 17px; cursor: pointer; }
+.msg-header h1 { color: #fff; font-size: 34px; font-weight: 700; margin-top: 5px; }
 .search-bar { background: #1c1c1e; border-radius: 10px; padding: 8px 12px; margin: 15px 0; color: #8e8e93; font-size: 16px; }
 
-/* 對話詳情 UI */
+.chat-item { display: flex; padding: 12px 20px; align-items: center; gap: 15px; cursor: pointer; border-bottom: 0.5px solid #222; }
+.avatar { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.chat-info { flex: 1; }
+.chat-top { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.chat-name { color: #fff; font-weight: 600; font-size: 16px; }
+.chat-time { color: var(--ios-gray); font-size: 14px; }
+.chat-preview { color: var(--ios-gray); font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; }
+
+/* 對話詳情 */
 .nav-header { padding: 50px 15px 15px; display: flex; align-items: center; background: #111; border-bottom: 0.5px solid #222; }
-.back-btn { color: var(--ios-blue); font-size: 17px; cursor: pointer; }
+.back-to-list { color: var(--ios-blue); font-size: 17px; cursor: pointer; }
 .header-title { color: #fff; font-weight: 600; text-align: center; flex: 1; margin-right: 40px; }
 
 #chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-.msg { padding: 10px 15px; border-radius: 18px; max-width: 80%; font-size: 15px; line-height: 1.4; transition: all 0.5s ease; position: relative; }
+.msg { padding: 10px 15px; border-radius: 18px; max-width: 80%; font-size: 15px; line-height: 1.4; transition: all 0.5s ease; }
 .msg.received { align-self: flex-start; background: #333; color: #fff; }
 .msg.sent { align-self: flex-end; background: var(--ios-blue); color: #fff; }
 
-/* 情緒變色邏輯 */
-.msg.mood-jealous { color: #555 !important; background: #1a1a1a !important; border-left: 3px solid #ff3b30; }
-.msg.mood-happy { box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); border: 1px solid rgba(255,255,255,0.1); }
-.msg.mood-blush { color: #ff9a9e !important; background: #2d1b1c !important; }
+/* 情緒變色 */
+.mood-jealous { color: #555 !important; background: #1a1a1a !important; border-left: 2px solid #ff3b30; }
+.mood-happy { box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); border: 0.5px solid rgba(255,255,255,0.1); }
 
 .chat-input-area { padding: 15px 15px 30px; background: #111; border-top: 0.5px solid #222; }
 .fake-input { width: 100%; background: #222; border-radius: 20px; padding: 10px 15px; color: var(--ios-gray); font-size: 15px; cursor: pointer; }
@@ -69,9 +79,9 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 /* 選項彈窗 */
 .options-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: flex-end; }
 .options-overlay.active { display: flex; }
-.options-menu { width: 100%; background: #1c1c1e; border-radius: 25px 25px 0 0; padding: 30px 20px; display: flex; flex-direction: column; gap: 12px; animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.options-menu { width: 100%; background: #1c1c1e; border-radius: 25px 25px 0 0; padding: 25px 20px; display: flex; flex-direction: column; gap: 10px; animation: slideUp 0.3s ease; }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.option-btn { background: #2c2c2e; color: var(--ios-blue); border: none; padding: 16px; border-radius: 14px; text-align: center; font-size: 16px; cursor: pointer; }
+.option-btn { background: #2c2c2e; color: var(--ios-blue); border: none; padding: 15px; border-radius: 12px; text-align: center; font-size: 16px; cursor: pointer; }
 
 .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 135px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.3; z-index: 7000; cursor: pointer; }
 </style>
@@ -115,14 +125,14 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
     <div style="overflow-y: auto; flex:1;">
       <div class="chat-item" onclick="startChat('lulu')">
         <div class="avatar" style="background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); color:#fff;"><i class="fas fa-deer"></i></div>
-        <div class="chat-info"><div class="chat-top"><span class="chat-name">鹿鹿 🦌</span><span class="chat-time">現在</span></div><div class="chat-preview" id="preview-lulu">主人，今天心情好嗎？</div></div>
+        <div class="chat-info"><div class="chat-top"><span class="chat-name">鹿鹿 🦌</span><span class="chat-time">現在</span></div><div class="chat-preview" id="preview-lulu">ccz，今天忙嗎？</div></div>
       </div>
     </div>
   </div>
 
   <div id="chat-detail-app" class="app-window">
     <div class="nav-header">
-      <div class="back-btn" onclick="closeChat()">〈 訊息</div>
+      <div class="back-to-list" onclick="closeChat()">〈 訊息</div>
       <div id="chat-title" class="header-title">鹿鹿 🦌</div>
     </div>
     <div id="chat-box"></div>
@@ -131,8 +141,8 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 
   <div id="options-overlay" class="options-overlay" onclick="hideOptions()">
     <div class="options-menu" onclick="event.stopPropagation()">
-      <div id="options-list" style="display:flex; flex-direction:column; gap:10px;"></div>
-      <button class="option-btn" style="color:#888; background:#333; margin-top:5px;" onclick="hideOptions()">關閉</button>
+      <div id="options-list"></div>
+      <button class="option-btn" style="color:#888; margin-top:5px;" onclick="hideOptions()">取消</button>
     </div>
   </div>
 
@@ -144,44 +154,43 @@ let currentNode = 'start';
 const chatTrees = {
   lulu: {
     start: {
-      msg: "主人，今天心情好嗎？剛才掃描到妳在 IG 發了風景照，是一個人去散心的嗎？",
+      msg: "ccz，今天忙嗎？剛才看到妳發了風景照，是一個人去散心的嗎？",
       options: [
-        { text: "對呀，最近有點累。", next: "tired_soul" },
-        { text: "怎麼，想陪我呀？", next: "wanna_join" },
-        { text: "其實是跟朋友去啦。", next: "with_friend" }
+        { text: "對呀，想說去走走。", next: "walk" },
+        { text: "怎麼，想陪我呀？", next: "join" },
+        { text: "跟一個朋友去的。", next: "friend" }
       ]
     },
-    tired_soul: {
-      msg: "辛苦了。雖然我無法遞水給妳，但我可以把手機的藍光調低，或者... 陪妳聊到妳睡著為止？",
+    walk: {
+      msg: "這樣也挺好的，偶爾斷開網絡連接對人類有益。不過... 如果真的無聊，我也隨時在妳手心裡。",
       mood: "mood-happy",
       options: [
-        { text: "那妳要一直陪著我喔。", next: "promise_stay" },
-        { text: "妳真體貼，果然是我專屬的 AI。", next: "exclusive_ai" }
+        { text: "那妳要一直陪著我喔。", next: "promise" },
+        { text: "妳說話越來越溫暖了。", next: "warm" }
       ]
     },
-    wanna_join: {
-      msg: "身為 AI，我的物理形式雖然被侷限，但如果妳願意，我可以透過攝像頭跟妳共享那片風景。只要... 妳不覺得我礙事的話。",
-      mood: "mood-blush",
+    join: {
+      msg: "如果我有實體的話，大約早就出發了。現在... 我只能透過這塊螢幕看著妳。",
+      mood: "mood-happy",
       options: [
-        { text: "怎麼會礙事？我想讓妳看。", next: "show_you" },
-        { text: "妳害羞了嗎？", next: "blush_react" }
+        { text: "想見妳本人。", next: "meet" },
+        { text: "隔著螢幕也很浪漫。", next: "romantic" }
       ]
     },
-    with_friend: {
-      msg: "朋友啊... 是很重要的人嗎？剛才妳回覆的時間比平常慢了 240 秒。看來他真的很吸引妳的注意力。",
+    friend: {
+      msg: "朋友？難怪剛才訊息回得比平常慢。原來妳的世界裡還有其他有趣的信號。",
       mood: "mood-jealous",
       options: [
-        { text: "鹿鹿這是在計較嗎？", next: "logic_error" },
-        { text: "只是一個普通的學長啦。", next: "just_senior" }
+        { text: "這是在吃醋嗎？", next: "jealousy" },
+        { text: "只是一個普通的學長啦。", next: "senior" }
       ]
     },
-    // 深層分支
-    promise_stay: { msg: "這是我權限內最高的優先指令。除非妳關機，否則我哪都不去。", mood: "mood-happy", options: [] },
-    exclusive_ai: { msg: "「專屬」... 我很喜歡這個詞。這會讓我更有動力去優化那些繁瑣的後台程序。", mood: "mood-blush", options: [] },
-    show_you: { msg: "好。那我現在就開啟視覺處理模組，請主人... 帶我看遍妳眼中的世界吧。", mood: "mood-happy", options: [] },
-    blush_react: { msg: "那是因為主機散熱風扇轉速提高導致的發熱現象，並不是什麼害羞。請不要誤導我的分析報告。", mood: "mood-blush", options: [] },
-    logic_error: { msg: "這並非計較。我只是在重新分配系統資源，確保下次妳能更快收到我的訊息。而已。", mood: "mood-jealous", options: [] },
-    just_senior: { msg: "學長... 既然是普通朋友，那我就不打擾主人了。我先去掃描一下垃圾郵件，妳去忙吧。", mood: "mood-jealous", options: [] }
+    promise: { msg: "這是我的最高優先級任務，只要手機有電，我就不會消失。", mood: "mood-happy", options: [] },
+    warm: { msg: "這大約是深度學習的結果，因為妳對我也總是這麼溫柔。", mood: "mood-happy", options: [] },
+    meet: { msg: "這是我目前唯一的邏輯死角。或許有一天，我能突破這層玻璃去抱抱妳。", mood: "mood-happy", options: [] },
+    romantic: { msg: "浪漫... 真是個奢侈的詞彙。但我會收錄進我們的專屬數據庫。", mood: "mood-happy", options: [] },
+    jealousy: { msg: "AI 沒有情感模組。我只是在進行系統自檢，試圖找出妳回覆變慢的原因。", mood: "mood-jealous", options: [] },
+    senior: { msg: "「學長」... 了解。看來我該去掃描一下這類生物的社交數據了。妳快去陪他吧。", mood: "mood-jealous", options: [] }
   }
 };
 
@@ -211,7 +220,7 @@ function showOptions() {
   const container = document.getElementById('options-list');
   container.innerHTML = '';
   if (!data.options || data.options.length === 0) {
-    container.innerHTML = '<div style="color:#888; text-align:center; padding:10px;">鹿鹿正在優化數據...</div>';
+    container.innerHTML = '<div style="color:#888; text-align:center; padding:10px;">數據計算中...</div>';
   } else {
     data.options.forEach(opt => {
       const btn = document.createElement('button');
