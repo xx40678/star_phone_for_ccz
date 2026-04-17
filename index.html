@@ -46,7 +46,9 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 
 /* 訊息列表 UI */
 #messages-list-app { background: #000; }
-.msg-header { padding: 60px 20px 10px; background: #000; }
+.msg-header { padding: 50px 20px 10px; background: #000; }
+.msg-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.msg-nav .back-btn { color: var(--ios-blue); font-size: 17px; cursor: pointer; }
 .msg-header h1 { color: #fff; font-size: 34px; font-weight: 700; }
 .search-bar { background: #1c1c1e; border-radius: 10px; padding: 8px 12px; margin: 15px 0; color: #8e8e93; font-size: 16px; }
 
@@ -69,10 +71,18 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
 .msg.received { align-self: flex-start; background: #333; color: #fff; }
 .msg.sent { align-self: flex-end; background: var(--ios-blue); color: #fff; }
 
-/* 選項區域 */
-.options-area { padding: 15px; background: #111; display: flex; flex-direction: column; gap: 10px; border-top: 0.5px solid #222; }
-.option-btn { background: #2c2c2e; color: var(--ios-blue); border: none; padding: 12px; border-radius: 12px; text-align: center; font-size: 15px; cursor: pointer; transition: background 0.2s; }
-.option-btn:active { background: #3a3a3c; }
+/* 模仿輸入框 */
+.chat-input-area { padding: 15px 15px 30px; background: #111; display: flex; flex-direction: column; border-top: 0.5px solid #222; }
+.fake-input { width: 100%; background: #222; border-radius: 20px; padding: 10px 15px; color: var(--ios-gray); font-size: 15px; cursor: pointer; border: none; text-align: left; }
+
+/* 選項彈窗 */
+.options-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); z-index: 2000; display: none; align-items: flex-end; }
+.options-overlay.active { display: flex; }
+.options-menu { width: 100%; background: #1c1c1e; border-radius: 20px 20px 0 0; padding: 20px; display: flex; flex-direction: column; gap: 12px; animation: slideUp 0.3s ease-out; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.option-btn { background: #2c2c2e; color: var(--ios-blue); border: none; padding: 15px; border-radius: 12px; text-align: center; font-size: 16px; cursor: pointer; }
+.cancel-opt { background: #3a3a3c; color: #ff3b30; margin-top: 5px; }
 
 .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 135px; height: 5px; background: #fff; border-radius: 10px; opacity: 0.3; z-index: 7000; cursor: pointer; }
 </style>
@@ -91,7 +101,7 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
   <div id="home-screen">
     <div class="memo-widget">
       <div class="memo-title"><i class="fas fa-sticky-note"></i> 備忘錄</div>
-      <div class="memo-content">¹ 記得喝水<br>² 記得回訊息</div>
+      <div class="memo-content">¹ 記得喝水<br>² 記得攻略鹿鹿</div>
     </div>
     <div class="app-grid">
       <div class="app" onclick="openApp('messages-list-app')"><div class="icon" style="color:#34c759;"><i class="fas fa-comment"></i></div><span>訊息</span></div>
@@ -108,7 +118,11 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
   </div>
 
   <div id="messages-list-app" class="app-window">
-    <div class="msg-header"><h1>訊息</h1><div class="search-bar"><i class="fas fa-search"></i> 搜尋</div></div>
+    <div class="msg-header">
+      <div class="msg-nav"><div class="back-btn" onclick="goHome()">主畫面</div></div>
+      <h1>訊息</h1>
+      <div class="search-bar"><i class="fas fa-search"></i> 搜尋</div>
+    </div>
     <div style="overflow-y: auto; flex:1;">
       <div class="chat-item" onclick="startChat('lulu')">
         <div class="avatar" style="background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); color:#fff;"><i class="fas fa-deer"></i></div>
@@ -118,10 +132,6 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
       <div class="chat-item" onclick="startChat('ran')">
         <div class="avatar" style="background:#333; color:#888;"><i class="fas fa-user"></i></div>
         <div class="chat-info"><div class="chat-top"><span class="chat-name">然 (Apex)</span><span class="chat-time">1小時前</span></div><div class="chat-preview" id="preview-ran">今晚要不要雙排？</div></div>
-      </div>
-      <div class="chat-item">
-        <div class="avatar" style="background:#333; color:#ff4500;"><i class="fas fa-shopping-bag"></i></div>
-        <div class="chat-info"><div class="chat-top"><span class="chat-name">蝦皮購物</span><span class="chat-time">上午10:24</span></div><div class="chat-preview">商品已抵達門市！</div></div>
       </div>
       <div class="chat-item" onclick="startChat('ex')">
         <div class="avatar" style="background:#333; color:#888;"><i class="fas fa-user-ninja"></i></div>
@@ -136,7 +146,16 @@ body { background: #000; display: flex; justify-content: center; align-items: ce
       <div id="chat-title" class="header-title">鹿鹿 🦌</div>
     </div>
     <div id="chat-box"></div>
-    <div id="options-container" class="options-area"></div>
+    <div class="chat-input-area">
+      <div class="fake-input" onclick="showOptions()">輸入訊息...</div>
+    </div>
+  </div>
+
+  <div id="options-overlay" class="options-overlay" onclick="hideOptions()">
+    <div class="options-menu" onclick="event.stopPropagation()">
+      <div id="options-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+      <button class="option-btn cancel-opt" onclick="hideOptions()">取消</button>
+    </div>
   </div>
 
   <div class="home-bar" onclick="goHome()"></div>
@@ -204,7 +223,6 @@ function startChat(id) {
   const data = chatData[id];
   document.getElementById('chat-title').innerText = data.name;
   renderMessages(data.history);
-  renderOptions(data.options);
   openApp('chat-detail-app');
 }
 
@@ -220,32 +238,42 @@ function renderMessages(history) {
   box.scrollTop = box.scrollHeight;
 }
 
-function renderOptions(options) {
-  const container = document.getElementById('options-container');
+function showOptions() {
+  const data = chatData[currentChat];
+  const container = document.getElementById('options-list');
   container.innerHTML = '';
-  options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.className = 'option-btn';
-    btn.innerText = opt.text;
-    btn.onclick = () => selectOption(opt);
-    container.appendChild(btn);
-  });
+  
+  const options = data.currentOptions || data.options;
+  if (options.length === 0) {
+    container.innerHTML = '<div style="color:#888; text-align:center; padding:10px;">沒有更多回覆選項</div>';
+  } else {
+    options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerText = opt.text;
+      btn.onclick = () => selectOption(opt);
+      container.appendChild(btn);
+    });
+  }
+  document.getElementById('options-overlay').classList.add('active');
 }
+
+function hideOptions() { document.getElementById('options-overlay').classList.remove('active'); }
 
 function selectOption(opt) {
   const data = chatData[currentChat];
   data.history.push({type: 'sent', text: opt.text});
   renderMessages(data.history);
   document.getElementById('preview-' + currentChat).innerText = opt.text;
-  document.getElementById('options-container').innerHTML = '';
+  hideOptions();
 
   setTimeout(() => {
     const response = data.responses[opt.next];
     if (response) {
       data.history.push({type: 'received', text: response.msg});
+      data.currentOptions = response.options; // 更新當前對話的可選選項
       renderMessages(data.history);
       document.getElementById('preview-' + currentChat).innerText = response.msg;
-      renderOptions(response.options);
     }
   }, 1000);
 }
